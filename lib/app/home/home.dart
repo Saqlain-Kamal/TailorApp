@@ -3,7 +3,6 @@ import 'package:tailor_app/app/home/chat/screens/chat.dart';
 import 'package:tailor_app/app/home/dashboard/screens/dashboard.dart';
 import 'package:tailor_app/app/home/orders/screens/orders.dart';
 import 'package:tailor_app/app/home/profile/screens/profile.dart';
-import 'package:tailor_app/utils/colors.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -28,24 +27,60 @@ class _HomeState extends State<Home> {
         borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(12), topRight: Radius.circular(12)),
         child: BottomNavigationBar(
-          backgroundColor: AppColors.borderGreyColor,
+          backgroundColor: Colors.grey.shade100,
           currentIndex: currentIndex,
           onTap: (value) {
             setState(() {
               currentIndex = value;
             });
           },
-          items: const [
+          items: [
             BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.home,
-                ),
+                icon: currentIndex == 0
+                    ? const Image(
+                        height: 25,
+                        image: AssetImage(
+                          'assets/images/gradientHome.png',
+                        ),
+                      )
+                    : const Image(
+                        height: 22,
+                        image: AssetImage(
+                          'assets/images/home.png',
+                        ),
+                      ),
                 label: 'Home'),
             BottomNavigationBarItem(
-              icon: Icon(Icons.menu),
+              icon: currentIndex == 1
+                  ? const Image(
+                      height: 25,
+                      image: AssetImage(
+                        'assets/images/gradientOrder.png',
+                      ),
+                    )
+                  : const Image(
+                      height: 22,
+                      image: AssetImage(
+                        'assets/images/order.png',
+                      ),
+                    ),
               label: 'Orders',
             ),
-            BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
+            BottomNavigationBarItem(
+                icon: currentIndex == 2
+                    ? const Image(
+                        height: 25,
+                        image: AssetImage(
+                          'assets/images/gradientChat.png',
+                        ),
+                      )
+                    : const Image(
+                        height: 22,
+                        image: AssetImage(
+                          'assets/images/chat.png',
+                        ),
+                      ),
+                label: 'Chat'),
           ],
         ),
       ),

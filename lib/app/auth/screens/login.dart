@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tailor_app/app/auth/widgets/custom_button.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
 import 'package:tailor_app/app/home/home.dart';
 import 'package:tailor_app/utils/colors.dart';
 import 'package:tailor_app/utils/constants.dart';
+import 'package:tailor_app/utils/custom_button.dart';
 import 'package:tailor_app/utils/mediaquery.dart';
 
 class Login extends StatelessWidget {

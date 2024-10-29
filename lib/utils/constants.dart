@@ -9,6 +9,9 @@ class AppStrings {
   static const String startingPrice = 'Starting Price';
   static const String loginAccount = 'Login account';
   static const String welcomeBack = 'Welcome back! Please login to contine';
+  static const String userName = 'Ali’sTaiolors Shop';
+  static const String dashboard = 'DASHBOARD';
+  static const String recentOrders = 'RECENT ORDERS';
   static const String getStartedText =
       'Join oue stiching plateform and connect with clients!';
 }

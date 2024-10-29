@@ -5,9 +5,9 @@ class CustomeTextField extends StatelessWidget {
   const CustomeTextField({
     super.key,
     required this.hint,
-    required this.prefixIcon,
+    this.prefixIcon,
   });
-  final String prefixIcon;
+  final String? prefixIcon;
   final String hint;
 
   @override
@@ -17,18 +17,21 @@ class CustomeTextField extends StatelessWidget {
       child: TextFormField(
         cursorColor: AppColors.darkBlueColor,
         decoration: InputDecoration(
-          prefixIcon: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 12),
-            child: Image.asset(
-              prefixIcon,
-              color: Colors.grey.shade500,
-              height: 10,
-            ),
-          ),
+          prefixIcon: prefixIcon != null
+              ? Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 2, vertical: 12),
+                  child: Image.asset(
+                    prefixIcon!,
+                    color: Colors.grey.shade500,
+                    height: 10,
+                  ),
+                )
+              : null,
           contentPadding: const EdgeInsets.symmetric(
               vertical: 12, horizontal: 10), // Adjust padding here,
           hintText: hint,
-          hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),
+          hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 13),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide:
