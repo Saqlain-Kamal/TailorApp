@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tailor_app/app/auth/widgets/custom_button.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
+import 'package:tailor_app/app/customer/customer_home/customer_home.dart';
 import 'package:tailor_app/app/home/home.dart';
 import 'package:tailor_app/utils/colors.dart';
 import 'package:tailor_app/utils/constants.dart';
@@ -82,6 +83,17 @@ class Login extends StatelessWidget {
                           );
                         },
                         text: 'Login'),
+                    InkWell(
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CustomerHome(),
+                          ),
+                        );
+                      },
+                      child: Text("Go to Customer Home"),
+                    )
                   ],
                 ),
               ),
