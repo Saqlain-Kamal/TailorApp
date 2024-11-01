@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tailor_app/app/auth/screens/continue_profile.dart';
-import 'package:tailor_app/app/auth/widgets/custom_button.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
 import 'package:tailor_app/app/auth/widgets/drop_down_type.dart';
 import 'package:tailor_app/utils/colors.dart';
 import 'package:tailor_app/utils/constants.dart';
+import 'package:tailor_app/utils/custom_button.dart';
 import 'package:tailor_app/utils/mediaquery.dart';
 
 class CreateAccount extends StatefulWidget {
@@ -63,11 +63,11 @@ class _CreateAccountState extends State<CreateAccount> {
                         hint: 'Email',
                       ),
                       const CustomeTextField(
-                        prefixIcon: 'assets/images/user2.png',
+                        prefixIcon: 'assets/images/Lock.png',
                         hint: 'Password',
                       ),
                       const CustomeTextField(
-                        prefixIcon: 'assets/images/user2.png',
+                        prefixIcon: 'assets/images/Lock.png',
                         hint: 'Confirm Password',
                       ),
                       const CustomeTextField(
@@ -75,7 +75,7 @@ class _CreateAccountState extends State<CreateAccount> {
                         hint: 'Phone Number',
                       ),
                       const CustomeTextField(
-                        prefixIcon: 'assets/images/user2.png',
+                        prefixIcon: 'assets/images/location.png',
                         hint: 'Location',
                       ),
                       DropDownType(

@@ -27,7 +27,7 @@ class DropDownType extends StatelessWidget {
           prefixIcon: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 12),
             child: Image.asset(
-              'assets/images/user2.png',
+              'assets/images/tag-user.png',
               color: Colors.grey.shade500,
               height: 10,
             ),
