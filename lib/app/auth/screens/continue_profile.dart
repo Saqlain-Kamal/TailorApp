@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tailor_app/app/auth/screens/login.dart';
-import 'package:tailor_app/app/auth/widgets/custom_button.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
 import 'package:tailor_app/utils/colors.dart';
 import 'package:tailor_app/utils/constants.dart';
+import 'package:tailor_app/utils/custom_button.dart';
 import 'package:tailor_app/utils/mediaquery.dart';
 
 class ContinueProfile extends StatelessWidget {
@@ -46,7 +46,8 @@ class ContinueProfile extends StatelessWidget {
                     CircleAvatar(
                       radius: 50,
                       backgroundColor: AppColors.borderGreyColor,
-                      child: Icon(Icons.camera),
+                      child:
+                          Image(image: AssetImage('assets/images/Camera.png')),
                     ),
                     SizedBox(
                       height: 10,
@@ -85,7 +86,6 @@ class ContinueProfile extends StatelessWidget {
                       ),
                       CustomeTextField(
                         hint: 'Experience',
-                        prefixIcon: 'assets/images/user2.png',
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 6),
@@ -97,7 +97,6 @@ class ContinueProfile extends StatelessWidget {
                       ),
                       CustomeTextField(
                         hint: 'Stiching Service',
-                        prefixIcon: 'assets/images/user2.png',
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 6),
@@ -109,7 +108,6 @@ class ContinueProfile extends StatelessWidget {
                       ),
                       CustomeTextField(
                         hint: 'Starting Price',
-                        prefixIcon: 'assets/images/user2.png',
                       ),
                     ],
                   ),
