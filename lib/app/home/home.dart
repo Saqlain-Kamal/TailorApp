@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:tailor_app/app/home/chat/screens/chat.dart';
 import 'package:tailor_app/app/home/dashboard/screens/dashboard.dart';
@@ -12,15 +14,28 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<Widget> pages = [
-    const Dashboard(),
-    const Orders(),
-    const Chat(),
-    const Profile(),
-  ];
   int currentIndex = 0;
+  int tabindex = 0;
+
+  navigateToOrdersInProgress(int index) {
+    setState(() {
+      currentIndex = 1; // Set to Orders tab index
+    });
+    tabindex = index;
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<Widget> pages = [
+      Dashboard(
+        onCardTap: navigateToOrdersInProgress, // Pass the callback
+      ),
+      Orders(
+        initialIndex: tabindex,
+      ),
+      const Chat(),
+      const Profile(),
+    ];
     return Scaffold(
       body: pages[currentIndex],
       bottomNavigationBar: ClipRRect(
@@ -32,6 +47,12 @@ class _HomeState extends State<Home> {
           onTap: (value) {
             setState(() {
               currentIndex = value;
+
+              if (value == 1) {
+                tabindex = 0;
+              }
+              log(currentIndex.toString());
+              log(tabindex.toString());
             });
           },
           items: [

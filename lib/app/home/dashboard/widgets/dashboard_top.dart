@@ -10,7 +10,6 @@ class DashboardTop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(12),
@@ -41,7 +40,10 @@ class DashboardTop extends StatelessWidget {
               )
             ],
           ),
-          trailing: Image.asset('assets/images/notification.png'),
+          trailing: Image.asset(
+            'assets/images/notification.png',
+            height: 25,
+          ),
         ),
       ),
     );

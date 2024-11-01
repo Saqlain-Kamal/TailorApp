@@ -3,11 +3,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:tailor_app/app/extension/padding.dart';
 import 'package:tailor_app/app/home/dashboard/widgets/recent_order_card.dart';
+import 'package:tailor_app/app/home/orders/screens/new_orders.dart';
 import 'package:tailor_app/utils/colors.dart';
 
 class Orders extends StatefulWidget {
-  const Orders({super.key});
-
+  const Orders({super.key, this.initialIndex = 0});
+  final int initialIndex;
   @override
   State<Orders> createState() => _OrdersState();
 }
@@ -20,7 +21,11 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(
+      length: 3,
+      vsync: this,
+      initialIndex: widget.initialIndex,
+    );
 
     // Listen to tab changes and update the title
     _tabController.addListener(() {
@@ -52,63 +57,78 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            _appBarTitle,
+          appBar: AppBar(
+            title: Text(
+              _appBarTitle,
+            ),
           ),
-        ),
-        body: Column(
-          children: [
-            TabBar(
-              controller: _tabController,
-              indicatorSize: TabBarIndicatorSize.label,
-              labelColor: AppColors.darkBlueColor,
-              indicatorColor: AppColors.darkBlueColor,
-              dividerColor: Colors.transparent,
-              splashBorderRadius: BorderRadius.circular(12),
-              tabs: const [
-                Tab(
-                  child: Text('New Orders'),
+          body: Navigator(
+            onGenerateRoute: (settings) {
+              return MaterialPageRoute(
+                builder: (context) => Column(
+                  children: [
+                    TabBar(
+                      controller: _tabController,
+                      indicatorSize: TabBarIndicatorSize.label,
+                      labelColor: AppColors.darkBlueColor,
+                      indicatorColor: AppColors.darkBlueColor,
+                      dividerColor: Colors.transparent,
+                      splashBorderRadius: BorderRadius.circular(12),
+                      tabs: const [
+                        Tab(
+                          child: Text('New Orders'),
+                        ),
+                        Tab(
+                          child: Text('In Progress'),
+                        ),
+                        Tab(
+                          child: Text('Pending '),
+                        ),
+                      ],
+                    ).paddingSymmetric(horizontal: 15),
+                    Expanded(
+                      child: TabBarView(controller: _tabController, children: [
+                        ListView.builder(
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const NewOrders(),
+                                  ),
+                                );
+                              },
+                              child: const RecentOrdersCard(
+                                status: 'New',
+                              ).paddingOnly(top: 2, bottom: 3),
+                            );
+                          },
+                        ),
+                        ListView.builder(
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            return const RecentOrdersCard(
+                              status: 'In Progress',
+                            ).paddingOnly(top: 2, bottom: 3);
+                          },
+                        ),
+                        ListView.builder(
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            return const RecentOrdersCard(
+                              status: 'Pending',
+                            ).paddingOnly(top: 2, bottom: 3);
+                          },
+                        ),
+                      ]),
+                    )
+                  ],
                 ),
-                Tab(
-                  child: Text('In Progress'),
-                ),
-                Tab(
-                  child: Text('Pending '),
-                ),
-              ],
-            ).paddingSymmetric(horizontal: 15),
-            Expanded(
-              child: TabBarView(controller: _tabController, children: [
-                ListView.builder(
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return const RecentOrdersCard(
-                      status: 'New',
-                    ).paddingOnly(top: 2, bottom: 3);
-                  },
-                ),
-                ListView.builder(
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return const RecentOrdersCard(
-                      status: 'In Progress',
-                    ).paddingOnly(top: 2, bottom: 3);
-                  },
-                ),
-                ListView.builder(
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return const RecentOrdersCard(
-                      status: 'Pending',
-                    ).paddingOnly(top: 2, bottom: 3);
-                  },
-                ),
-              ]),
-            )
-          ],
-        ),
-      ),
+              );
+            },
+          )),
     );
   }
 }

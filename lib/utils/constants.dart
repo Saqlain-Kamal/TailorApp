@@ -12,6 +12,12 @@ class AppStrings {
   static const String userName = 'Ali’sTaiolors Shop';
   static const String dashboard = 'DASHBOARD';
   static const String recentOrders = 'RECENT ORDERS';
+  static const String orderSummary = 'ORDER SUMMARY';
+  static const String orderId = 'Order ID:';
+  static const String orderDate = 'Order Date:';
+  static const String price = 'Price:';
+  static const String deliveryDate = 'Delivery Date:';
+  static const String customerReviews = 'CUSTOMER REVIEWS';
   static const String getStartedText =
       'Join oue stiching plateform and connect with clients!';
 }
