@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
 import 'package:tailor_app/app/customer/customer_home/customer_home.dart';
 import 'package:tailor_app/app/home/home.dart';
@@ -7,9 +10,16 @@ import 'package:tailor_app/utils/constants.dart';
 import 'package:tailor_app/utils/custom_button.dart';
 import 'package:tailor_app/utils/mediaquery.dart';
 
-class Login extends StatelessWidget {
-  const Login({super.key});
+class Login extends StatefulWidget {
+  const Login({super.key, required this.onTap});
+  final void Function()? onTap;
+  @override
+  State<Login> createState() => _LoginState();
+}
 
+class _LoginState extends State<Login> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,17 +61,20 @@ class Login extends StatelessWidget {
                   children: [
                     SizedBox(
                       height: screenHeight(context) * 0.2,
-                      child: const Column(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           CustomeTextField(
                             hint: 'Email',
                             prefixIcon: 'assets/images/user2.png',
+                            controller: emailController,
                           ),
                           CustomeTextField(
-                              hint: 'Password',
-                              prefixIcon: 'assets/images/user2.png'),
-                          Padding(
+                            hint: 'Password',
+                            prefixIcon: 'assets/images/user2.png',
+                            controller: passwordController,
+                          ),
+                          const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 8),
                             child: Row(
                               children: [
@@ -74,13 +87,21 @@ class Login extends StatelessWidget {
                       ),
                     ),
                     CustomButton(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Home(),
-                            ),
-                          );
+                        onTap: () async {
+                          try {
+                            await context
+                                .read<AuthCubit>()
+                                .sighInWithEmailAndPassword(
+                                    emailController.text.trim(),
+                                    passwordController.text.trim());
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Home(),
+                              ),
+                            );
+                          } on FirebaseAuthException catch (e) {}
                         },
                         text: 'Login'),
                     InkWell(
@@ -100,7 +121,20 @@ class Login extends StatelessWidget {
               SizedBox(
                 height: screenHeight(context) * 0.32,
               ),
-              const Text('Dont have an account? Create account'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Dont have an account? '),
+                  GestureDetector(
+                      onTap: widget.onTap,
+                      child: const Text(
+                        'Create account',
+                        style: TextStyle(
+                            color: AppColors.darkBlueColor,
+                            fontWeight: FontWeight.bold),
+                      ))
+                ],
+              ),
             ],
           ),
         ),

@@ -5,6 +5,7 @@ import 'package:tailor_app/app/home/chat/screens/chat.dart';
 import 'package:tailor_app/app/home/dashboard/screens/dashboard.dart';
 import 'package:tailor_app/app/home/orders/screens/orders.dart';
 import 'package:tailor_app/app/home/profile/screens/profile.dart';
+import 'package:tailor_app/utils/colors.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -42,7 +43,9 @@ class _HomeState extends State<Home> {
         borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(12), topRight: Radius.circular(12)),
         child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.grey.shade100,
+          fixedColor: AppColors.darkBlueColor,
           currentIndex: currentIndex,
           onTap: (value) {
             setState(() {
@@ -102,6 +105,21 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                 label: 'Chat'),
+            BottomNavigationBarItem(
+                icon: currentIndex == 3
+                    ? const Image(
+                        height: 25,
+                        image: AssetImage(
+                          'assets/images/frame.png',
+                        ),
+                      )
+                    : const Image(
+                        height: 22,
+                        image: AssetImage(
+                          'assets/images/profile.png',
+                        ),
+                      ),
+                label: 'Profile'),
           ],
         ),
       ),

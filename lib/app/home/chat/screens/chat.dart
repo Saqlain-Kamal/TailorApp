@@ -4,9 +4,15 @@ import 'package:tailor_app/app/extension/padding.dart';
 import 'package:tailor_app/app/home/chat/screens/individual_chat_screen.dart';
 import 'package:tailor_app/app/home/chat/widgets/single_chat_card.dart';
 
-class Chat extends StatelessWidget {
+class Chat extends StatefulWidget {
   const Chat({super.key});
 
+  @override
+  State<Chat> createState() => _ChatState();
+}
+
+class _ChatState extends State<Chat> {
+  final searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,9 +23,10 @@ class Chat extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           children: [
-            const CustomeTextField(
+            CustomeTextField(
               hint: 'Search messages',
               prefixIcon: 'assets/images/Search.png',
+              controller: searchController,
             ),
             Expanded(
               child: ListView.builder(

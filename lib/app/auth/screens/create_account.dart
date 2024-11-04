@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tailor_app/app/auth/model/user_model.dart';
 import 'package:tailor_app/app/auth/screens/continue_profile.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
 import 'package:tailor_app/app/auth/widgets/drop_down_type.dart';
@@ -16,6 +17,14 @@ class CreateAccount extends StatefulWidget {
 
 class _CreateAccountState extends State<CreateAccount> {
   final List<String> items = ['Tailor', 'Customer', 'Rider'];
+
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  final locationController = TextEditingController();
+
   String? selectedValue;
   @override
   Widget build(BuildContext context) {
@@ -54,31 +63,40 @@ class _CreateAccountState extends State<CreateAccount> {
                   height: screenHeight(context) * 0.65,
                   child: Column(
                     children: [
-                      const CustomeTextField(
+                      CustomeTextField(
                         prefixIcon: 'assets/images/user2.png',
                         hint: 'Full Name',
+                        controller: nameController,
                       ),
-                      const CustomeTextField(
+                      CustomeTextField(
                         prefixIcon: 'assets/images/user2.png',
                         hint: 'Email',
+                        controller: emailController,
                       ),
-                      const CustomeTextField(
+                      CustomeTextField(
                         prefixIcon: 'assets/images/Lock.png',
                         hint: 'Password',
+                        controller: passwordController,
                       ),
-                      const CustomeTextField(
+                      CustomeTextField(
                         prefixIcon: 'assets/images/Lock.png',
                         hint: 'Confirm Password',
+                        controller: confirmPasswordController,
                       ),
-                      const CustomeTextField(
+                      CustomeTextField(
                         prefixIcon: 'assets/images/user2.png',
                         hint: 'Phone Number',
+                        controller: phoneNumberController,
                       ),
-                      const CustomeTextField(
+                      CustomeTextField(
                         prefixIcon: 'assets/images/location.png',
                         hint: 'Location',
+                        controller: locationController,
                       ),
                       DropDownType(
+                        isNotification: false,
+                        prefixImage: 'assets/images/tag-user.png',
+                        hintText: 'Select Language',
                         selectedValue: selectedValue,
                         items: items,
                         onChanged: (p0) {
@@ -91,12 +109,22 @@ class _CreateAccountState extends State<CreateAccount> {
                   ),
                 ),
                 CustomButton(
-                  text: 'Sign In',
+                  text: 'Continue',
                   onTap: () {
+                    final user = UserModel(
+                      name: nameController.text.trim(),
+                      email: emailController.text.trim(),
+                      phoneNumber: phoneNumberController.text.trim(),
+                      location: locationController.text.trim(),
+                      role: selectedValue,
+                    );
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ContinueProfile(),
+                        builder: (context) => ContinueProfile(
+                          user: user,
+                          password: passwordController.text.trim(),
+                        ),
                       ),
                     );
                   },

@@ -4,7 +4,10 @@ class AppStrings {
   static const String welcomeText = 'Welcome to stiching app';
   static const String uploadProfile = 'Upload Profile Picture';
   static const String shopName = 'Shop name';
+  static const String manageAccount = 'Manage Account';
   static const String experience = 'Experience';
+  static const String selectLanguage = 'Select Language';
+  static const String notificationSetting = 'Notification Setting';
   static const String stichingService = 'Stiching Service';
   static const String startingPrice = 'Starting Price';
   static const String loginAccount = 'Login account';
