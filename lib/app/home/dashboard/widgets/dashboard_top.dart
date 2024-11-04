@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tailor_app/app/auth/model/user_model.dart';
+import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/utils/colors.dart';
-import 'package:tailor_app/utils/constants.dart';
 
 class DashboardTop extends StatelessWidget {
   const DashboardTop({
+    required this.user,
     super.key,
   });
-
+  final UserModel user;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,9 +26,9 @@ class DashboardTop extends StatelessWidget {
             backgroundImage: AssetImage('assets/images/avatar2.png'),
             radius: 40,
           ),
-          title: const Text(
-            AppStrings.userName,
-            style: TextStyle(color: Colors.white),
+          title: Text(
+            user.name!,
+            style: const TextStyle(color: Colors.white),
           ),
           subtitle: Row(
             children: [
@@ -40,9 +43,14 @@ class DashboardTop extends StatelessWidget {
               )
             ],
           ),
-          trailing: Image.asset(
-            'assets/images/notification.png',
-            height: 25,
+          trailing: GestureDetector(
+            onTap: () async {
+              await context.read<AuthCubit>().signOut();
+            },
+            child: Image.asset(
+              'assets/images/notification.png',
+              height: 30,
+            ),
           ),
         ),
       ),

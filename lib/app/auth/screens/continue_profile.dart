@@ -1,14 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:tailor_app/app/auth/screens/login.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tailor_app/app/auth/model/user_model.dart';
+import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
+import 'package:tailor_app/app/home/home.dart';
 import 'package:tailor_app/utils/colors.dart';
 import 'package:tailor_app/utils/constants.dart';
 import 'package:tailor_app/utils/custom_button.dart';
 import 'package:tailor_app/utils/mediaquery.dart';
 
-class ContinueProfile extends StatelessWidget {
-  const ContinueProfile({super.key});
+class ContinueProfile extends StatefulWidget {
+  const ContinueProfile(
+      {super.key, required this.user, required this.password});
+  final UserModel user;
+  final String password;
+  @override
+  State<ContinueProfile> createState() => _ContinueProfileState();
+}
 
+class _ContinueProfileState extends State<ContinueProfile> {
+  final shopNameController = TextEditingController();
+  final experienceController = TextEditingController();
+  final stichingServiceController = TextEditingController();
+  final startingPriceController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,11 +74,11 @@ class ContinueProfile extends StatelessWidget {
                 ),
                 SizedBox(
                   height: screenHeight(context) * 0.46,
-                  child: const Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 6),
                         child: Text(
                           AppStrings.shopName,
@@ -75,8 +89,9 @@ class ContinueProfile extends StatelessWidget {
                       CustomeTextField(
                         hint: 'Shop Name',
                         prefixIcon: 'assets/images/user2.png',
+                        controller: shopNameController,
                       ),
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 6),
                         child: Text(
                           AppStrings.experience,
@@ -85,9 +100,10 @@ class ContinueProfile extends StatelessWidget {
                         ),
                       ),
                       CustomeTextField(
+                        controller: experienceController,
                         hint: 'Experience',
                       ),
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 6),
                         child: Text(
                           AppStrings.stichingService,
@@ -96,9 +112,10 @@ class ContinueProfile extends StatelessWidget {
                         ),
                       ),
                       CustomeTextField(
+                        controller: stichingServiceController,
                         hint: 'Stiching Service',
                       ),
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 6),
                         child: Text(
                           AppStrings.startingPrice,
@@ -108,17 +125,38 @@ class ContinueProfile extends StatelessWidget {
                       ),
                       CustomeTextField(
                         hint: 'Starting Price',
+                        controller: startingPriceController,
                       ),
                     ],
                   ),
                 ),
                 CustomButton(
                   text: 'Save',
-                  onTap: () {
+                  onTap: () async {
+                    try {
+                      final createUser = UserModel(
+                        name: widget.user.name,
+                        email: widget.user.email,
+                        phoneNumber: widget.user.phoneNumber,
+                        location: widget.user.location,
+                        role: widget.user.role,
+                        shopName: shopNameController.text.trim(),
+                        experience: experienceController.text.trim(),
+                        stichingService: stichingServiceController.text.trim(),
+                        startingPrice: startingPriceController.text.trim(),
+                      );
+                      await context
+                          .read<AuthCubit>()
+                          .sighUpWithEmailAndPassword(
+                            createUser,
+                            widget.password,
+                          );
+                    } catch (e) {}
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const Login(),
+                        builder: (context) => const Home(),
                       ),
                     );
                   },

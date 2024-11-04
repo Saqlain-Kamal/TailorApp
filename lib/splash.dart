@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
-import 'package:tailor_app/app/auth/screens/get_started.dart';
+import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -12,19 +13,13 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> {
   @override
   void initState() {
-    // TODO: implement initState
-    loadData();
     super.initState();
+    // loadData();
   }
 
   void loadData() {
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const GetStarted(),
-        ),
-      );
+      context.read<AuthCubit>().checkCurrentUser(context);
     });
   }
 

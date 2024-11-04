@@ -4,9 +4,17 @@ import 'package:tailor_app/app/auth/widgets/social_tile.dart';
 import 'package:tailor_app/utils/colors.dart';
 import 'package:tailor_app/utils/constants.dart';
 
-class GetStarted extends StatelessWidget {
-  const GetStarted({super.key});
+class GetStarted extends StatefulWidget {
+  const GetStarted({
+    super.key,
+    required this.onTap,
+  });
+  final void Function()? onTap;
+  @override
+  State<GetStarted> createState() => _GetStartedState();
+}
 
+class _GetStartedState extends State<GetStarted> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,13 +57,16 @@ class GetStarted extends StatelessWidget {
                 ),
               ],
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Already have an account?'),
-                Text(
-                  ' Log in',
-                  style: TextStyle(color: AppColors.darkBlueColor),
+                const Text('Already have an account?'),
+                GestureDetector(
+                  onTap: widget.onTap,
+                  child: const Text(
+                    ' Log in',
+                    style: TextStyle(color: AppColors.darkBlueColor),
+                  ),
                 ),
               ],
             )

@@ -6,6 +6,8 @@ class InitialState extends AuthStates {}
 
 class LoadingState extends AuthStates {}
 
+class SplashLoadingState extends AuthStates {}
+
 class AuthenticatedState extends AuthStates {
   final UserModel user;
   AuthenticatedState({required this.user});

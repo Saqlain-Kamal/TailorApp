@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/extension/padding.dart';
 import 'package:tailor_app/app/home/dashboard/screens/reviews.dart';
 import 'package:tailor_app/app/home/dashboard/widgets/dashboard_card.dart';
@@ -13,6 +15,7 @@ class Dashboard extends StatelessWidget {
   final Function(int) onCardTap;
   @override
   Widget build(BuildContext context) {
+    final user = context.read<AuthCubit>().appUser;
     // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     //   statusBarColor: AppColors.darkBlueColor,
     // ));
@@ -30,7 +33,9 @@ class Dashboard extends StatelessWidget {
               centerTitle: true,
               backgroundColor: AppColors.darkBlueColor,
               automaticallyImplyLeading: false,
-              title: const DashboardTop().paddingOnly(top: 50),
+              title: DashboardTop(
+                user: user!,
+              ).paddingOnly(top: 50),
             ),
           ),
         ),

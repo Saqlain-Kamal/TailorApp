@@ -7,11 +7,17 @@ class DropDownType extends StatelessWidget {
     required this.selectedValue,
     required this.items,
     required this.onChanged,
+    required this.hintText,
+    this.prefixImage,
+    required this.isNotification,
   });
 
   final String? selectedValue;
   final List<String> items;
   final void Function(String?)? onChanged;
+  final String hintText;
+  final String? prefixImage;
+  final bool isNotification;
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +32,13 @@ class DropDownType extends StatelessWidget {
         decoration: InputDecoration(
           prefixIcon: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 12),
-            child: Image.asset(
-              'assets/images/tag-user.png',
-              color: Colors.grey.shade500,
-              height: 10,
-            ),
+            child: prefixImage != null
+                ? Image.asset(
+                    prefixImage!,
+                    color: Colors.grey.shade500,
+                    height: 10,
+                  )
+                : const SizedBox(),
           ),
           suffixIcon: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -48,12 +56,33 @@ class DropDownType extends StatelessWidget {
                 items: items.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: SizedBox(
-                        width: 150,
-                        child: Text(
-                          value,
-                          style: TextStyle(color: Colors.grey.shade500),
-                        )),
+                    child: isNotification
+                        ? SizedBox(
+                            width: 140,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    value,
+                                    style: TextStyle(
+                                        color: Colors.grey.shade500,
+                                        fontSize: 13),
+                                  ),
+                                ),
+                                Switch(
+                                  value: true,
+                                  onChanged: (value) {},
+                                )
+                              ],
+                            ))
+                        : SizedBox(
+                            width: 150,
+                            child: Text(
+                              value,
+                              style: TextStyle(color: Colors.grey.shade500),
+                            ),
+                          ),
                   );
                 }).toList(),
               ),
@@ -62,7 +91,7 @@ class DropDownType extends StatelessWidget {
 
           contentPadding: const EdgeInsets.symmetric(
               vertical: 12, horizontal: 10), // Adjust padding here,
-          hintText: 'Account Type',
+          hintText: hintText,
           hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
