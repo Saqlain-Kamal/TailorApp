@@ -3,9 +3,15 @@ import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
 import 'package:tailor_app/utils/colors.dart';
 import 'package:tailor_app/utils/mediaquery.dart';
 
-class IndividualChatScreen extends StatelessWidget {
+class IndividualChatScreen extends StatefulWidget {
   const IndividualChatScreen({super.key});
 
+  @override
+  State<IndividualChatScreen> createState() => _IndividualChatScreenState();
+}
+
+class _IndividualChatScreenState extends State<IndividualChatScreen> {
+  final messageController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,7 +117,12 @@ class IndividualChatScreen extends StatelessWidget {
               ),
               Row(
                 children: [
-                  const Expanded(child: CustomeTextField(hint: 'Message')),
+                  Expanded(
+                    child: CustomeTextField(
+                      hint: 'Message',
+                      controller: messageController,
+                    ),
+                  ),
                   Container(
                     padding: const EdgeInsets.all(12),
                     width: screenWidth(context) * 0.13,
