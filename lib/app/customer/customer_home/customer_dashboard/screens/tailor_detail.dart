@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tailor_app/app/customer/customer_home/customer_dashboard/screens/customer_payment.dart';
 import 'package:tailor_app/app/customer/customer_home/customer_dashboard/widgets/tailor_detail_card.dart';
 import 'package:tailor_app/app/extension/padding.dart';
 
@@ -97,7 +98,14 @@ class TailorDetail extends StatelessWidget {
                   }),
             ),
             SizedBox(height: screenHeight(context)*0.05,),
-            CustomButton(onTap: (){},text: "Start Order",),
+            CustomButton(onTap: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CustomerPayment(),
+                ),
+              );
+            },text: "Start Order",),
             SizedBox(height: screenHeight(context)*0.02,),
             CustomButton(onTap: (){},text: "Chat",),
             SizedBox(height: screenHeight(context)*0.02,),
