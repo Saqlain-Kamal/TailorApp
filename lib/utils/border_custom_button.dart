@@ -3,8 +3,8 @@ import 'package:lottie/lottie.dart';
 import 'package:tailor_app/utils/colors.dart';
 import 'package:tailor_app/utils/mediaquery.dart';
 
-class CustomButton extends StatelessWidget {
-  const CustomButton(
+class BorderCustomButton extends StatelessWidget {
+  const BorderCustomButton(
       {required this.onTap,
       required this.text,
       this.firstColor,
@@ -25,16 +25,8 @@ class CustomButton extends StatelessWidget {
         width: screenWidth(context) * 0.95,
         height: screenHeight(context) * 0.06,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14),
-          gradient: LinearGradient(
-            colors: [
-              firstColor != null ? firstColor! : AppColors.darkBlueColor,
-              secondColor != null ? secondColor! : AppColors.lightkBlueColor,
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.topRight,
-          ),
-        ),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(width: 1.5, color: Colors.grey.shade300)),
         child: isloading != null
             ? Lottie.asset(
                 'assets/images/whiteLoading.json',
@@ -44,7 +36,7 @@ class CustomButton extends StatelessWidget {
                 child: Text(
                   text,
                   style: const TextStyle(
-                      color: AppColors.whiteColor, fontSize: 14),
+                      color: AppColors.darkBlueColor, fontSize: 14),
                 ),
               ),
       ),
