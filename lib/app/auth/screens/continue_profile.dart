@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/auth/model/user_model.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
-import 'package:tailor_app/app/home/home.dart';
 import 'package:tailor_app/utils/colors.dart';
 import 'package:tailor_app/utils/constants.dart';
 import 'package:tailor_app/utils/custom_button.dart';
@@ -145,20 +144,15 @@ class _ContinueProfileState extends State<ContinueProfile> {
                         stichingService: stichingServiceController.text.trim(),
                         startingPrice: startingPriceController.text.trim(),
                       );
-                      await context
-                          .read<AuthCubit>()
-                          .sighUpWithEmailAndPassword(
-                            createUser,
-                            widget.password,
-                          );
+                      if (widget.user.name!.isNotEmpty) {
+                        await context
+                            .read<AuthCubit>()
+                            .sighUpWithEmailAndPassword(
+                              createUser,
+                              widget.password,
+                            );
+                      }
                     } catch (e) {}
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Home(),
-                      ),
-                    );
                   },
                 ),
               ],

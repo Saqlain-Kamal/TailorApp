@@ -29,6 +29,16 @@ class MyApp extends StatelessWidget {
             if (state is ErrorState) {
               context.mySnackBar(text: state.message, color: Colors.red);
             }
+            if (state is PasswordChangedState) {
+              context.mySnackBar(
+                  text: 'Password Changed Successfully',
+                  color: AppColors.darkBlueColor);
+            }
+            if (state is TailorInfoChangedState) {
+              context.mySnackBar(
+                  text: 'Info Updated Successfully',
+                  color: AppColors.darkBlueColor);
+            }
             // TODO: implement listener
           },
           builder: (context, state) {
@@ -51,6 +61,7 @@ class MyApp extends StatelessWidget {
                 ),
               );
             } else {
+              log('message');
               return const Splash();
             }
           },

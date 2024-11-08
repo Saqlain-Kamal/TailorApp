@@ -8,6 +8,12 @@ class LoadingState extends AuthStates {}
 
 class SplashLoadingState extends AuthStates {}
 
+class PasswordChangedState extends AuthStates {}
+
+class TailorInfoChangedState extends AuthStates {}
+
+class AccountDeletedState extends AuthStates {}
+
 class AuthenticatedState extends AuthStates {
   final UserModel user;
   AuthenticatedState({required this.user});

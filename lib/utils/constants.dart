@@ -16,6 +16,9 @@ class AppStrings {
   static const String dashboard = 'DASHBOARD';
   static const String recentOrders = 'RECENT ORDERS';
   static const String orderSummary = 'ORDER SUMMARY';
+  static const String accountDeletion = 'Confirm Account Deletion';
+  static const String accountDeletionConfirmation =
+      'Are you sure you want to delete your account? This action cannot be undone.';
   static const String orderId = 'Order ID:';
   static const String orderDate = 'Order Date:';
   static const String price = 'Price:';
