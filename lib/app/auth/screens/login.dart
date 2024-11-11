@@ -103,6 +103,17 @@ class _LoginState extends State<Login> {
                           } on FirebaseAuthException catch (e) {}
                         },
                         text: 'Login'),
+                    InkWell(
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CustomerHome(),
+                          ),
+                        );
+                      },
+                      child: Text("Go to Customer Home"),
+                    )
                   ],
                 ),
               ),

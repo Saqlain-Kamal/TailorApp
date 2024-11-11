@@ -3,11 +3,13 @@ import 'package:tailor_app/app/home/dashboard/widgets/recent_orders_button.dart'
 import 'package:tailor_app/utils/colors.dart';
 
 class RecentOrdersCard extends StatelessWidget {
-  const RecentOrdersCard({
+ const RecentOrdersCard({
     super.key,
     required this.status,
+    this.showBtn = true,
   });
   final String status;
+  final bool showBtn;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -51,16 +53,18 @@ class RecentOrdersCard extends StatelessWidget {
             const SizedBox(
               height: 5,
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                RecentOrdersButton(
+                const RecentOrdersButton(
                   text: 'View Details',
                 ),
-                SizedBox(
+                if(showBtn)
+                  const SizedBox(
                   width: 25,
                 ),
-                RecentOrdersButton(
+                if(showBtn)
+                const RecentOrdersButton(
                   text: 'Update Status',
                 ),
               ],
