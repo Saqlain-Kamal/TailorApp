@@ -113,7 +113,7 @@ class CustomAlertDialogue extends StatelessWidget {
               Navigator.pop(context);
               Navigator.pop(context);
               context.mySnackBar(
-                  text: 'Account Deletef Successfully',
+                  text: 'Account Deleted Successfully',
                   color: AppColors.darkBlueColor);
             }
             // TODO: implement listener

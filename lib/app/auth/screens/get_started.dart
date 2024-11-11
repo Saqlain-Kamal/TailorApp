@@ -8,9 +8,11 @@ import 'package:tailor_app/utils/constants.dart';
 class GetStarted extends StatefulWidget {
   const GetStarted({
     super.key,
+    required this.cxt,
     required this.onTap,
   });
   final void Function()? onTap;
+  final BuildContext cxt;
   @override
   State<GetStarted> createState() => _GetStartedState();
 }

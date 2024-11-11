@@ -34,6 +34,11 @@ class MyApp extends StatelessWidget {
                   text: 'Password Changed Successfully',
                   color: AppColors.darkBlueColor);
             }
+            if (state is AuthenticatedState) {
+              context.mySnackBar(
+                  text: 'Account Created Succesfully',
+                  color: AppColors.darkBlueColor);
+            }
             if (state is TailorInfoChangedState) {
               context.mySnackBar(
                   text: 'Info Updated Successfully',
@@ -47,12 +52,15 @@ class MyApp extends StatelessWidget {
               return const AuthPage();
             }
             if (state is AuthenticatedState) {
+              log('Home');
               return const Home();
             }
             if (state is ErrorState) {
               return const AuthPage();
             }
             if (state is LoadingState) {
+              log('messsssssage');
+
               return const Scaffold(
                 body: Center(
                   child: CircularProgressIndicator(

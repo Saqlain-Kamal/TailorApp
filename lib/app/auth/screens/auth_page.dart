@@ -10,7 +10,7 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
-  bool isShowing = true;
+  bool isShowing = false;
 
   void togglePages() {
     setState(() {
@@ -24,6 +24,7 @@ class _AuthPageState extends State<AuthPage> {
       return Login(onTap: togglePages);
     } else {
       return GetStarted(
+        cxt: context,
         onTap: togglePages,
       );
     }

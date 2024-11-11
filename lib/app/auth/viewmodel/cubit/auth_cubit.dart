@@ -49,16 +49,24 @@ class AuthCubit extends Cubit<AuthStates> {
       UserModel user, String password) async {
     try {
       emit(LoadingState());
+      await Future.delayed(const Duration(seconds: 2));
+      log('Loading State');
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
           email: user.email!, password: password);
       appUser = user;
-      emit(AuthenticatedState(user: appUser!));
       await authRepo.signUpUser(user: user, credential: userCredential);
+      emit(AuthenticatedState(user: appUser!));
+      log(appUser.toString());
+      log('Authenticated State');
 
       return userCredential;
     } on FirebaseAuthException catch (e) {
       emit(ErrorState(message: e.message!));
       throw Exception('error is${e.message}');
+    } catch (e) {
+      log('Unknown exception: $e');
+      emit(ErrorState(message: 'An unknown error occurred.'));
+      throw Exception('Error is: $e');
     }
   }
 
@@ -101,6 +109,7 @@ class AuthCubit extends Cubit<AuthStates> {
     try {
       await auth.signOut();
       emit(UnAuthenticatedState());
+      // emit(CreateUserUnAuthenticatedState());
     } catch (e) {
       emit(ErrorState(message: e.toString()));
       log('Error signing out: $e');
