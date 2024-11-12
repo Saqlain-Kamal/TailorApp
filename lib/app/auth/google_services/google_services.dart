@@ -8,7 +8,7 @@ import 'package:tailor_app/app/auth/model/user_model.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 
 class GoogleServices {
-  signInWithGoogle(BuildContext context) async {
+  signInWithGoogle(BuildContext context, String role) async {
     final GoogleSignInAccount? user = await GoogleSignIn().signIn();
 
     final GoogleSignInAuthentication auth = await user!.authentication;
@@ -26,6 +26,7 @@ class GoogleServices {
           id: value.user!.uid,
           name: value.user?.displayName.toString() ?? 'not found',
           email: value.user!.email.toString(),
+          role: role,
         );
 
         context.read<AuthCubit>().signupwithGoogle(user: user);

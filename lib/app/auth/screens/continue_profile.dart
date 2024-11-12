@@ -175,6 +175,7 @@ import 'package:tailor_app/app/auth/model/user_model.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/auth/viewmodel/states/auth_states.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
+import 'package:tailor_app/app/customer/customer_home/customer_home.dart';
 import 'package:tailor_app/app/home/home.dart';
 import 'package:tailor_app/utils/colors.dart';
 import 'package:tailor_app/utils/constants.dart';
@@ -225,8 +226,8 @@ class _ContinueProfileState extends State<ContinueProfile> {
           // }
           if (state is AuthenticatedState) {
             // Once authenticated, navigate to the home screen or show a success message
-
-            return const Home();
+            final role = context.read<AuthCubit>().appUser!.role;
+            return role == 'Tailor' ? const Home() : const CustomerHome();
             // Removes all previous routes
 
             // Example: Navigate to Home screen
@@ -342,15 +343,16 @@ class _ContinueProfileState extends State<ContinueProfile> {
                       onTap: () async {
                         try {
                           final createUser = UserModel(
-                            name: 'jamal',
-                            email: 'zxx@gmail.com',
-                            phoneNumber: '34234234',
-                            location: 'asdasdasd',
-                            role: 'Tailor',
-                            shopName: 'asfasfasdasd',
-                            experience: 'asfasfasdad',
-                            stichingService: 'afasdasdasdasd',
-                            startingPrice: 'asdasdsadasd',
+                            name: widget.user.name,
+                            email: widget.user.email,
+                            phoneNumber: widget.user.phoneNumber,
+                            location: widget.user.location,
+                            role: widget.user.role,
+                            shopName: shopNameController.text.trim(),
+                            experience: experienceController.text.trim(),
+                            stichingService:
+                                stichingServiceController.text.trim(),
+                            startingPrice: startingPriceController.text.trim(),
                           );
                           // context.read<AuthCubit>().emit(LoadingState());
                           await context

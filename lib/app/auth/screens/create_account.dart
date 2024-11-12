@@ -97,12 +97,12 @@ class _CreateAccountState extends State<CreateAccount> {
                         isNotification: false,
                         prefixImage: 'assets/images/tag-user.png',
                         hintText: 'Select Role',
-                        selectedValue: 'Tailor',
+                        selectedValue: selectedValue,
                         items: items,
                         onChanged: (p0) {
-                          // setState(() {
-                          //   selectedValue = p0;
-                          // });
+                          setState(() {
+                            selectedValue = p0;
+                          });
                         },
                       )
                     ],

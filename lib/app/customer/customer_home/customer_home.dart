@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:tailor_app/app/customer/customer_home/customer_dashboard/screens/customer_dashboard.dart';
 import 'package:tailor_app/app/home/chat/screens/chat.dart';
-import 'package:tailor_app/app/home/dashboard/screens/dashboard.dart';
 import 'package:tailor_app/app/home/orders/screens/orders.dart';
 import 'package:tailor_app/app/home/profile/screens/profile.dart';
 
@@ -58,48 +57,48 @@ class _CustomerHomeState extends State<CustomerHome> {
             BottomNavigationBarItem(
                 icon: currentIndex == 0
                     ? const Image(
-                  height: 25,
-                  image: AssetImage(
-                    'assets/images/gradientHome.png',
-                  ),
-                )
+                        height: 25,
+                        image: AssetImage(
+                          'assets/images/gradientHome.png',
+                        ),
+                      )
                     : const Image(
-                  height: 22,
-                  image: AssetImage(
-                    'assets/images/home.png',
-                  ),
-                ),
+                        height: 22,
+                        image: AssetImage(
+                          'assets/images/home.png',
+                        ),
+                      ),
                 label: 'Home'),
             BottomNavigationBarItem(
               icon: currentIndex == 1
                   ? const Image(
-                height: 25,
-                image: AssetImage(
-                  'assets/images/gradientOrder.png',
-                ),
-              )
+                      height: 25,
+                      image: AssetImage(
+                        'assets/images/gradientOrder.png',
+                      ),
+                    )
                   : const Image(
-                height: 22,
-                image: AssetImage(
-                  'assets/images/order.png',
-                ),
-              ),
+                      height: 22,
+                      image: AssetImage(
+                        'assets/images/order.png',
+                      ),
+                    ),
               label: 'Favorites',
             ),
             BottomNavigationBarItem(
                 icon: currentIndex == 2
                     ? const Image(
-                  height: 25,
-                  image: AssetImage(
-                    'assets/images/gradientChat.png',
-                  ),
-                )
+                        height: 25,
+                        image: AssetImage(
+                          'assets/images/gradientChat.png',
+                        ),
+                      )
                     : const Image(
-                  height: 22,
-                  image: AssetImage(
-                    'assets/images/chat.png',
-                  ),
-                ),
+                        height: 22,
+                        image: AssetImage(
+                          'assets/images/chat.png',
+                        ),
+                      ),
                 label: 'Chat'),
           ],
         ),

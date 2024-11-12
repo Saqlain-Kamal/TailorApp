@@ -32,7 +32,7 @@ class CustomButton extends StatelessWidget {
               secondColor != null ? secondColor! : AppColors.lightkBlueColor,
             ],
             begin: Alignment.topLeft,
-            end: Alignment.topRight,
+            end: Alignment.bottomRight,
           ),
         ),
         child: isloading != null

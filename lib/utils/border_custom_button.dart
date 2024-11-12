@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:lottie/lottie.dart';
 import 'package:tailor_app/utils/colors.dart';
 import 'package:tailor_app/utils/mediaquery.dart';
@@ -25,8 +26,19 @@ class BorderCustomButton extends StatelessWidget {
         width: screenWidth(context) * 0.95,
         height: screenHeight(context) * 0.06,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(width: 1.5, color: Colors.grey.shade300)),
+          borderRadius: BorderRadius.circular(14),
+          border: const GradientBoxBorder(
+            gradient: LinearGradient(
+              colors: [
+                AppColors.darkBlueColor,
+                AppColors.blueColor,
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          // Border.all(width: 1.5, color: Colors.grey.shade300)
+        ),
         child: isloading != null
             ? Lottie.asset(
                 'assets/images/whiteLoading.json',
