@@ -62,8 +62,11 @@ class TailorListing extends StatelessWidget {
                 ),
                 itemCount: 12,
                 itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
+                  return TailorListingCard(
+                    name: "Ali Tailor Shop",
+                    cityName: "Peshawar",
+                    image: 'assets/images/avatar3.png',
+                    onTap: (){
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -71,10 +74,6 @@ class TailorListing extends StatelessWidget {
                         ),
                       );
                     },
-                    child: const TailorListingCard(
-                      name: "Ali Tailor Shop",
-                      cityName: "Peshawar",
-                    ),
                   );
                 },
               ),

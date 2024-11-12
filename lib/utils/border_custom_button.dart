@@ -10,12 +10,14 @@ class BorderCustomButton extends StatelessWidget {
       required this.text,
       this.firstColor,
       this.secondColor,
+        this.textColor,
       this.isloading,
       super.key});
   final void Function()? onTap;
   final String text;
   final Color? firstColor;
   final Color? secondColor;
+  final Color? textColor;
   final bool? isloading;
 
   @override
@@ -27,11 +29,11 @@ class BorderCustomButton extends StatelessWidget {
         height: screenHeight(context) * 0.06,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
-          border: const GradientBoxBorder(
+          border: GradientBoxBorder(
             gradient: LinearGradient(
               colors: [
-                AppColors.darkBlueColor,
-                AppColors.blueColor,
+                firstColor != null ? firstColor! : AppColors.darkBlueColor,
+                secondColor != null ? secondColor! :AppColors.blueColor,
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -47,8 +49,8 @@ class BorderCustomButton extends StatelessWidget {
             : Center(
                 child: Text(
                   text,
-                  style: const TextStyle(
-                      color: AppColors.darkBlueColor, fontSize: 14),
+                  style:  TextStyle(
+                      color: textColor != null ? textColor! : AppColors.darkBlueColor, fontSize: 14),
                 ),
               ),
       ),
