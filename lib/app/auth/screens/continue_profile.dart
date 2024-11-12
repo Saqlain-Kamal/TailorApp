@@ -182,6 +182,8 @@ import 'package:tailor_app/utils/constants.dart';
 import 'package:tailor_app/utils/custom_button.dart';
 import 'package:tailor_app/utils/mediaquery.dart';
 
+import 'auth_page.dart';
+
 class ContinueProfile extends StatefulWidget {
   const ContinueProfile(
       {super.key, required this.user, required this.password});
@@ -200,6 +202,7 @@ class _ContinueProfileState extends State<ContinueProfile> {
 
   @override
   Widget build(BuildContext context) {
+    context.read<AuthCubit>().emit(InitialState());
     return Scaffold(
       body: BlocBuilder<AuthCubit, AuthStates>(
         builder: (context, state) {
@@ -221,9 +224,9 @@ class _ContinueProfileState extends State<ContinueProfile> {
           //     ),
           //   );
           // }
-          // if (state is CreateUserUnAuthenticatedState) {
-          //   return const AuthPage();
-          // }
+          if (state is UnAuthenticatedState) {
+            return const AuthPage();
+          }
           if (state is AuthenticatedState) {
             // Once authenticated, navigate to the home screen or show a success message
             final role = context.read<AuthCubit>().appUser!.role;
@@ -359,7 +362,7 @@ class _ContinueProfileState extends State<ContinueProfile> {
                               .read<AuthCubit>()
                               .sighUpWithEmailAndPassword(
                                 createUser,
-                                '1231231231',
+                                widget.password,
                               );
                         } catch (e) {
                           log(e.toString());
