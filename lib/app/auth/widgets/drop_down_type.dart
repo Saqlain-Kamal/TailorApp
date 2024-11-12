@@ -30,16 +30,17 @@ class DropDownType extends StatelessWidget {
         ),
         cursorColor: AppColors.darkBlueColor,
         decoration: InputDecoration(
-          prefixIcon: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 12),
-            child: prefixImage != null
-                ? Image.asset(
+          prefixIcon: prefixImage != null
+              ? Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 2, vertical: 12),
+                  child: Image.asset(
                     prefixImage!,
                     color: Colors.grey.shade500,
                     height: 10,
-                  )
-                : const SizedBox(),
-          ),
+                  ),
+                )
+              : null,
           suffixIcon: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: SizedBox(
@@ -95,8 +96,7 @@ class DropDownType extends StatelessWidget {
           hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide:
-                const BorderSide(width: 1, color: AppColors.borderGreyColor),
+            borderSide: BorderSide(width: 1, color: Colors.grey.shade200),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),

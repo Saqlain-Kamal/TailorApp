@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
 import 'package:tailor_app/utils/colors.dart';
@@ -12,11 +14,54 @@ class IndividualChatScreen extends StatefulWidget {
 
 class _IndividualChatScreenState extends State<IndividualChatScreen> {
   final messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  final ValueNotifier<bool> _showScrollButton = ValueNotifier<bool>(false);
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  // Function to scroll to the end of the ListView
+  void _scrollToEnd() {
+    _scrollController.animateTo(
+      _scrollController.position.minScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.atEdge) {
+      // At the top or bottom of the list
+      log(_scrollController.position.pixels.toString());
+      if (_scrollController.position.pixels == 0) {
+        // At the bottom
+
+        _showScrollButton.value = false;
+      } else {
+        // At the bottom of the list, hide the button
+        _showScrollButton.value = true;
+      }
+    } else {
+      _showScrollButton.value = true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    log(_showScrollButton.value.toString());
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.only(left: 5, right: 10, top: 25),
+        padding: const EdgeInsets.only(left: 15, right: 10, top: 35),
         child: SizedBox(
           height: screenHeight(context) * 0.99,
           child: Column(
@@ -63,54 +108,74 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
                 ],
               ),
               Expanded(
-                child: ListView(
-                  reverse: true,
-                  children: const [
-                    MessageBubble(
-                      message:
-                          'Hello! I just want to confirm if you have received my order details? ',
-                      date: '02:43',
-                      isMe: false,
+                child: Stack(
+                  children: [
+                    ListView(
+                      controller: _scrollController,
+                      reverse: true,
+                      children: const [
+                        MessageBubble(
+                          message:
+                              'Hello! I just want to confirm if you have received my order details? ',
+                          date: '02:43',
+                          isMe: false,
+                        ),
+                        MessageBubble(
+                          message:
+                              'Hello! I just want to confirm if you have received my order details? ',
+                          date: '02:43',
+                          isMe: false,
+                        ),
+                        MessageBubble(
+                          message:
+                              'Hello! I just want to confirm if you have received my order details? ',
+                          date: '02:43',
+                          isMe: true,
+                        ),
+                        MessageBubble(
+                          message: 'Hello! Nisma ',
+                          date: '02:43',
+                          isMe: true,
+                        ),
+                        MessageBubble(
+                          message:
+                              'Hello! I just want to confirm if you have received my order details? ',
+                          date: '02:43',
+                          isMe: false,
+                        ),
+                        MessageBubble(
+                          message:
+                              'Hello! I just want to confirm if you have received my order details? ',
+                          date: '02:43',
+                          isMe: false,
+                        ),
+                        MessageBubble(
+                          message: 'Hello! Nisma ',
+                          date: '02:43',
+                          isMe: false,
+                        ),
+                        MessageBubble(
+                          message:
+                              'Hello! I just want to confirm if you have received my order details? ',
+                          date: '02:43',
+                          isMe: true,
+                        ),
+                      ],
                     ),
-                    MessageBubble(
-                      message:
-                          'Hello! I just want to confirm if you have received my order details? ',
-                      date: '02:43',
-                      isMe: false,
-                    ),
-                    MessageBubble(
-                      message:
-                          'Hello! I just want to confirm if you have received my order details? ',
-                      date: '02:43',
-                      isMe: true,
-                    ),
-                    MessageBubble(
-                      message: 'Hello! Nisma ',
-                      date: '02:43',
-                      isMe: true,
-                    ),
-                    MessageBubble(
-                      message:
-                          'Hello! I just want to confirm if you have received my order details? ',
-                      date: '02:43',
-                      isMe: false,
-                    ),
-                    MessageBubble(
-                      message:
-                          'Hello! I just want to confirm if you have received my order details? ',
-                      date: '02:43',
-                      isMe: false,
-                    ),
-                    MessageBubble(
-                      message: 'Hello! Nisma ',
-                      date: '02:43',
-                      isMe: false,
-                    ),
-                    MessageBubble(
-                      message:
-                          'Hello! I just want to confirm if you have received my order details? ',
-                      date: '02:43',
-                      isMe: true,
+                    ValueListenableBuilder<bool>(
+                      valueListenable: _showScrollButton,
+                      builder: (context, showButton, child) {
+                        return showButton
+                            ? Positioned(
+                                bottom: 16.0,
+                                right: 16.0,
+                                child: FloatingActionButton(
+                                  onPressed: _scrollToEnd,
+                                  child: const Icon(Icons.arrow_downward),
+                                ),
+                              )
+                            : const SizedBox.shrink();
+                      },
                     ),
                   ],
                 ),

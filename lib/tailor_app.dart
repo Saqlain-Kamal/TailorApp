@@ -10,6 +10,8 @@ import 'package:tailor_app/app/home/home.dart';
 import 'package:tailor_app/splash.dart';
 import 'package:tailor_app/utils/colors.dart';
 
+import 'app/customer/customer_home/customer_home.dart';
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -29,20 +31,40 @@ class MyApp extends StatelessWidget {
             if (state is ErrorState) {
               context.mySnackBar(text: state.message, color: Colors.red);
             }
+            if (state is PasswordChangedState) {
+              context.mySnackBar(
+                  text: 'Password Changed Successfully',
+                  color: AppColors.darkBlueColor);
+            }
+            if (state is AuthenticatedState) {
+              context.mySnackBar(
+                  text: 'Account Created Succesfully',
+                  color: AppColors.darkBlueColor);
+            }
+            if (state is TailorInfoChangedState) {
+              context.mySnackBar(
+                  text: 'Info Updated Successfully',
+                  color: AppColors.darkBlueColor);
+            }
             // TODO: implement listener
           },
           builder: (context, state) {
             log(state.toString());
             if (state is UnAuthenticatedState) {
+              log('HIiiiii');
               return const AuthPage();
             }
             if (state is AuthenticatedState) {
-              return const Home();
+              log('Home');
+              final role = context.read<AuthCubit>().appUser!.role;
+              return role == 'Tailor' ? const Home() : const CustomerHome();
             }
             if (state is ErrorState) {
               return const AuthPage();
             }
             if (state is LoadingState) {
+              log('messsssssage');
+
               return const Scaffold(
                 body: Center(
                   child: CircularProgressIndicator(
@@ -51,6 +73,7 @@ class MyApp extends StatelessWidget {
                 ),
               );
             } else {
+              log('message');
               return const Splash();
             }
           },

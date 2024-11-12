@@ -96,7 +96,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       DropDownType(
                         isNotification: false,
                         prefixImage: 'assets/images/tag-user.png',
-                        hintText: 'Select Language',
+                        hintText: 'Select Role',
                         selectedValue: selectedValue,
                         items: items,
                         onChanged: (p0) {

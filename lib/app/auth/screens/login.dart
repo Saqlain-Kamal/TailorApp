@@ -1,9 +1,9 @@
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
-import 'package:tailor_app/app/home/home.dart';
 import 'package:tailor_app/utils/colors.dart';
 import 'package:tailor_app/utils/constants.dart';
 import 'package:tailor_app/utils/custom_button.dart';
@@ -94,15 +94,26 @@ class _LoginState extends State<Login> {
                                     emailController.text.trim(),
                                     passwordController.text.trim());
 
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const Home(),
-                              ),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => const Home(),
+                            //   ),
+                            // );
                           } on FirebaseAuthException catch (e) {}
                         },
                         text: 'Login'),
+                    // InkWell(
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder: (context) => const CustomerHome(),
+                    //       ),
+                    //     );
+                    //   },
+                    //   child: const Text("Go to Customer Home"),
+                    // )
                   ],
                 ),
               ),

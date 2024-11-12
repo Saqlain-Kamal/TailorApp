@@ -45,7 +45,7 @@ class DashboardCard extends StatelessWidget {
                           height: 26,
                         ),
                       ),
-                Text(text).paddingOnly(left: 8),
+                Expanded(child: Text(text).paddingOnly(left: 8)),
               ],
             ),
             const Row(
