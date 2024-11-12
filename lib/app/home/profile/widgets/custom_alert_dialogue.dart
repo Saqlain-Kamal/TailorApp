@@ -11,7 +11,23 @@ import 'package:tailor_app/utils/custom_button.dart';
 class CustomAlertDialogue extends StatelessWidget {
   const CustomAlertDialogue({
     super.key,
+    required this.image,
+    required this.title,
+    required this.desc,
+    this.showBtn1 = true,
+    this.btnText1 = "",
+    required this.btnText2,
+    this.btnOnTap1,
+    required this.btnOnTap2,
   });
+  final String image;
+  final String title;
+  final String desc;
+  final bool showBtn1;
+  final String btnText1;
+  final String btnText2;
+  final void Function()? btnOnTap1;
+  final void Function()? btnOnTap2;
 
   @override
   Widget build(BuildContext context) {
@@ -21,29 +37,28 @@ class CustomAlertDialogue extends StatelessWidget {
       title: Column(
         children: [
           Image.asset(
-            'assets/images/warning.png',
+            image,
             height: 70,
           ),
           const SizedBox(
             height: 5,
           ),
-          const Text(
-            AppStrings.accountDeletion,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+           Text(
+            title,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),textAlign: TextAlign.center,
           ),
         ],
       ),
       content: Text(
-        AppStrings.accountDeletionConfirmation,
+        desc,
         textAlign: TextAlign.center,
         style: TextStyle(color: Colors.grey.shade500, fontSize: 13),
       ),
       actions: [
+        if(showBtn1)
         BorderCustomButton(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            text: 'Cancel'),
+            onTap: btnOnTap1,
+            text: btnText1),
         const SizedBox(
           height: 10,
         ),
@@ -68,10 +83,8 @@ class CustomAlertDialogue extends StatelessWidget {
             }
 
             return CustomButton(
-                onTap: () async {
-                  await context.read<AuthCubit>().deleteUserAndFirestoreData();
-                },
-                text: 'Delete Account');
+                onTap: btnOnTap2,
+                text: btnText2);
           },
         ),
       ],

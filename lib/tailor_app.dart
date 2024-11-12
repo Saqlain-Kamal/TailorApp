@@ -10,6 +10,8 @@ import 'package:tailor_app/app/home/home.dart';
 import 'package:tailor_app/splash.dart';
 import 'package:tailor_app/utils/colors.dart';
 
+import 'app/customer/customer_home/customer_home.dart';
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -54,7 +56,8 @@ class MyApp extends StatelessWidget {
             }
             if (state is AuthenticatedState) {
               log('Home');
-              return const Home();
+              final role = context.read<AuthCubit>().appUser!.role;
+              return role == 'Tailor' ? const Home() : const CustomerHome();
             }
             if (state is ErrorState) {
               return const AuthPage();

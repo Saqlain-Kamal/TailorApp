@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
+import 'package:tailor_app/app/customer/customer_home/customer_dashboard/screens/review.dart';
 
 import '../../../../../utils/colors.dart';
 import '../../../../../utils/custom_button.dart';
 import '../../../../../utils/mediaquery.dart';
+import '../../../../home/profile/widgets/custom_alert_dialogue.dart';
 
 class CustomerPayment extends StatefulWidget {
   const CustomerPayment({super.key});
@@ -47,7 +49,29 @@ class _CustomerPaymentState extends State<CustomerPayment> {
             const Spacer(),
             CustomButton(
               text: "Pay Now",
-              onTap: () {},
+              onTap: () {
+                showDialog(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (context) {
+                    return CustomAlertDialogue(
+                      image: 'assets/images/warning.png',
+                      title: 'Your order has been placed successfully',
+                      desc: "Thank you for choosing us. We'll notify you when your order is ready",
+                      showBtn1: false,
+                      btnText2: 'Leave Review',
+                      btnOnTap2: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Review(),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              },
             ),
             SizedBox(
               height: screenHeight(context) * 0.02,

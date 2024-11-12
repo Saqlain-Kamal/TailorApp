@@ -183,6 +183,8 @@ import 'package:tailor_app/utils/constants.dart';
 import 'package:tailor_app/utils/custom_button.dart';
 import 'package:tailor_app/utils/mediaquery.dart';
 
+import 'auth_page.dart';
+
 class ContinueProfile extends StatefulWidget {
   const ContinueProfile(
       {super.key, required this.user, required this.password});

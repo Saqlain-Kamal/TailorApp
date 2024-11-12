@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
 import 'package:tailor_app/app/customer/customer_home/customer_dashboard/screens/tailor_listing.dart';
 import 'package:tailor_app/app/customer/customer_home/customer_dashboard/widgets/customer_dashboard_card.dart';
@@ -8,6 +11,8 @@ import 'package:tailor_app/utils/mediaquery.dart';
 
 import '../../../../../utils/colors.dart';
 import '../../../../../utils/constants.dart';
+import '../../../../auth/screens/auth_page.dart';
+import '../../../../auth/viewmodel/cubit/auth_cubit.dart';
 import '../../../../home/dashboard/widgets/recent_order_card.dart';
 
 class CustomerDashboard extends StatelessWidget {
@@ -34,15 +39,30 @@ class CustomerDashboard extends StatelessWidget {
                       prefixIcon: 'assets/images/Search.png',
                     )),
                     SizedBox(width: screenWidth(context)*0.01,),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      height: screenHeight(context)*0.06,
-                      width: screenWidth(context)*0.13,
-                      decoration: BoxDecoration(
-                          border: Border.all(width: 1, color: AppColors.borderGreyColor),
-                          borderRadius: BorderRadius.circular(12),
+                    InkWell(
+                      onTap: ()async{
+                        try {
+                          await context.read<AuthCubit>().signOut();
+                          // Navigator.pushAndRemoveUntil(
+                          //   context,
+                          //   MaterialPageRoute(builder: (context) => const AuthPage()),
+                          //       (Route<dynamic> route) =>
+                          //   false, // Removes all previous routes
+                          // );
+                        } catch (e) {
+                          log(e.toString());
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        height: screenHeight(context)*0.06,
+                        width: screenWidth(context)*0.13,
+                        decoration: BoxDecoration(
+                            border: Border.all(width: 1, color: AppColors.borderGreyColor),
+                            borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(Icons.notifications),
                       ),
-                      child: const Icon(Icons.notifications),
                     )
                   ],
                 ),
