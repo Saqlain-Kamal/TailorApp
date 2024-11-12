@@ -17,9 +17,10 @@ class GoogleServices {
       accessToken: auth.accessToken,
       idToken: auth.idToken,
     );
+
     return await FirebaseAuth.instance
         .signInWithCredential(credential)
-        .then((value) {
+        .then((value) async {
       log('LoggedIn');
       try {
         final user = UserModel(
@@ -29,8 +30,10 @@ class GoogleServices {
           role: role,
         );
 
-        context.read<AuthCubit>().signupwithGoogle(user: user);
-      } catch (e) {}
+        await context.read<AuthCubit>().signupwithGoogle(user: user);
+      } catch (e) {
+        log(e.toString());
+      }
     });
   }
 }

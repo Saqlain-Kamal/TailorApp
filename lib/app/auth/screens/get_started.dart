@@ -53,10 +53,11 @@ class _GetStartedState extends State<GetStarted> {
                   onTap: () {
                     showDialog(
                       context: context,
-                      builder: (context) {
+                      builder: (ctx) {
                         return RoleSelectionDialogue(
                           onTap: (value) {
                             GoogleServices().signInWithGoogle(context, value);
+                            Navigator.pop(ctx);
                           },
                         );
                       },

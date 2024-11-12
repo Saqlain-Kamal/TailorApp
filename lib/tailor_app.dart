@@ -49,6 +49,7 @@ class MyApp extends StatelessWidget {
           builder: (context, state) {
             log(state.toString());
             if (state is UnAuthenticatedState) {
+              log('HIiiiii');
               return const AuthPage();
             }
             if (state is AuthenticatedState) {

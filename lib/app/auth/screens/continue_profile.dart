@@ -172,6 +172,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/auth/model/user_model.dart';
+import 'package:tailor_app/app/auth/screens/auth_page.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/auth/viewmodel/states/auth_states.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
@@ -200,6 +201,7 @@ class _ContinueProfileState extends State<ContinueProfile> {
 
   @override
   Widget build(BuildContext context) {
+    context.read<AuthCubit>().emit(InitialState());
     return Scaffold(
       body: BlocBuilder<AuthCubit, AuthStates>(
         builder: (context, state) {
@@ -221,9 +223,9 @@ class _ContinueProfileState extends State<ContinueProfile> {
           //     ),
           //   );
           // }
-          // if (state is CreateUserUnAuthenticatedState) {
-          //   return const AuthPage();
-          // }
+          if (state is UnAuthenticatedState) {
+            return const AuthPage();
+          }
           if (state is AuthenticatedState) {
             // Once authenticated, navigate to the home screen or show a success message
             final role = context.read<AuthCubit>().appUser!.role;
@@ -359,7 +361,7 @@ class _ContinueProfileState extends State<ContinueProfile> {
                               .read<AuthCubit>()
                               .sighUpWithEmailAndPassword(
                                 createUser,
-                                '1231231231',
+                                widget.password,
                               );
                         } catch (e) {
                           log(e.toString());
