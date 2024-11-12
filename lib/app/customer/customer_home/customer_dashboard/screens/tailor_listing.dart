@@ -12,10 +12,7 @@ class TailorListing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.whiteColor,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-      ),
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
@@ -24,29 +21,37 @@ class TailorListing extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Expanded(child: CustomeTextField(
+                const Expanded(
+                    child: CustomeTextField(
                   hint: "Search for Tailors",
                   prefixIcon: 'assets/images/Search.png',
                 )),
-                SizedBox(width: screenWidth(context)*0.01,),
+                SizedBox(
+                  width: screenWidth(context) * 0.01,
+                ),
                 Container(
                   padding: const EdgeInsets.all(8),
-                  height: screenHeight(context)*0.06,
-                  width: screenWidth(context)*0.13,
+                  height: screenHeight(context) * 0.06,
+                  width: screenWidth(context) * 0.13,
                   decoration: BoxDecoration(
-                    border: Border.all(width: 1, color: AppColors.borderGreyColor),
+                    border:
+                        Border.all(width: 1, color: AppColors.borderGreyColor),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(Icons.notifications),
                 )
               ],
             ),
-            SizedBox(height: screenHeight(context)*0.01,),
+            SizedBox(
+              height: screenHeight(context) * 0.01,
+            ),
             const Text(
               "Tailors Listings",
               style: TextStyle(fontSize: 20),
             ),
-            SizedBox(height: screenHeight(context)*0.01,),
+            SizedBox(
+              height: screenHeight(context) * 0.01,
+            ),
             Flexible(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -58,7 +63,7 @@ class TailorListing extends StatelessWidget {
                 itemCount: 12,
                 itemBuilder: (context, index) {
                   return InkWell(
-                    onTap: (){
+                    onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -74,7 +79,9 @@ class TailorListing extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(height: screenHeight(context)*0.01,),
+            SizedBox(
+              height: screenHeight(context) * 0.01,
+            ),
           ],
         ),
       ),

@@ -14,6 +14,9 @@ class ChangePassword extends StatefulWidget {
 }
 
 class _ChangePasswordState extends State<ChangePassword> {
+  final oldPasswordController = TextEditingController();
+  final newPasswordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,17 +28,20 @@ class _ChangePasswordState extends State<ChangePassword> {
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
           child: Column(
             children: [
-              const CustomeTextField(
+              CustomeTextField(
+                controller: oldPasswordController,
                 hint: 'Old Password',
-                prefixIcon: 'assets/images/user-edit.png',
+                prefixIcon: 'assets/images/Lock.png',
               ),
-              const CustomeTextField(
+              CustomeTextField(
+                controller: newPasswordController,
                 hint: 'New Password',
-                prefixIcon: 'assets/images/repeate-music.png',
+                prefixIcon: 'assets/images/Lock.png',
               ),
-              const CustomeTextField(
+              CustomeTextField(
+                controller: confirmPasswordController,
                 hint: 'Confirm New Password',
-                prefixIcon: 'assets/images/trash.png',
+                prefixIcon: 'assets/images/Lock.png',
               ),
               SizedBox(height: screenHeight(context) * 0.52), // Rep
               BlocConsumer<AuthCubit, AuthStates>(
@@ -53,9 +59,12 @@ class _ChangePasswordState extends State<ChangePassword> {
 
                   return CustomButton(
                       onTap: () async {
-                        await context
-                            .read<AuthCubit>()
-                            .changePassword('123456789', '12345678');
+                        if (newPasswordController.text.trim() ==
+                            confirmPasswordController.text.trim()) {
+                          await context.read<AuthCubit>().changePassword(
+                              oldPasswordController.text.trim(),
+                              newPasswordController.text.trim());
+                        }
                       },
                       text: 'Save Password');
                 },

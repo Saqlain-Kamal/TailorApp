@@ -17,6 +17,11 @@ class AppStrings {
   static const String recentOrders = 'RECENT ORDERS';
   static const String orderSummary = 'ORDER SUMMARY';
   static const String accountDeletion = 'Confirm Account Deletion';
+  static const String accountType = 'Select Account Type';
+  static const String accountTypeCarefully =
+      'Choose your role carefully, as it will determine your experience in the app.';
+  static const String accountTypeBrief =
+      'Please select your account role to continue: Are you a Client, Stitcher, or Rider?';
   static const String accountDeletionConfirmation =
       'Are you sure you want to delete your account? This action cannot be undone.';
   static const String orderId = 'Order ID:';

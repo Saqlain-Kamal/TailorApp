@@ -21,6 +21,8 @@ class AuthenticatedState extends AuthStates {
 
 class UnAuthenticatedState extends AuthStates {}
 
+class CreateUserUnAuthenticatedState extends AuthStates {}
+
 class ErrorState extends AuthStates {
   final String message;
   ErrorState({required this.message});
