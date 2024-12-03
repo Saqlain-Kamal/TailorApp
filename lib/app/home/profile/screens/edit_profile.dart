@@ -1,9 +1,13 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/auth/model/user_model.dart';
+import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
 import 'package:tailor_app/app/home/profile/screens/continue_edit_profile.dart';
+import 'package:tailor_app/app/profile_cubit/profile_cubit.dart';
+import 'package:tailor_app/app/profile_cubit/profile_states.dart';
 import 'package:tailor_app/utils/bottom_sheet.dart';
 import 'package:tailor_app/utils/custom_button.dart';
 import 'package:tailor_app/utils/mediaquery.dart';
@@ -20,6 +24,22 @@ class _EditProfileState extends State<EditProfile> {
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
   final locationController = TextEditingController();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final user = context.read<AuthCubit>().appUser;
+      context.read<ProfileCubit>().emit(InitialStates());
+      if (user != null) {
+        nameController.text = user.name!; // Set name in the controller
+        emailController.text = user.email!; // Set email in the controller
+        phoneController.text = user.phoneNumber!; // Set phone in the controller
+        locationController.text =
+            user.location!; // Set location in the controller
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +93,7 @@ class _EditProfileState extends State<EditProfile> {
                       controller: nameController,
                     ),
                     CustomeTextField(
+                      readOnly: true,
                       hint: 'Email',
                       prefixIcon: 'assets/images/user2.png',
                       controller: emailController,

@@ -55,6 +55,7 @@ class UserModel {
       'shopName': shopName,
       'userImage': userImage,
       'bio': bio,
+      'location': location,
       'experience': experience,
       'stichingService': stichingService,
       'startingPrice': startingPrice,

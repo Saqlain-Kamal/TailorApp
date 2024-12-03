@@ -55,6 +55,7 @@ class DashboardTop extends StatelessWidget {
                 //   (Route<dynamic> route) =>
                 //       false, // Removes all previous routes
                 // );
+                log('I am here');
               } catch (e) {
                 log(e.toString());
               }

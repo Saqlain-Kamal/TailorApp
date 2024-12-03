@@ -8,14 +8,21 @@ import 'package:tailor_app/app/home/profile/screens/profile.dart';
 import 'package:tailor_app/utils/colors.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
-
+  const Home({super.key, required this.index});
+  final int index;
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  int currentIndex = 0;
+  late int currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    currentIndex = widget.index; // Assign the passed index
+  }
+
   int tabindex = 0;
   Future<bool> _onWillPop() async {
     // Check if the current tab is 0 (Dashboard), and if so, close the app

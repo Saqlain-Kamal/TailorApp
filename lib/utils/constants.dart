@@ -30,5 +30,5 @@ class AppStrings {
   static const String deliveryDate = 'Delivery Date:';
   static const String customerReviews = 'CUSTOMER REVIEWS';
   static const String getStartedText =
-      'Join oue stiching plateform and connect with clients!';
+      'Join our stiching plateform and connect with clients!';
 }

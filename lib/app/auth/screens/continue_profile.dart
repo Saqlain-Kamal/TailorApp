@@ -183,8 +183,6 @@ import 'package:tailor_app/utils/constants.dart';
 import 'package:tailor_app/utils/custom_button.dart';
 import 'package:tailor_app/utils/mediaquery.dart';
 
-import 'auth_page.dart';
-
 class ContinueProfile extends StatefulWidget {
   const ContinueProfile(
       {super.key, required this.user, required this.password});
@@ -231,7 +229,11 @@ class _ContinueProfileState extends State<ContinueProfile> {
           if (state is AuthenticatedState) {
             // Once authenticated, navigate to the home screen or show a success message
             final role = context.read<AuthCubit>().appUser!.role;
-            return role == 'Tailor' ? const Home() : const CustomerHome();
+            return role == 'Tailor'
+                ? const Home(
+                    index: 0,
+                  )
+                : const CustomerHome();
             // Removes all previous routes
 
             // Example: Navigate to Home screen

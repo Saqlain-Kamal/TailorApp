@@ -11,7 +11,6 @@ import 'package:tailor_app/utils/mediaquery.dart';
 
 import '../../../../../utils/colors.dart';
 import '../../../../../utils/constants.dart';
-import '../../../../auth/screens/auth_page.dart';
 import '../../../../auth/viewmodel/cubit/auth_cubit.dart';
 import '../../../../home/dashboard/widgets/recent_order_card.dart';
 
@@ -30,17 +29,22 @@ class CustomerDashboard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: screenHeight(context)*0.04,),
+                SizedBox(
+                  height: screenHeight(context) * 0.04,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Expanded(child: CustomeTextField(
+                    const Expanded(
+                        child: CustomeTextField(
                       hint: "Search for Tailors",
                       prefixIcon: 'assets/images/Search.png',
                     )),
-                    SizedBox(width: screenWidth(context)*0.01,),
+                    SizedBox(
+                      width: screenWidth(context) * 0.01,
+                    ),
                     InkWell(
-                      onTap: ()async{
+                      onTap: () async {
                         try {
                           await context.read<AuthCubit>().signOut();
                           // Navigator.pushAndRemoveUntil(
@@ -55,23 +59,28 @@ class CustomerDashboard extends StatelessWidget {
                       },
                       child: Container(
                         padding: const EdgeInsets.all(8),
-                        height: screenHeight(context)*0.06,
-                        width: screenWidth(context)*0.13,
+                        height: screenHeight(context) * 0.06,
+                        width: screenWidth(context) * 0.13,
                         decoration: BoxDecoration(
-                            border: Border.all(width: 1, color: AppColors.borderGreyColor),
-                            borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                              width: 1, color: AppColors.borderGreyColor),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(Icons.notifications),
                       ),
                     )
                   ],
                 ),
-                SizedBox(height: screenHeight(context)*0.02,),
+                SizedBox(
+                  height: screenHeight(context) * 0.02,
+                ),
                 const Text(
                   AppStrings.dashboard,
                   style: TextStyle(fontSize: 20),
                 ),
-                SizedBox(height: screenHeight(context)*0.02,),
+                SizedBox(
+                  height: screenHeight(context) * 0.02,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -102,7 +111,9 @@ class CustomerDashboard extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: screenHeight(context)*0.02,),
+                SizedBox(
+                  height: screenHeight(context) * 0.02,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -111,23 +122,22 @@ class CustomerDashboard extends StatelessWidget {
                       style: TextStyle(fontSize: 20),
                     ),
                     InkWell(
-                      onTap: (){},
+                      onTap: () {},
                       child: const Text(
                         "View all",
                         style: TextStyle(fontSize: 13),
                       ),
                     ),
-
                   ],
                 ),
-                SizedBox(height: screenHeight(context)*0.02,),
-
-
+                SizedBox(
+                  height: screenHeight(context) * 0.02,
+                ),
               ],
             ),
           ),
           SizedBox(
-            height: screenHeight(context)*0.15,
+            height: screenHeight(context) * 0.15,
             child: ListView.builder(
                 itemCount: 5,
                 scrollDirection: Axis.horizontal,
@@ -144,7 +154,9 @@ class CustomerDashboard extends StatelessWidget {
                   );
                 }),
           ).paddingOnly(left: 15),
-          SizedBox(height: screenHeight(context)*0.02,),
+          SizedBox(
+            height: screenHeight(context) * 0.02,
+          ),
           const Text(
             "Your Orders",
             style: TextStyle(fontSize: 20),
@@ -159,7 +171,6 @@ class CustomerDashboard extends StatelessWidget {
                   ).paddingOnly(bottom: 5);
                 }),
           )
-
         ],
       ),
     );

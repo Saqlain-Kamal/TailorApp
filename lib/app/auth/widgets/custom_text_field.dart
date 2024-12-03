@@ -22,8 +22,9 @@ class CustomeTextField extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
       child: TextFormField(
         onTap: onTap,
+        style: const TextStyle(fontSize: 12),
         readOnly: readOnly != null ? true : false,
-        controller: readOnly != null ? null : controller,
+        controller: controller,
         cursorColor: AppColors.darkBlueColor,
         decoration: InputDecoration(
           prefixIcon: prefixIcon != null
@@ -50,7 +51,8 @@ class CustomeTextField extends StatelessWidget {
           contentPadding: const EdgeInsets.symmetric(
               vertical: 12, horizontal: 10), // Adjust padding here,
           hintText: hint,
-          hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 13),
+
+          hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 12),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(width: 1, color: Colors.grey.shade200),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
@@ -28,7 +30,8 @@ class _ProfileState extends State<Profile> {
   final manageAccountController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthCubit>().appUser;
+    final user = context.watch<AuthCubit>().appUser;
+    log(user!.toJson().toString());
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -42,7 +45,7 @@ class _ProfileState extends State<Profile> {
             const SizedBox(
               height: 20,
             ),
-            Text(user!.name!),
+            Text(user.name!),
             const SizedBox(
               height: 50,
             ),

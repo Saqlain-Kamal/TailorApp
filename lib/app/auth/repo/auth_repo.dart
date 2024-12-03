@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tailor_app/app/auth/model/user_model.dart';
@@ -48,6 +49,17 @@ class AuthRepo {
 
   Future<void> updateTailorDetails({required UserModel user}) async {
     try {
+      // User? firebaseUser = FirebaseAuth.instance.currentUser;
+      // if (firebaseUser != null && user.email != firebaseUser.email) {
+
+      //   await firebaseUser.verifyBeforeUpdateEmail(user.email!);
+      // }
+
+      final connectivityResult = await Connectivity().checkConnectivity();
+      if (connectivityResult.contains(ConnectivityResult.none)) {
+        throw Exception('No Internet Connection');
+      }
+
       log(user.id.toString());
       await FirebaseFirestore.instance
           .collection('users')
