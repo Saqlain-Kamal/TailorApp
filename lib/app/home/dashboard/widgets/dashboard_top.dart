@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tailor_app/app/auth/model/user_model.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
-import 'package:tailor_app/utils/colors.dart';
+import 'package:tailor_app/app/model/user_model.dart';
+import 'package:tailor_app/app/utils/colors.dart';
 
 class DashboardTop extends StatelessWidget {
   const DashboardTop({

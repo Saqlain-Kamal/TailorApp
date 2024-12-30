@@ -2,15 +2,15 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tailor_app/app/auth/model/user_model.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
+import 'package:tailor_app/app/cubit/profile_cubit/profile_cubit.dart';
+import 'package:tailor_app/app/cubit/profile_cubit/profile_states.dart';
 import 'package:tailor_app/app/home/profile/screens/continue_edit_profile.dart';
-import 'package:tailor_app/app/profile_cubit/profile_cubit.dart';
-import 'package:tailor_app/app/profile_cubit/profile_states.dart';
-import 'package:tailor_app/utils/bottom_sheet.dart';
-import 'package:tailor_app/utils/custom_button.dart';
-import 'package:tailor_app/utils/mediaquery.dart';
+import 'package:tailor_app/app/model/user_model.dart';
+import 'package:tailor_app/app/utils/bottom_sheet.dart';
+import 'package:tailor_app/app/utils/custom_button.dart';
+import 'package:tailor_app/app/utils/mediaquery.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -33,7 +33,8 @@ class _EditProfileState extends State<EditProfile> {
       if (user != null) {
         nameController.text = user.name!; // Set name in the controller
         emailController.text = user.email!; // Set email in the controller
-        phoneController.text = user.phoneNumber!; // Set phone in the controller
+        phoneController.text =
+            user.phoneNumber ?? ''; // Set phone in the controller
         locationController.text =
             user.location!; // Set location in the controller
       }
@@ -43,6 +44,8 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.watch<AuthCubit>().appUser;
+    log(user!.toJson().toString());
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Account'),

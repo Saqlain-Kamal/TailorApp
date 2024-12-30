@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tailor_app/app/auth/model/user_model.dart';
+import 'package:tailor_app/app/model/user_model.dart';
 
 class TailorRepo {
   Future<List<UserModel>> getTailors() async {

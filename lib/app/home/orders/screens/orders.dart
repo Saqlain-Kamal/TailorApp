@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tailor_app/app/extension/padding.dart';
 import 'package:tailor_app/app/home/dashboard/widgets/recent_order_card.dart';
 import 'package:tailor_app/app/home/orders/screens/new_orders.dart';
-import 'package:tailor_app/utils/colors.dart';
+import 'package:tailor_app/app/utils/colors.dart';
 
 class Orders extends StatefulWidget {
   const Orders({super.key, this.initialIndex = 0});

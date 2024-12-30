@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:tailor_app/app/auth/model/user_model.dart';
 import 'package:tailor_app/app/customer/customer_home/customer_dashboard/screens/customer_payment.dart';
 import 'package:tailor_app/app/customer/customer_home/customer_dashboard/widgets/tailor_detail_card.dart';
 import 'package:tailor_app/app/extension/padding.dart';
+import 'package:tailor_app/app/model/user_model.dart';
 
-import '../../../../../utils/colors.dart';
-import '../../../../../utils/custom_button.dart';
-import '../../../../../utils/mediaquery.dart';
+import '../../../../utils/colors.dart';
+import '../../../../utils/custom_button.dart';
+import '../../../../utils/mediaquery.dart';
 
 class TailorDetail extends StatelessWidget {
   const TailorDetail({super.key, required this.tailor});
@@ -39,12 +39,12 @@ class TailorDetail extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: screenHeight(context) * 0.05,
+              height: screenHeight(context) * 0.02,
             ),
             const Center(
               child: CircleAvatar(
                 backgroundImage: AssetImage('assets/images/avatar3.png'),
-                radius: 40,
+                radius: 60,
               ),
             ),
             SizedBox(
@@ -123,14 +123,16 @@ class TailorDetail extends StatelessWidget {
                   }),
             ),
             SizedBox(
-              height: screenHeight(context) * 0.05,
+              height: screenHeight(context) * 0.02,
             ),
             CustomButton(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const CustomerPayment(),
+                    builder: (context) => CustomerPayment(
+                      user: tailor,
+                    ),
                   ),
                 );
               },

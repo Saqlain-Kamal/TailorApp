@@ -5,7 +5,7 @@ import 'package:tailor_app/app/home/chat/screens/chat.dart';
 import 'package:tailor_app/app/home/dashboard/screens/dashboard.dart';
 import 'package:tailor_app/app/home/orders/screens/orders.dart';
 import 'package:tailor_app/app/home/profile/screens/profile.dart';
-import 'package:tailor_app/utils/colors.dart';
+import 'package:tailor_app/app/utils/colors.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key, required this.index});

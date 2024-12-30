@@ -2,16 +2,16 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tailor_app/app/auth/model/user_model.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
+import 'package:tailor_app/app/cubit/profile_cubit/profile_cubit.dart';
+import 'package:tailor_app/app/cubit/profile_cubit/profile_states.dart';
 import 'package:tailor_app/app/extension/snackbar.dart';
-import 'package:tailor_app/app/profile_cubit/profile_cubit.dart';
-import 'package:tailor_app/app/profile_cubit/profile_states.dart';
-import 'package:tailor_app/utils/colors.dart';
-import 'package:tailor_app/utils/constants.dart';
-import 'package:tailor_app/utils/custom_button.dart';
-import 'package:tailor_app/utils/mediaquery.dart';
+import 'package:tailor_app/app/model/user_model.dart';
+import 'package:tailor_app/app/utils/colors.dart';
+import 'package:tailor_app/app/utils/constants.dart';
+import 'package:tailor_app/app/utils/custom_button.dart';
+import 'package:tailor_app/app/utils/mediaquery.dart';
 
 class ContinueEditProfile extends StatefulWidget {
   const ContinueEditProfile({
@@ -48,8 +48,9 @@ class _ContinueEditProfileState extends State<ContinueEditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final id = context.read<AuthCubit>().appUser!.id;
-
+    final myUser = context.read<AuthCubit>().appUser!;
+    // final user = context.watch<AuthCubit>().appUser;
+    log(myUser.toJson().toString());
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Profile'),
@@ -160,13 +161,15 @@ class _ContinueEditProfileState extends State<ContinueEditProfile> {
 
                   return CustomButton(
                       onTap: () async {
+                        log(myUser.role!);
                         final createUser = UserModel(
                           name: widget.user.name,
                           email: widget.user.email,
                           phoneNumber: widget.user.phoneNumber,
-                          id: id,
+                          id: myUser.id,
+                          userId: myUser.userId,
                           location: widget.user.location,
-                          role: 'Tailor',
+                          role: myUser.role,
                           shopName: shopNameController.text.trim(),
                           experience: experienceController.text.trim(),
                           stichingService: stichingController.text.trim(),

@@ -6,8 +6,8 @@ import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
 import 'package:tailor_app/app/auth/widgets/drop_down_type.dart';
 import 'package:tailor_app/app/home/profile/screens/manage_account.dart';
-import 'package:tailor_app/utils/constants.dart';
-import 'package:tailor_app/utils/mediaquery.dart';
+import 'package:tailor_app/app/utils/constants.dart';
+import 'package:tailor_app/app/utils/mediaquery.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});

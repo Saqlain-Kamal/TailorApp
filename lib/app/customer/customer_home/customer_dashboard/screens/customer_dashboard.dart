@@ -7,10 +7,11 @@ import 'package:tailor_app/app/customer/customer_home/customer_dashboard/screens
 import 'package:tailor_app/app/customer/customer_home/customer_dashboard/widgets/customer_dashboard_card.dart';
 import 'package:tailor_app/app/customer/customer_home/customer_dashboard/widgets/customer_tailor_card.dart';
 import 'package:tailor_app/app/extension/padding.dart';
-import 'package:tailor_app/utils/mediaquery.dart';
+import 'package:tailor_app/app/home/dashboard/screens/reviews.dart';
+import 'package:tailor_app/app/utils/mediaquery.dart';
 
-import '../../../../../utils/colors.dart';
-import '../../../../../utils/constants.dart';
+import '../../../../utils/colors.dart';
+import '../../../../utils/constants.dart';
 import '../../../../auth/viewmodel/cubit/auth_cubit.dart';
 import '../../../../home/dashboard/widgets/recent_order_card.dart';
 
@@ -85,7 +86,7 @@ class CustomerDashboard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CustomerDashboardCard(
-                      asset: 'assets/images/sessor.png',
+                      asset: 'assets/images/listing.jpeg',
                       text: 'Tailor Listings',
                       countText: '80',
                       onTap: () {
@@ -98,16 +99,23 @@ class CustomerDashboard extends StatelessWidget {
                       },
                     ),
                     CustomerDashboardCard(
-                      asset: 'assets/images/sessor.png',
+                      asset: 'assets/images/measurement.jpeg',
                       text: 'Measurements',
                       countText: '05',
                       onTap: () {},
                     ),
                     CustomerDashboardCard(
-                      asset: 'assets/images/sessor.png',
+                      asset: 'assets/images/review.png',
                       text: 'Client Reviews',
                       countText: '80',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Reviews(),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -163,6 +171,7 @@ class CustomerDashboard extends StatelessWidget {
           ).paddingSymmetric(horizontal: 15),
           Expanded(
             child: ListView.builder(
+                padding: EdgeInsets.zero,
                 itemCount: 3,
                 itemBuilder: (context, index) {
                   return const RecentOrdersCard(

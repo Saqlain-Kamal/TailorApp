@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
 import 'package:tailor_app/app/extension/snackbar.dart';
-import 'package:tailor_app/app/profile_cubit/profile_cubit.dart';
-import 'package:tailor_app/app/profile_cubit/profile_states.dart';
-import 'package:tailor_app/utils/colors.dart';
-import 'package:tailor_app/utils/custom_button.dart';
-import 'package:tailor_app/utils/mediaquery.dart';
+import 'package:tailor_app/app/cubit/profile_cubit/profile_cubit.dart';
+import 'package:tailor_app/app/cubit/profile_cubit/profile_states.dart';
+import 'package:tailor_app/app/utils/colors.dart';
+import 'package:tailor_app/app/utils/custom_button.dart';
+import 'package:tailor_app/app/utils/mediaquery.dart';
 
 class ChangePassword extends StatefulWidget {
   const ChangePassword({super.key});

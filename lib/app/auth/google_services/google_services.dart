@@ -4,8 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:tailor_app/app/auth/model/user_model.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
+import 'package:tailor_app/app/model/user_model.dart';
+import 'package:uuid/uuid.dart';
 
 class GoogleServices {
   signInWithGoogle(BuildContext context, String role) async {
@@ -25,6 +26,7 @@ class GoogleServices {
       try {
         final user = UserModel(
           id: value.user!.uid,
+          userId: const Uuid().v1(),
           name: value.user?.displayName.toString() ?? 'not found',
           email: value.user!.email.toString(),
           role: role,

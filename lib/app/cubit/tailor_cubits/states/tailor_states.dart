@@ -1,4 +1,4 @@
-import 'package:tailor_app/app/auth/model/user_model.dart';
+import 'package:tailor_app/app/model/user_model.dart';
 
 abstract class TailorStates {}
 

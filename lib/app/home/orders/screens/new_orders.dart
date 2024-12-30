@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tailor_app/utils/colors.dart';
-import 'package:tailor_app/utils/constants.dart';
-import 'package:tailor_app/utils/container_decoration.dart';
-import 'package:tailor_app/utils/custom_button.dart';
+import 'package:tailor_app/app/utils/colors.dart';
+import 'package:tailor_app/app/utils/constants.dart';
+import 'package:tailor_app/app/utils/container_decoration.dart';
+import 'package:tailor_app/app/utils/custom_button.dart';
 
 class NewOrders extends StatelessWidget {
   const NewOrders({super.key});

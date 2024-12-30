@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/auth/viewmodel/states/auth_states.dart';
 import 'package:tailor_app/app/extension/snackbar.dart';
-import 'package:tailor_app/utils/border_custom_button.dart';
-import 'package:tailor_app/utils/colors.dart';
-import 'package:tailor_app/utils/constants.dart';
-import 'package:tailor_app/utils/custom_button.dart';
+import 'package:tailor_app/app/utils/border_custom_button.dart';
+import 'package:tailor_app/app/utils/colors.dart';
+import 'package:tailor_app/app/utils/constants.dart';
+import 'package:tailor_app/app/utils/custom_button.dart';
 
 class CustomAlertDialogue extends StatelessWidget {
   const CustomAlertDialogue({

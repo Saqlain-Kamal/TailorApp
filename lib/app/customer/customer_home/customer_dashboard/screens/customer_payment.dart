@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:tailor_app/app/customer/customer_home/customer_dashboard/screens/review.dart';
+import 'package:tailor_app/app/model/user_model.dart';
 
-import '../../../../../utils/colors.dart';
-import '../../../../../utils/custom_button.dart';
-import '../../../../../utils/mediaquery.dart';
 import '../../../../home/profile/widgets/custom_alert_dialogue.dart';
+import '../../../../utils/colors.dart';
+import '../../../../utils/custom_button.dart';
+import '../../../../utils/mediaquery.dart';
 
 class CustomerPayment extends StatefulWidget {
-  const CustomerPayment({super.key});
-
+  const CustomerPayment({super.key, required this.user});
+  final UserModel user;
   @override
   State<CustomerPayment> createState() => _CustomerPaymentState();
 }
@@ -57,14 +58,17 @@ class _CustomerPaymentState extends State<CustomerPayment> {
                     return CustomAlertDialogue(
                       image: 'assets/images/warning.png',
                       title: 'Your order has been placed successfully',
-                      desc: "Thank you for choosing us. We'll notify you when your order is ready",
+                      desc:
+                          "Thank you for choosing us. We'll notify you when your order is ready",
                       showBtn1: false,
                       btnText2: 'Leave Review',
                       btnOnTap2: () async {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Review(),
+                            builder: (context) => Review(
+                              user: widget.user,
+                            ),
                           ),
                         );
                       },

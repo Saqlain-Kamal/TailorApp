@@ -171,17 +171,18 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tailor_app/app/auth/model/user_model.dart';
 import 'package:tailor_app/app/auth/screens/auth_page.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/auth/viewmodel/states/auth_states.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
 import 'package:tailor_app/app/customer/customer_home/customer_home.dart';
 import 'package:tailor_app/app/home/home.dart';
-import 'package:tailor_app/utils/colors.dart';
-import 'package:tailor_app/utils/constants.dart';
-import 'package:tailor_app/utils/custom_button.dart';
-import 'package:tailor_app/utils/mediaquery.dart';
+import 'package:tailor_app/app/model/user_model.dart';
+import 'package:tailor_app/app/utils/colors.dart';
+import 'package:tailor_app/app/utils/constants.dart';
+import 'package:tailor_app/app/utils/custom_button.dart';
+import 'package:tailor_app/app/utils/mediaquery.dart';
+import 'package:uuid/uuid.dart';
 
 class ContinueProfile extends StatefulWidget {
   const ContinueProfile(
@@ -351,6 +352,7 @@ class _ContinueProfileState extends State<ContinueProfile> {
                           final createUser = UserModel(
                             name: widget.user.name,
                             email: widget.user.email,
+                            userId: const Uuid().v1(),
                             phoneNumber: widget.user.phoneNumber,
                             location: widget.user.location,
                             role: widget.user.role,

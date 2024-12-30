@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:tailor_app/app/auth/model/user_model.dart';
+import 'package:tailor_app/app/model/user_model.dart';
 
 class AuthRepo {
   Future<void> signUpUser(
@@ -139,5 +139,70 @@ class AuthRepo {
     //   } catch (e) {
     //     print("Error deleting user and Firestore data: $e");
     //   }
+  }
+
+  Future<void> addToFav({required UserModel user, required String uid}) async {
+    try {
+      final newDocRef = FirebaseFirestore.instance
+          .collection('favorites')
+          .doc(uid)
+          .collection('tailors')
+          .doc(user.id);
+      await newDocRef.set(user.toJson());
+    } on FirebaseException catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> isFavorite({required String userId, required String uid}) async {
+    try {
+      final docSnapshot = await FirebaseFirestore.instance
+          .collection('favorites')
+          .doc(uid)
+          .collection('tailors')
+          .doc(userId)
+          .get();
+
+      return docSnapshot.exists; // Returns true if the document exists
+    } on FirebaseException catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> removeItemFromFav(
+      {required UserModel user, required String uid}) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('favorites')
+          .doc(uid)
+          .collection('tailors')
+          .doc(user.id)
+          .delete();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<UserModel>> getFavorites(String uid) async {
+    // Replace with your Firebase fetching logic
+    final snapshot = await FirebaseFirestore.instance
+        .collection('favorites')
+        .doc(uid)
+        .collection('tailors')
+        .get();
+
+    return snapshot.docs.map((doc) => UserModel.fromJson(doc.data())).toList();
+  }
+
+  Future<int> fetchFavoritesCount(String uid) async {
+    // Replace with your Firebase fetching logic
+    final snapshot = await FirebaseFirestore.instance
+        .collection('favorites')
+        .doc(uid)
+        .collection('tailors')
+        .get();
+    final int itemCount = snapshot.size;
+    print('Number of items: $itemCount');
+    return itemCount;
   }
 }

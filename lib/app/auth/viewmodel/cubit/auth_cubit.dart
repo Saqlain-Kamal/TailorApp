@@ -3,10 +3,10 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
-import 'package:tailor_app/app/auth/model/user_model.dart';
-import 'package:tailor_app/app/auth/repo/auth_repo.dart';
 import 'package:tailor_app/app/auth/viewmodel/states/auth_states.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
+import 'package:tailor_app/app/model/user_model.dart';
+import 'package:tailor_app/app/repo/auth_repo.dart';
 
 class AuthCubit extends Cubit<AuthStates> {
   AuthCubit() : super(InitialState());

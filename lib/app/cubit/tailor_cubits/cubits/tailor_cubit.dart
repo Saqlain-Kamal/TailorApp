@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tailor_app/app/auth/model/user_model.dart';
-import 'package:tailor_app/app/auth/repo/tailor_repo.dart';
-import 'package:tailor_app/app/tailor_cubits/states/tailor_states.dart';
+import 'package:tailor_app/app/cubit/tailor_cubits/states/tailor_states.dart';
+import 'package:tailor_app/app/model/user_model.dart';
+import 'package:tailor_app/app/repo/tailor_repo.dart';
 
 class TailorCubit extends Cubit<TailorStates> {
   TailorCubit() : super(TailorInitialState());

@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/customer/customer_home/customer_dashboard/screens/tailor_detail.dart';
 import 'package:tailor_app/app/customer/customer_home/customer_dashboard/widgets/tailor_listing_card.dart';
-import 'package:tailor_app/app/tailor_cubits/cubits/tailor_cubit.dart';
-import 'package:tailor_app/app/tailor_cubits/states/tailor_states.dart';
+import 'package:tailor_app/app/cubit/tailor_cubits/cubits/tailor_cubit.dart';
+import 'package:tailor_app/app/cubit/tailor_cubits/states/tailor_states.dart';
 
-import '../../../../../utils/colors.dart';
-import '../../../../../utils/mediaquery.dart';
+import '../../../../utils/colors.dart';
+import '../../../../utils/mediaquery.dart';
 import '../../../../auth/widgets/custom_text_field.dart';
 
 class TailorListing extends StatefulWidget {
@@ -27,6 +27,9 @@ class _TailorListingState extends State<TailorListing> {
 
   void getTailors() async {
     await context.read<TailorCubit>().getTailors();
+    // context
+    //     .read<FavoriteCubit>()
+    //     .fetchFavorites(uid: context.read<AuthCubit>().appUser!.id!);
   }
 
   @override
@@ -104,6 +107,7 @@ class _TailorListingState extends State<TailorListing> {
                               log(tailor.name.toString());
                               return InkWell(
                                 onTap: () {
+                                  log('message');
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -116,9 +120,9 @@ class _TailorListingState extends State<TailorListing> {
                                 child: TailorListingCard(
                                   cityName: tailor.location!,
                                   name: tailor.name!,
-                                  showFavorite: false,
-                                  onTap: () {},
+                                  showFavorite: true,
                                   image: 'assets/images/avatar3.png',
+                                  user: tailor,
                                 ),
                               );
                             },

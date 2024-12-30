@@ -3,10 +3,10 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tailor_app/app/auth/model/user_model.dart';
-import 'package:tailor_app/app/auth/repo/auth_repo.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
-import 'package:tailor_app/app/profile_cubit/profile_states.dart';
+import 'package:tailor_app/app/cubit/profile_cubit/profile_states.dart';
+import 'package:tailor_app/app/model/user_model.dart';
+import 'package:tailor_app/app/repo/auth_repo.dart';
 
 class ProfileCubit extends Cubit<ProfileStates> {
   ProfileCubit() : super(InitialStates());

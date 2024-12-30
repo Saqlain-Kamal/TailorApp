@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tailor_app/app/home/dashboard/widgets/recent_orders_button.dart';
-import 'package:tailor_app/utils/colors.dart';
+import 'package:tailor_app/app/utils/colors.dart';
 
 class RecentOrdersCard extends StatelessWidget {
  const RecentOrdersCard({

@@ -6,11 +6,13 @@ import 'package:tailor_app/app/auth/screens/auth_page.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/auth/viewmodel/states/auth_states.dart';
 import 'package:tailor_app/app/extension/snackbar.dart';
+import 'package:tailor_app/app/cubit/favorite_cubit/favorite_cubit.dart';
 import 'package:tailor_app/app/home/home.dart';
-import 'package:tailor_app/app/profile_cubit/profile_cubit.dart';
-import 'package:tailor_app/app/tailor_cubits/cubits/tailor_cubit.dart';
+import 'package:tailor_app/app/cubit/profile_cubit/profile_cubit.dart';
+import 'package:tailor_app/app/cubit/review_cubit/review_cubit.dart';
+import 'package:tailor_app/app/cubit/tailor_cubits/cubits/tailor_cubit.dart';
 import 'package:tailor_app/splash.dart';
-import 'package:tailor_app/utils/colors.dart';
+import 'package:tailor_app/app/utils/colors.dart';
 
 import 'app/customer/customer_home/customer_home.dart';
 
@@ -29,6 +31,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => ProfileCubit(),
+        ),
+        BlocProvider(
+          create: (context) => FavoriteCubit(),
+        ),
+        BlocProvider(
+          create: (context) => ReviewCubit(),
         ),
       ],
       child: MaterialApp(
