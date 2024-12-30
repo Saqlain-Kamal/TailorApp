@@ -6,9 +6,13 @@ import 'package:tailor_app/app/auth/screens/auth_page.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/auth/viewmodel/states/auth_states.dart';
 import 'package:tailor_app/app/extension/snackbar.dart';
+import 'package:tailor_app/app/cubit/favorite_cubit/favorite_cubit.dart';
 import 'package:tailor_app/app/home/home.dart';
+import 'package:tailor_app/app/cubit/profile_cubit/profile_cubit.dart';
+import 'package:tailor_app/app/cubit/review_cubit/review_cubit.dart';
+import 'package:tailor_app/app/cubit/tailor_cubits/cubits/tailor_cubit.dart';
 import 'package:tailor_app/splash.dart';
-import 'package:tailor_app/utils/colors.dart';
+import 'package:tailor_app/app/utils/colors.dart';
 
 import 'app/customer/customer_home/customer_home.dart';
 
@@ -17,8 +21,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AuthCubit()..checkCurrentUser(context),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => AuthCubit()..checkCurrentUser(context),
+        ),
+        BlocProvider(
+          create: (context) => TailorCubit(),
+        ),
+        BlocProvider(
+          create: (context) => ProfileCubit(),
+        ),
+        BlocProvider(
+          create: (context) => FavoriteCubit(),
+        ),
+        BlocProvider(
+          create: (context) => ReviewCubit(),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
@@ -29,6 +49,7 @@ class MyApp extends StatelessWidget {
         home: BlocConsumer<AuthCubit, AuthStates>(
           listener: (context, state) {
             if (state is ErrorState) {
+              log(state.message.toString());
               context.mySnackBar(text: state.message, color: Colors.red);
             }
             if (state is PasswordChangedState) {
@@ -37,15 +58,17 @@ class MyApp extends StatelessWidget {
                   color: AppColors.darkBlueColor);
             }
             if (state is AuthenticatedState) {
-              context.mySnackBar(
-                  text: 'Account Created Succesfully',
-                  color: AppColors.darkBlueColor);
+              state.message != null
+                  ? context.mySnackBar(
+                      text: state.message!, color: AppColors.darkBlueColor)
+                  : const SizedBox();
             }
-            if (state is TailorInfoChangedState) {
-              context.mySnackBar(
-                  text: 'Info Updated Successfully',
-                  color: AppColors.darkBlueColor);
-            }
+            // if (state is TailorInfoChangedState) {
+            //   log('ji');
+            //   context.mySnackBar(
+            //       text: 'Info Updated Successfully',
+            //       color: AppColors.darkBlueColor);
+            // }
             // TODO: implement listener
           },
           builder: (context, state) {
@@ -57,7 +80,20 @@ class MyApp extends StatelessWidget {
             if (state is AuthenticatedState) {
               log('Home');
               final role = context.read<AuthCubit>().appUser!.role;
-              return role == 'Tailor' ? const Home() : const CustomerHome();
+              return role == 'Tailor'
+                  ? const Home(
+                      index: 0,
+                    )
+                  : const CustomerHome();
+            }
+            if (state is LoadedState) {
+              log('Home');
+              final role = context.read<AuthCubit>().appUser!.role;
+              return role == 'Tailor'
+                  ? const Home(
+                      index: 0,
+                    )
+                  : const CustomerHome();
             }
             if (state is ErrorState) {
               return const AuthPage();

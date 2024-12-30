@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tailor_app/app/auth/screens/create_account.dart';
-import 'package:tailor_app/utils/colors.dart';
-import 'package:tailor_app/utils/mediaquery.dart';
+import 'package:tailor_app/app/utils/colors.dart';
+import 'package:tailor_app/app/utils/mediaquery.dart';
 
 class CreateAccountTile extends StatelessWidget {
   const CreateAccountTile({

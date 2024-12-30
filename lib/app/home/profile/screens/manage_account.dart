@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
@@ -5,7 +7,7 @@ import 'package:tailor_app/app/home/profile/screens/change_password.dart';
 import 'package:tailor_app/app/home/profile/screens/edit_profile.dart';
 import 'package:tailor_app/app/home/profile/widgets/custom_alert_dialogue.dart';
 
-import '../../../../utils/constants.dart';
+import '../../../utils/constants.dart';
 import '../../../auth/viewmodel/cubit/auth_cubit.dart';
 
 class ManageAccount extends StatelessWidget {
@@ -13,6 +15,8 @@ class ManageAccount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.watch<AuthCubit>().appUser;
+    log(user!.toJson().toString());
     return Scaffold(
       appBar: AppBar(
         title: const Text('Manage Account'),
@@ -48,7 +52,6 @@ class ManageAccount extends StatelessWidget {
           CustomeTextField(
             onTap: () {
               showDialog(
-                barrierDismissible: false,
                 context: context,
                 builder: (context) {
                   return CustomAlertDialogue(
@@ -57,11 +60,13 @@ class ManageAccount extends StatelessWidget {
                     desc: AppStrings.accountDeletionConfirmation,
                     btnText1: 'Cancel',
                     btnText2: 'Delete Account',
-                    btnOnTap1: (){
+                    btnOnTap1: () {
                       Navigator.pop(context);
                     },
                     btnOnTap2: () async {
-                      await context.read<AuthCubit>().deleteUserAndFirestoreData();
+                      await context
+                          .read<AuthCubit>()
+                          .deleteUserAndFirestoreData();
                     },
                   );
                 },

@@ -3,10 +3,10 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
-import 'package:tailor_app/app/auth/model/user_model.dart';
-import 'package:tailor_app/app/auth/repo/auth_repo.dart';
 import 'package:tailor_app/app/auth/viewmodel/states/auth_states.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
+import 'package:tailor_app/app/model/user_model.dart';
+import 'package:tailor_app/app/repo/auth_repo.dart';
 
 class AuthCubit extends Cubit<AuthStates> {
   AuthCubit() : super(InitialState());
@@ -29,7 +29,8 @@ class AuthCubit extends Cubit<AuthStates> {
         appUser = await authRepo.getUserById(uid: currentUser.uid);
         if (appUser != null) {
           log("${appUser!.name.toString()}hhhhhhhhhhhhh");
-          emit(AuthenticatedState(user: appUser!));
+          emit(AuthenticatedState(
+              user: appUser!, message: 'Logged In Succesfully'));
         } else {
           log("User data is null");
           emit(UnAuthenticatedState());
@@ -55,7 +56,10 @@ class AuthCubit extends Cubit<AuthStates> {
           email: user.email!, password: password);
       appUser = user;
       await authRepo.signUpUser(user: user, credential: userCredential);
-      emit(AuthenticatedState(user: appUser!));
+      emit(
+        AuthenticatedState(
+            user: appUser!, message: 'Account Created Succesfully'),
+      );
       log(appUser.toString());
       log('Authenticated State');
 
@@ -76,8 +80,25 @@ class AuthCubit extends Cubit<AuthStates> {
     try {
       emit(LoadingState());
       await authRepo.googleSignUp(user);
-      appUser = user;
-      emit(AuthenticatedState(user: appUser!));
+      final currentUser = authRepo.isCurrentUser();
+      log("${currentUser.toString()}tttttttttttttt");
+
+      if (currentUser != null) {
+        appUser = await authRepo.getUserById(uid: currentUser.uid);
+        if (appUser != null) {
+          log("${appUser!.name.toString()}hhhhhhhhhhhhh");
+          emit(AuthenticatedState(
+              user: appUser!, message: 'Logged In Successfully'));
+          // emit(AuthenticatedState(user: appUser!));
+        } else {
+          log("User data is null");
+          emit(UnAuthenticatedState());
+        }
+      } else {
+        log("Current user is null");
+      }
+
+      // appUser = user;
     } catch (e) {
       emit(ErrorState(message: e.toString()));
     }
@@ -116,45 +137,6 @@ class AuthCubit extends Cubit<AuthStates> {
     }
   }
 
-  Future<void> changePassword(
-      String currentPassword, String newPassword) async {
-    emit(LoadingState());
-
-    final currentUser = authRepo.isCurrentUser();
-
-    if (currentUser != null) {
-      try {
-        // Re-authenticate the user with the current password
-        AuthCredential credential = EmailAuthProvider.credential(
-          email: currentUser.email!,
-          password: currentPassword,
-        );
-
-        await currentUser.reauthenticateWithCredential(credential);
-
-        // Update password after successful re-authentication
-        await currentUser.updatePassword(newPassword);
-        appUser = await authRepo.getUserById(uid: currentUser.uid);
-        // await _auth.signOut(); // Optional: Sign out after password change
-        log("Password changed successfully!");
-        emit(PasswordChangedState());
-      } on FirebaseAuthException catch (e) {
-        emit(ErrorState(message: e.message!));
-        print("Error: ${e.message}");
-      }
-    }
-  }
-
-  Future<void> updateTailorDetails({required UserModel user}) async {
-    try {
-      emit(LoadingState());
-      await authRepo.updateTailorDetails(user: user);
-      emit(TailorInfoChangedState());
-    } catch (e) {
-      emit(ErrorState(message: e.toString()));
-    }
-  }
-
   Future<void> deleteUserAndFirestoreData() async {
     try {
       emit(LoadingState());
@@ -165,5 +147,11 @@ class AuthCubit extends Cubit<AuthStates> {
     } catch (e) {
       emit(ErrorState(message: e.toString()));
     }
+  }
+
+  void updateUser(UserModel user) {
+    appUser = user;
+    emit(AuthenticatedState(user: user));
+    // Emit a state if needed
   }
 }

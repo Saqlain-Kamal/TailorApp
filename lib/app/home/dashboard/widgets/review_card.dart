@@ -1,14 +1,17 @@
 import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:tailor_app/utils/colors.dart';
-import 'package:tailor_app/utils/container_decoration.dart';
+import 'package:tailor_app/app/extension/date.dart';
+import 'package:tailor_app/app/model/review_model.dart';
+import 'package:tailor_app/app/utils/colors.dart';
+import 'package:tailor_app/app/utils/container_decoration.dart';
 
 class ReviewCard extends StatelessWidget {
   const ReviewCard({
     super.key,
+    required this.review,
   });
-
+  final ReviewModel review;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,7 +27,7 @@ class ReviewCard extends StatelessWidget {
                 radius: 30,
                 backgroundImage: AssetImage('assets/images/avatar3.png'),
               ),
-              title: const Text('Ahmad Ali'),
+              title: Text(review.name),
               subtitle: Column(
                 children: [
                   Padding(
@@ -36,7 +39,7 @@ class ReviewCard extends StatelessWidget {
                       filledIcon: Icons.star,
                       emptyIcon: Icons.star,
                       onRatingChanged: (p0) {},
-                      initialRating: 1,
+                      initialRating: review.rating.toDouble(),
                     ),
                   ),
                   Row(
@@ -49,14 +52,14 @@ class ReviewCard extends StatelessWidget {
                       const SizedBox(
                         width: 5,
                       ),
-                      const Text('Apr 22, 2024')
+                      Text(review.reviewTime.myDate)
                     ],
                   ),
                 ],
               ),
             ),
             Text(
-              'Great Service! My dress was ready on time, and the stiching was flawless.',
+              review.reviewMessage,
               style: TextStyle(color: Colors.grey.shade500),
             ),
           ],

@@ -1,10 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
-import 'package:tailor_app/app/auth/viewmodel/states/auth_states.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
-import 'package:tailor_app/utils/custom_button.dart';
-import 'package:tailor_app/utils/mediaquery.dart';
+import 'package:tailor_app/app/extension/snackbar.dart';
+import 'package:tailor_app/app/cubit/profile_cubit/profile_cubit.dart';
+import 'package:tailor_app/app/cubit/profile_cubit/profile_states.dart';
+import 'package:tailor_app/app/utils/colors.dart';
+import 'package:tailor_app/app/utils/custom_button.dart';
+import 'package:tailor_app/app/utils/mediaquery.dart';
 
 class ChangePassword extends StatefulWidget {
   const ChangePassword({super.key});
@@ -17,6 +21,12 @@ class _ChangePasswordState extends State<ChangePassword> {
   final oldPasswordController = TextEditingController();
   final newPasswordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,26 +54,41 @@ class _ChangePasswordState extends State<ChangePassword> {
                 prefixIcon: 'assets/images/Lock.png',
               ),
               SizedBox(height: screenHeight(context) * 0.52), // Rep
-              BlocConsumer<AuthCubit, AuthStates>(
+              BlocConsumer<ProfileCubit, ProfileStates>(
                 listener: (context, state) {
                   // TODO: implement listener
+
+                  if (state is PasswordChangedState) {
+                    log('ji');
+                    context.mySnackBar(
+                        text: 'Password Changed Successfully',
+                        color: AppColors.darkBlueColor);
+                  }
                 },
                 builder: (context, state) {
-                  if (state is LoadingState) {
+                  if (state is LoadingStates) {
                     return CustomButton(
                       onTap: () {},
                       text: 'text',
                       isloading: true,
                     );
                   }
+                  if (state is PasswordChangedState) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    });
+                  }
 
                   return CustomButton(
                       onTap: () async {
+                        log('message');
                         if (newPasswordController.text.trim() ==
                             confirmPasswordController.text.trim()) {
-                          await context.read<AuthCubit>().changePassword(
+                          await context.read<ProfileCubit>().changePassword(
                               oldPasswordController.text.trim(),
-                              newPasswordController.text.trim());
+                              newPasswordController.text.trim(),
+                              context);
                         }
                       },
                       text: 'Save Password');

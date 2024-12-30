@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:tailor_app/app/auth/google_services/google_services.dart';
 import 'package:tailor_app/app/auth/widgets/create_account_tile.dart';
 import 'package:tailor_app/app/auth/widgets/social_tile.dart';
-import 'package:tailor_app/utils/border_custom_button.dart';
-import 'package:tailor_app/utils/colors.dart';
-import 'package:tailor_app/utils/constants.dart';
-import 'package:tailor_app/utils/custom_button.dart';
+import 'package:tailor_app/app/utils/border_custom_button.dart';
+import 'package:tailor_app/app/utils/colors.dart';
+import 'package:tailor_app/app/utils/constants.dart';
+import 'package:tailor_app/app/utils/custom_button.dart';
 
 class GetStarted extends StatefulWidget {
   const GetStarted({

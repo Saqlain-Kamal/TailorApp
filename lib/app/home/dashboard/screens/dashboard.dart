@@ -6,9 +6,9 @@ import 'package:tailor_app/app/home/dashboard/screens/reviews.dart';
 import 'package:tailor_app/app/home/dashboard/widgets/dashboard_card.dart';
 import 'package:tailor_app/app/home/dashboard/widgets/dashboard_top.dart';
 import 'package:tailor_app/app/home/dashboard/widgets/recent_order_card.dart';
-import 'package:tailor_app/utils/colors.dart';
-import 'package:tailor_app/utils/constants.dart';
-import 'package:tailor_app/utils/mediaquery.dart';
+import 'package:tailor_app/app/utils/colors.dart';
+import 'package:tailor_app/app/utils/constants.dart';
+import 'package:tailor_app/app/utils/mediaquery.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key, required this.onCardTap});

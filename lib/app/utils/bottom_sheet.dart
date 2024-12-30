@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tailor_app/utils/colors.dart';
-import 'package:tailor_app/utils/mediaquery.dart';
+import 'package:tailor_app/app/utils/colors.dart';
+import 'package:tailor_app/app/utils/mediaquery.dart';
 
 class ModelBottomSheet extends StatefulWidget {
   const ModelBottomSheet({

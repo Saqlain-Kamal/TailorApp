@@ -1,4 +1,4 @@
-import 'package:tailor_app/app/auth/model/user_model.dart';
+import 'package:tailor_app/app/model/user_model.dart';
 
 abstract class AuthStates {}
 
@@ -10,13 +10,20 @@ class SplashLoadingState extends AuthStates {}
 
 class PasswordChangedState extends AuthStates {}
 
-class TailorInfoChangedState extends AuthStates {}
-
 class AccountDeletedState extends AuthStates {}
 
 class AuthenticatedState extends AuthStates {
   final UserModel user;
-  AuthenticatedState({required this.user});
+  final String? message;
+  AuthenticatedState({
+    required this.user,
+    this.message,
+  });
+}
+
+class LoadedState extends AuthStates {
+  final UserModel user;
+  LoadedState({required this.user});
 }
 
 class UnAuthenticatedState extends AuthStates {}

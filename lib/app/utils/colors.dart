@@ -9,4 +9,5 @@ class AppColors {
   static const Color goldenColor = Color(0xffE7AD02);
   static const Color whiteColor = Color(0xffFFFFFF);
   static const Color ratingColor = Color(0xffFEB052);
+  static const Color greenColor = Color(0xff4CAF50);
 }

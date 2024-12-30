@@ -1,5 +1,6 @@
 class UserModel {
   String? id;
+  String? userId;
   String? name;
   String? email;
   String? role;
@@ -15,6 +16,7 @@ class UserModel {
 
   UserModel({
     this.id,
+    this.userId,
     this.name,
     this.email,
     this.role,
@@ -35,6 +37,7 @@ class UserModel {
       shopName: json['shopName'],
       role: json['role'],
       id: json['id'],
+      userId: json['userId'],
       name: json['name'],
       email: json['email'],
       userImage: json['userImage'],
@@ -48,6 +51,7 @@ class UserModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'userId': userId,
       'name': name,
       'email': email,
       'role': role,
@@ -55,6 +59,7 @@ class UserModel {
       'shopName': shopName,
       'userImage': userImage,
       'bio': bio,
+      'location': location,
       'experience': experience,
       'stichingService': stichingService,
       'startingPrice': startingPrice,

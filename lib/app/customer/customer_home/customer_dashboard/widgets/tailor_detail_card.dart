@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tailor_app/app/home/dashboard/widgets/recent_orders_button.dart';
-import 'package:tailor_app/utils/colors.dart';
-
-import '../../../../../utils/mediaquery.dart';
+import 'package:tailor_app/app/utils/colors.dart';
 
 class TailorDetailCard extends StatelessWidget {
   const TailorDetailCard({
@@ -16,7 +13,7 @@ class TailorDetailCard extends StatelessWidget {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           border: Border.all(width: 1, color: AppColors.borderGreyColor)),
-      padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -26,24 +23,56 @@ class TailorDetailCard extends StatelessWidget {
               backgroundImage: AssetImage('assets/images/avatar3.png'),
               radius: 20,
             ),
-            title: Text(name,style: const TextStyle(fontSize: 16),),
-            subtitle: Column(
+            title: Text(
+              name,
+              style: const TextStyle(fontSize: 16),
+            ),
+            subtitle: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
+                Row(
                   children: [
-                    Icon(Icons.star,size: 15,color: AppColors.ratingColor,),
-                    Icon(Icons.star,size: 15,color: AppColors.ratingColor,),
-                    Icon(Icons.star,size: 15,color: AppColors.ratingColor,),
-                    Icon(Icons.star,size: 15,color: AppColors.ratingColor,),
-                    Icon(Icons.star,size: 15,color: AppColors.greyColor,),
+                    Icon(
+                      Icons.star,
+                      size: 15,
+                      color: AppColors.ratingColor,
+                    ),
+                    Icon(
+                      Icons.star,
+                      size: 15,
+                      color: AppColors.ratingColor,
+                    ),
+                    Icon(
+                      Icons.star,
+                      size: 15,
+                      color: AppColors.ratingColor,
+                    ),
+                    Icon(
+                      Icons.star,
+                      size: 15,
+                      color: AppColors.ratingColor,
+                    ),
+                    Icon(
+                      Icons.star,
+                      size: 15,
+                      color: AppColors.greyColor,
+                    ),
                   ],
                 ),
                 Row(
                   children: [
-                    Icon(Icons.watch_later_outlined,size: 14,),
-                    SizedBox(width: 5,),
-                    Text("Apr 22,2024",style: const TextStyle(fontSize: 10,color: AppColors.greyColor),),
+                    Icon(
+                      Icons.watch_later_outlined,
+                      size: 14,
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      "Apr 22,2024",
+                      style:
+                          TextStyle(fontSize: 10, color: AppColors.greyColor),
+                    ),
                   ],
                 )
               ],
@@ -52,7 +81,9 @@ class TailorDetailCard extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-          const Text("Great Service! My dress was ready on time, and the stitching was flawless.",style: TextStyle(fontSize: 12,color: AppColors.greyColor)),
+          const Text(
+              "Great Service! My dress was ready on time, and the stitching was flawless.",
+              style: TextStyle(fontSize: 12, color: AppColors.greyColor)),
         ],
       ),
     );

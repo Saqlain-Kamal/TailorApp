@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tailor_app/utils/colors.dart';
-import 'package:tailor_app/utils/container_decoration.dart';
+import 'package:tailor_app/app/utils/colors.dart';
+import 'package:tailor_app/app/utils/container_decoration.dart';
 
 class SingleChatCard extends StatelessWidget {
   const SingleChatCard({
