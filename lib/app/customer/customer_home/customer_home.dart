@@ -2,9 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:tailor_app/app/customer/customer_home/customer_dashboard/screens/customer_dashboard.dart';
+import 'package:tailor_app/app/customer/customer_home/customer_favorite/screens/customer_favorite.dart';
 import 'package:tailor_app/app/home/chat/screens/chat.dart';
 import 'package:tailor_app/app/home/orders/screens/orders.dart';
 import 'package:tailor_app/app/home/profile/screens/profile.dart';
+
+import '../../../utils/colors.dart';
 
 class CustomerHome extends StatefulWidget {
   const CustomerHome({super.key});
@@ -15,22 +18,11 @@ class CustomerHome extends StatefulWidget {
 
 class _CustomerHomeState extends State<CustomerHome> {
   int currentIndex = 0;
-  int tabindex = 0;
-
-  navigateToOrdersInProgress(int index) {
-    setState(() {
-      currentIndex = 1; // Set to Orders tab index
-    });
-    tabindex = index;
-  }
-
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
       const CustomerDashboard(),
-      Orders(
-        initialIndex: tabindex,
-      ),
+      const CustomerFavorite(),
       const Chat(),
       const Profile(),
     ];
@@ -40,17 +32,13 @@ class _CustomerHomeState extends State<CustomerHome> {
         borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(12), topRight: Radius.circular(12)),
         child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.grey.shade100,
+          fixedColor: AppColors.darkBlueColor,
           currentIndex: currentIndex,
           onTap: (value) {
             setState(() {
               currentIndex = value;
-
-              if (value == 1) {
-                tabindex = 0;
-              }
-              log(currentIndex.toString());
-              log(tabindex.toString());
             });
           },
           items: [
@@ -100,6 +88,22 @@ class _CustomerHomeState extends State<CustomerHome> {
                         ),
                       ),
                 label: 'Chat'),
+            BottomNavigationBarItem(
+                icon: currentIndex == 3
+                    ? const Image(
+                  height: 25,
+                  image: AssetImage(
+                    'assets/images/gradientProfile.png',
+                  ),
+                )
+                    : const Image(
+                  height: 22,
+                  image: AssetImage(
+                    'assets/images/profile.png',
+                  ),
+                ),
+                label: 'Profile'),
+
           ],
         ),
       ),

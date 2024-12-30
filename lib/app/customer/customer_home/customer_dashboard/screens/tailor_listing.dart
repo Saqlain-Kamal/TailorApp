@@ -114,7 +114,11 @@ class _TailorListingState extends State<TailorListing> {
                                   );
                                 },
                                 child: TailorListingCard(
-                                  tailor: tailor,
+                                  cityName: tailor.location!,
+                                  name: tailor.name!,
+                                  showFavorite: false,
+                                  onTap: () {},
+                                  image: 'assets/images/avatar3.png',
                                 ),
                               );
                             },
