@@ -10,4 +10,6 @@ class AppColors {
   static const Color whiteColor = Color(0xffFFFFFF);
   static const Color ratingColor = Color(0xffFEB052);
   static const Color greenColor = Color(0xff4CAF50);
+  static const Color lightWightColor = Color(0xffF0F5FA);
+  static const Color purpleColor = Color(0xffB33DFB);
 }

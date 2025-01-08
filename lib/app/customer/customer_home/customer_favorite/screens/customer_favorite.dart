@@ -3,9 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
-import 'package:tailor_app/app/customer/customer_home/customer_dashboard/screens/tailor_detail.dart';
 import 'package:tailor_app/app/cubit/favorite_cubit/favorite_cubit.dart';
 import 'package:tailor_app/app/cubit/favorite_cubit/favorite_states.dart';
+import 'package:tailor_app/app/customer/customer_home/customer_dashboard/screens/tailor_detail.dart';
 
 import '../../../../utils/mediaquery.dart';
 import '../../customer_dashboard/widgets/tailor_listing_card.dart';
@@ -93,7 +93,7 @@ class _CustomerFavoriteState extends State<CustomerFavorite> {
                                   );
                                 },
                                 child: TailorListingCard(
-                                  cityName: tailor.location!,
+                                  cityName: tailor.location ?? '',
                                   name: tailor.name!,
                                   showFavorite: false,
                                   image: 'assets/images/avatar3.png',

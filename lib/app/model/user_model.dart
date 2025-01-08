@@ -6,7 +6,7 @@ class UserModel {
   String? role;
   String? phoneNumber;
   String? bio;
-
+  String? isOrderSend;
   String? location;
   String? userImage;
   String? shopName;
@@ -22,6 +22,7 @@ class UserModel {
     this.role,
     this.phoneNumber,
     this.bio,
+    this.isOrderSend,
     this.shopName,
     this.userImage,
     this.experience,
@@ -33,6 +34,7 @@ class UserModel {
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       bio: json['bio'],
+      isOrderSend: json['isOrderSend'],
       phoneNumber: json['phoneNumber'],
       shopName: json['shopName'],
       role: json['role'],
@@ -55,6 +57,7 @@ class UserModel {
       'name': name,
       'email': email,
       'role': role,
+      'isOrderSend': isOrderSend,
       'phoneNumber': phoneNumber,
       'shopName': shopName,
       'userImage': userImage,

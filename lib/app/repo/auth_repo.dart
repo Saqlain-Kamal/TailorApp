@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tailor_app/app/model/user_model.dart';
 
 class AuthRepo {
@@ -78,34 +77,39 @@ class AuthRepo {
         String uid = user.uid;
 
         // Re-authenticate the user with Google
-        final GoogleSignIn googleSignIn = GoogleSignIn();
-        final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+        // final GoogleSignIn googleSignIn = GoogleSignIn();
+        // final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-        if (googleUser != null) {
-          final GoogleSignInAuthentication googleAuth =
-              await googleUser.authentication;
+        // if (googleUser != null) {
+        //   final GoogleSignInAuthentication googleAuth =
+        //       await googleUser.authentication;
 
-          final AuthCredential credential = GoogleAuthProvider.credential(
-            accessToken: googleAuth.accessToken,
-            idToken: googleAuth.idToken,
-          );
+        //   final AuthCredential credential = GoogleAuthProvider.credential(
+        //     accessToken: googleAuth.accessToken,
+        //     idToken: googleAuth.idToken,
+        //   );
 
-          // Re-authenticate
-          await user.reauthenticateWithCredential(credential);
+        //   // Re-authenticate
+        //   await user.reauthenticateWithCredential(credential);
 
-          // Delete Firestore data
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(uid)
-              .delete();
+        // Delete Firestore data
+//-----------------------------
+        // Re-authenticate if necessary
+        // Example re-authentication (if required)
+        // AuthCredential credential = EmailAuthProvider.credential(
+        //   email: user.email!,
+        //   password: user.,
+        // );
+        // await user.reauthenticateWithCredential(credential);
+        await FirebaseFirestore.instance.collection('users').doc(uid).delete();
 
-          // Delete the user from Firebase Auth
-          await user.delete();
+        // Delete the user from Firebase Auth
+        await user.delete();
 
-          log("User and Firestore data deleted successfully.");
-        } else {
-          log("Google sign-in failed.");
-        }
+        log("User and Firestore data deleted successfully.");
+        // } else {
+        //   log("Google sign-in failed.");
+        // }
       } else {
         log("No user is signed in.");
       }

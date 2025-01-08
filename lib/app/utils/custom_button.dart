@@ -19,21 +19,25 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDisabled = onTap == null;
     return GestureDetector(
-      onTap: onTap,
+      onTap: isDisabled ? null : onTap,
       child: Container(
         width: screenWidth(context) * 0.95,
         height: screenHeight(context) * 0.06,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
-          gradient: LinearGradient(
-            colors: [
-              firstColor != null ? firstColor! : AppColors.darkBlueColor,
-              secondColor != null ? secondColor! : AppColors.lightkBlueColor,
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          gradient: isDisabled
+              ? null // No gradient for disabled state
+              : LinearGradient(
+                  colors: [
+                    firstColor ?? AppColors.darkBlueColor,
+                    secondColor ?? AppColors.lightkBlueColor,
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+          color: isDisabled ? Colors.grey : null,
         ),
         child: isloading != null
             ? Lottie.asset(

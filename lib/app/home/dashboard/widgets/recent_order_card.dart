@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:tailor_app/app/home/dashboard/widgets/recent_orders_button.dart';
+import 'package:tailor_app/app/model/user_model.dart';
 import 'package:tailor_app/app/utils/colors.dart';
 
 class RecentOrdersCard extends StatelessWidget {
- const RecentOrdersCard({
+  const RecentOrdersCard({
     super.key,
+    this.user,
     required this.status,
     this.showBtn = true,
   });
   final String status;
   final bool showBtn;
+  final UserModel? user;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -27,23 +30,24 @@ class RecentOrdersCard extends StatelessWidget {
                 backgroundImage: AssetImage('assets/images/avatar3.png'),
                 radius: 30,
               ),
-              title: const Text('Sarah Khan'),
-              subtitle: const Column(
+              title: Text(user?.name ?? 'Sarah Khan'),
+              subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Custom Suit'),
-                  Text('Delivery Date: oct 15,2024')
+                  Text(user?.location ?? ''),
+                  const Text('Delivery Date: oct 15,2024')
                 ],
               ),
               trailing: Container(
-                padding: const EdgeInsets.all(8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
                 decoration: BoxDecoration(
                     color: status == 'In Progress'
                         ? AppColors.blueColor
                         : status == 'Pending'
                             ? AppColors.goldenColor
                             : Colors.green,
-                    borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(8)),
                 child: Text(
                   status,
                   style: const TextStyle(color: Colors.white),
@@ -59,14 +63,14 @@ class RecentOrdersCard extends StatelessWidget {
                 const RecentOrdersButton(
                   text: 'View Details',
                 ),
-                if(showBtn)
+                if (showBtn)
                   const SizedBox(
-                  width: 25,
-                ),
-                if(showBtn)
-                const RecentOrdersButton(
-                  text: 'Update Status',
-                ),
+                    width: 25,
+                  ),
+                if (showBtn)
+                  const RecentOrdersButton(
+                    text: 'Update Status',
+                  ),
               ],
             )
           ],

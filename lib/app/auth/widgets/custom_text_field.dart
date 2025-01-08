@@ -9,6 +9,8 @@ class CustomeTextField extends StatelessWidget {
     this.controller,
     this.readOnly,
     this.onTap,
+    this.keyboardType,
+    this.textInputAction,
   });
   final String? prefixIcon;
 
@@ -16,11 +18,15 @@ class CustomeTextField extends StatelessWidget {
   final TextEditingController? controller;
   final bool? readOnly;
   final void Function()? onTap;
+  final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
       child: TextFormField(
+        textInputAction: textInputAction,
+        keyboardType: keyboardType,
         onTap: onTap,
         style: const TextStyle(fontSize: 12),
         readOnly: readOnly != null ? true : false,

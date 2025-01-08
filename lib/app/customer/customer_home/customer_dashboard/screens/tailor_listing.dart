@@ -2,14 +2,14 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tailor_app/app/customer/customer_home/customer_dashboard/screens/tailor_detail.dart';
-import 'package:tailor_app/app/customer/customer_home/customer_dashboard/widgets/tailor_listing_card.dart';
 import 'package:tailor_app/app/cubit/tailor_cubits/cubits/tailor_cubit.dart';
 import 'package:tailor_app/app/cubit/tailor_cubits/states/tailor_states.dart';
+import 'package:tailor_app/app/customer/customer_home/customer_dashboard/screens/tailor_detail.dart';
+import 'package:tailor_app/app/customer/customer_home/customer_dashboard/widgets/tailor_listing_card.dart';
 
+import '../../../../auth/widgets/custom_text_field.dart';
 import '../../../../utils/colors.dart';
 import '../../../../utils/mediaquery.dart';
-import '../../../../auth/widgets/custom_text_field.dart';
 
 class TailorListing extends StatefulWidget {
   const TailorListing({super.key});
@@ -20,23 +20,10 @@ class TailorListing extends StatefulWidget {
 
 class _TailorListingState extends State<TailorListing> {
   @override
-  void initState() {
-    getTailors();
-    super.initState();
-  }
-
-  void getTailors() async {
-    await context.read<TailorCubit>().getTailors();
-    // context
-    //     .read<FavoriteCubit>()
-    //     .fetchFavorites(uid: context.read<AuthCubit>().appUser!.id!);
-  }
-
-  @override
   Widget build(BuildContext context) {
     final tailors = context.read<TailorCubit>().tailorList;
     log(
-      tailors.map((e) => e..toString()).toString(),
+      tailors.map((e) => e.toString()).toString(),
     );
     return Scaffold(
       appBar: AppBar(),
@@ -118,7 +105,7 @@ class _TailorListingState extends State<TailorListing> {
                                   );
                                 },
                                 child: TailorListingCard(
-                                  cityName: tailor.location!,
+                                  cityName: tailor.location ?? '',
                                   name: tailor.name!,
                                   showFavorite: true,
                                   image: 'assets/images/avatar3.png',
