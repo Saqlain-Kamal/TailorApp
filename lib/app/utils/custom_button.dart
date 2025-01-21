@@ -10,30 +10,36 @@ class CustomButton extends StatelessWidget {
       this.firstColor,
       this.secondColor,
       this.isloading,
+      this.widget,
       super.key});
   final void Function()? onTap;
   final String text;
   final Color? firstColor;
   final Color? secondColor;
   final bool? isloading;
+  final Widget? widget;
 
   @override
   Widget build(BuildContext context) {
+    final bool isDisabled = onTap == null;
     return GestureDetector(
-      onTap: onTap,
+      onTap: isDisabled ? null : onTap,
       child: Container(
         width: screenWidth(context) * 0.95,
         height: screenHeight(context) * 0.06,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
-          gradient: LinearGradient(
-            colors: [
-              firstColor != null ? firstColor! : AppColors.darkBlueColor,
-              secondColor != null ? secondColor! : AppColors.lightkBlueColor,
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          gradient: isDisabled
+              ? null // No gradient for disabled state
+              : LinearGradient(
+                  colors: [
+                    firstColor ?? AppColors.darkBlueColor,
+                    secondColor ?? AppColors.lightkBlueColor,
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+          color: isDisabled ? Colors.grey : null,
         ),
         child: isloading != null
             ? Lottie.asset(
@@ -41,10 +47,20 @@ class CustomButton extends StatelessWidget {
                 height: 100,
               )
             : Center(
-                child: Text(
-                  text,
-                  style: const TextStyle(
-                      color: AppColors.whiteColor, fontSize: 14),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      text,
+                      style: const TextStyle(
+                          color: AppColors.whiteColor, fontSize: 14),
+                    ),
+                    if (widget != null)
+                      const SizedBox(
+                        width: 20,
+                      ),
+                    if (widget != null) widget!,
+                  ],
                 ),
               ),
       ),

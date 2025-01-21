@@ -10,11 +10,14 @@ class DashboardCard extends StatelessWidget {
     this.asset,
     required this.text,
     this.onTap,
+    required this.count,
     super.key,
   });
   final String? asset;
   final String? svg;
   final String text;
+  final String count;
+
   final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
@@ -48,14 +51,14 @@ class DashboardCard extends StatelessWidget {
                 Expanded(child: Text(text).paddingOnly(left: 8)),
               ],
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 42),
-                  child: Text('14'),
+                  padding: const EdgeInsets.only(left: 42),
+                  child: Text(count),
                 ),
-                Icon(Icons.arrow_forward_rounded)
+                const Icon(Icons.arrow_forward_rounded)
               ],
             )
           ],

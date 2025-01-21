@@ -6,9 +6,13 @@ class InitialState extends AuthStates {}
 
 class LoadingState extends AuthStates {}
 
+class LocationLoadingState extends AuthStates {}
+
 class SplashLoadingState extends AuthStates {}
 
 class PasswordChangedState extends AuthStates {}
+
+class LocationAccessedStates extends AuthStates {}
 
 class AccountDeletedState extends AuthStates {}
 

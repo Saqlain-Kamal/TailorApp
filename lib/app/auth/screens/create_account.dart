@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tailor_app/app/auth/screens/continue_profile.dart';
+import 'package:tailor_app/app/auth/screens/location_access.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
 import 'package:tailor_app/app/auth/widgets/drop_down_type.dart';
 import 'package:tailor_app/app/model/user_model.dart';
@@ -88,11 +89,11 @@ class _CreateAccountState extends State<CreateAccount> {
                         hint: 'Phone Number',
                         controller: phoneNumberController,
                       ),
-                      CustomeTextField(
-                        prefixIcon: 'assets/images/location.png',
-                        hint: 'Location',
-                        controller: locationController,
-                      ),
+                      // CustomeTextField(
+                      //   prefixIcon: 'assets/images/location.png',
+                      //   hint: 'Location',
+                      //   controller: locationController,
+                      // ),
                       DropDownType(
                         isNotification: false,
                         prefixImage: 'assets/images/tag-user.png',
@@ -115,18 +116,31 @@ class _CreateAccountState extends State<CreateAccount> {
                       name: nameController.text.trim(),
                       email: emailController.text.trim(),
                       phoneNumber: phoneNumberController.text.trim(),
-                      location: locationController.text.trim(),
+                      // location: locationController.text.trim(),
                       role: selectedValue,
                     );
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ContinueProfile(
-                          user: user,
-                          password: passwordController.text.trim(),
+
+                    if (selectedValue == 'Customer') {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LocationAccessScreen(
+                            user: user,
+                            password: passwordController.text.trim(),
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    } else {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ContinueProfile(
+                            user: user,
+                            password: passwordController.text.trim(),
+                          ),
+                        ),
+                      );
+                    }
                   },
                 ),
               ],

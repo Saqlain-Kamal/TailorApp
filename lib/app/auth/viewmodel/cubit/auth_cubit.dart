@@ -3,6 +3,9 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tailor_app/app/auth/viewmodel/states/auth_states.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tailor_app/app/model/user_model.dart';
@@ -12,6 +15,8 @@ class AuthCubit extends Cubit<AuthStates> {
   AuthCubit() : super(InitialState());
   UserModel? appUser;
   final authRepo = AuthRepo();
+  LatLng? currentPosition;
+  String? currentDistrict;
 
   final FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -56,6 +61,7 @@ class AuthCubit extends Cubit<AuthStates> {
           email: user.email!, password: password);
       appUser = user;
       await authRepo.signUpUser(user: user, credential: userCredential);
+      // emit(LocationAccessedStates());
       emit(
         AuthenticatedState(
             user: appUser!, message: 'Account Created Succesfully'),
@@ -112,6 +118,7 @@ class AuthCubit extends Cubit<AuthStates> {
       await Future.delayed(const Duration(seconds: 3));
       final isCurrentUser = authRepo.isCurrentUser();
       if (isCurrentUser != null) {
+        log(isCurrentUser.email!);
         appUser = await authRepo.getUserById(uid: isCurrentUser.uid);
         emit(AuthenticatedState(user: appUser!));
         log(appUser!.toJson().toString());
@@ -153,5 +160,51 @@ class AuthCubit extends Cubit<AuthStates> {
     appUser = user;
     emit(AuthenticatedState(user: user));
     // Emit a state if needed
+  }
+
+  // Future<void> updateUserLocation(UserModel user) async {
+  //   try {
+  //     await FirebaseFirestore.instance
+  //         .collection('users')
+  //         .doc(user.id) // Ensure 'id' is the document ID in Firestore
+  //         .update({
+  //       'location': GeoPoint(user.location!.latitude, user.location!.longitude),
+  //       'place': user.place,
+  //     });
+  //     appUser = user;
+  //     emit(AuthenticatedState(user: user));
+  //     log('User updated successfully in Firestore');
+  //   } catch (e) {
+  //     log('Error updating user: $e');
+  //   }
+  // }
+
+  Future<void> getPermission() async {
+    emit(LoadingState());
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      double lat = position.latitude;
+      double long = position.longitude;
+      log(lat.toString());
+      log(long.toString());
+      currentPosition = LatLng(lat, long);
+      log(currentPosition.toString());
+      List<Placemark> placemark =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+
+      log(placemark.toString());
+      Placemark place = placemark[0];
+      currentDistrict = place.administrativeArea;
+
+      emit(LocationAccessedStates());
+    }
   }
 }

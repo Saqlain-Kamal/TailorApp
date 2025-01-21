@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
+import 'package:tailor_app/app/cubit/send_request_cubit/send_request_cubit.dart';
 import 'package:tailor_app/app/extension/padding.dart';
 import 'package:tailor_app/app/home/dashboard/screens/reviews.dart';
 import 'package:tailor_app/app/home/dashboard/widgets/dashboard_card.dart';
@@ -10,9 +11,33 @@ import 'package:tailor_app/app/utils/colors.dart';
 import 'package:tailor_app/app/utils/constants.dart';
 import 'package:tailor_app/app/utils/mediaquery.dart';
 
-class Dashboard extends StatelessWidget {
+class Dashboard extends StatefulWidget {
   const Dashboard({super.key, required this.onCardTap});
   final Function(int) onCardTap;
+
+  @override
+  State<Dashboard> createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
+  @override
+  void initState() {
+    getOrdersLength();
+    super.initState();
+  }
+
+  void getOrdersLength() async {
+    await context
+        .read<SendRequestCubit>()
+        .getNewOrdersLength(uid: context.read<AuthCubit>().appUser!.id!);
+    await context
+        .read<SendRequestCubit>()
+        .getPendingOrdersLength(uid: context.read<AuthCubit>().appUser!.id!);
+    await context
+        .read<SendRequestCubit>()
+        .getProgressOrdersLength(uid: context.read<AuthCubit>().appUser!.id!);
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = context.read<AuthCubit>().appUser;
@@ -61,17 +86,25 @@ class Dashboard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           DashboardCard(
+                            count: context
+                                .watch<SendRequestCubit>()
+                                .progressOrderLength
+                                .toString(),
                             asset: 'assets/images/sessor.png',
                             text: 'Orders in progress',
                             onTap: () {
-                              onCardTap(1);
+                              widget.onCardTap(1);
                             },
                           ),
                           DashboardCard(
+                            count: context
+                                .watch<SendRequestCubit>()
+                                .pendingOrderLength
+                                .toString(),
                             text: 'Pending Orders',
                             svg: 'assets/images/clock.svg',
                             onTap: () {
-                              onCardTap(2);
+                              widget.onCardTap(2);
                             },
                           ),
                         ],
@@ -80,13 +113,18 @@ class Dashboard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           DashboardCard(
+                            count: context
+                                .watch<SendRequestCubit>()
+                                .newOrderLength
+                                .toString(),
                             svg: 'assets/images/box.svg',
                             text: 'New Orders',
                             onTap: () {
-                              onCardTap(0);
+                              widget.onCardTap(0);
                             },
                           ),
                           DashboardCard(
+                            count: '14',
                             onTap: () {
                               Navigator.push(
                                 context,

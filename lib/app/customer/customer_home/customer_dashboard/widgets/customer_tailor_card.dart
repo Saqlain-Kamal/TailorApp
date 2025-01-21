@@ -36,27 +36,39 @@ class CustomerTailorCard extends StatelessWidget {
           children: [
             svg != null
                 ? Padding(
-              padding: const EdgeInsets.only(left: 6),
-              child: SvgPicture.asset(svg!),
-            )
+                    padding: const EdgeInsets.only(left: 6),
+                    child: SvgPicture.asset(svg!),
+                  )
                 : Padding(
-              padding: const EdgeInsets.only(left: 6),
-              child: Image.asset(
-                asset!,
-                height: 26,
-              ),
+                    padding: const EdgeInsets.only(left: 6),
+                    child: Image.asset(
+                      asset!,
+                      height: 26,
+                    ),
+                  ),
+            Text(text, style: const TextStyle(fontSize: 12))
+                .paddingOnly(left: 6),
+            const SizedBox(
+              height: 5,
             ),
-            Text(text,style: const TextStyle(fontSize: 12)).paddingOnly(left: 6),
-            const SizedBox(height: 5,),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.star,size: 15,color: AppColors.ratingColor,),
+                const Icon(
+                  Icons.star,
+                  size: 15,
+                  color: AppColors.ratingColor,
+                ),
                 Text(rating),
               ],
             ),
-            const SizedBox(height: 5,),
-            Text("Starting from PKR $priceText",style: const TextStyle(fontSize: 10)).paddingOnly(left: 6),
+            const SizedBox(
+              height: 5,
+            ),
+            Text("Starting from PKR $priceText",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 10))
+                .paddingOnly(left: 6),
           ],
         ),
       ),

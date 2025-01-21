@@ -59,7 +59,7 @@ class DropDownType extends StatelessWidget {
                     value: value,
                     child: isNotification
                         ? SizedBox(
-                            width: 140,
+                            width: 160,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [

@@ -20,6 +20,7 @@ class ReviewCard extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         decoration: reusableBoxDecoration,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ListTile(
               contentPadding: EdgeInsets.zero,

@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
+import 'package:tailor_app/app/cubit/tailor_cubits/cubits/tailor_cubit.dart';
+import 'package:tailor_app/app/customer/customer_home/customer_dashboard/screens/customer_measurements.dart';
 import 'package:tailor_app/app/customer/customer_home/customer_dashboard/screens/tailor_listing.dart';
 import 'package:tailor_app/app/customer/customer_home/customer_dashboard/widgets/customer_dashboard_card.dart';
 import 'package:tailor_app/app/customer/customer_home/customer_dashboard/widgets/customer_tailor_card.dart';
@@ -10,13 +12,31 @@ import 'package:tailor_app/app/extension/padding.dart';
 import 'package:tailor_app/app/home/dashboard/screens/reviews.dart';
 import 'package:tailor_app/app/utils/mediaquery.dart';
 
-import '../../../../utils/colors.dart';
-import '../../../../utils/constants.dart';
 import '../../../../auth/viewmodel/cubit/auth_cubit.dart';
 import '../../../../home/dashboard/widgets/recent_order_card.dart';
+import '../../../../utils/colors.dart';
+import '../../../../utils/constants.dart';
 
-class CustomerDashboard extends StatelessWidget {
+class CustomerDashboard extends StatefulWidget {
   const CustomerDashboard({super.key});
+
+  @override
+  State<CustomerDashboard> createState() => _CustomerDashboardState();
+}
+
+class _CustomerDashboardState extends State<CustomerDashboard> {
+  @override
+  void initState() {
+    getTailors();
+    super.initState();
+  }
+
+  void getTailors() async {
+    await context.read<TailorCubit>().getTailors();
+    // context
+    //     .read<FavoriteCubit>()
+    //     .fetchFavorites(uid: context.read<AuthCubit>().appUser!.id!);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +108,11 @@ class CustomerDashboard extends StatelessWidget {
                     CustomerDashboardCard(
                       asset: 'assets/images/listing.jpeg',
                       text: 'Tailor Listings',
-                      countText: '80',
+                      countText: context
+                          .watch<TailorCubit>()
+                          .tailorList
+                          .length
+                          .toString(),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -102,7 +126,14 @@ class CustomerDashboard extends StatelessWidget {
                       asset: 'assets/images/measurement.jpeg',
                       text: 'Measurements',
                       countText: '05',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CustomerMeasurements(),
+                          ),
+                        );
+                      },
                     ),
                     CustomerDashboardCard(
                       asset: 'assets/images/review.png',

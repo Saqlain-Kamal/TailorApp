@@ -35,8 +35,8 @@ class _EditProfileState extends State<EditProfile> {
         emailController.text = user.email!; // Set email in the controller
         phoneController.text =
             user.phoneNumber ?? ''; // Set phone in the controller
-        locationController.text =
-            user.location!; // Set location in the controller
+        // locationController.text =
+        //     user.location!; // Set location in the controller
       }
     });
     super.initState();
@@ -147,7 +147,6 @@ class _EditProfileState extends State<EditProfile> {
                           name: nameController.text.trim(),
                           email: emailController.text.trim(),
                           phoneNumber: phoneController.text.trim(),
-                          location: locationController.text.trim(),
                         );
                         Navigator.push(
                           context,
