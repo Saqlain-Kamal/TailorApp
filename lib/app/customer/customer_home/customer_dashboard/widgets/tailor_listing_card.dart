@@ -95,9 +95,15 @@ class _TailorListingCardState extends State<TailorListingCard> {
                   Icons.location_on_outlined,
                   size: 15,
                 ),
-                Text(
-                  widget.user?.location ?? '',
-                  style: const TextStyle(fontSize: 12),
+                SizedBox(
+                  width: screenWidth(context) * 0.25,
+                  child: Text(
+                    widget.user?.place ?? '',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 )
               ],
             ),

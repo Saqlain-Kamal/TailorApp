@@ -10,12 +10,14 @@ class CustomButton extends StatelessWidget {
       this.firstColor,
       this.secondColor,
       this.isloading,
+      this.widget,
       super.key});
   final void Function()? onTap;
   final String text;
   final Color? firstColor;
   final Color? secondColor;
   final bool? isloading;
+  final Widget? widget;
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +47,20 @@ class CustomButton extends StatelessWidget {
                 height: 100,
               )
             : Center(
-                child: Text(
-                  text,
-                  style: const TextStyle(
-                      color: AppColors.whiteColor, fontSize: 14),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      text,
+                      style: const TextStyle(
+                          color: AppColors.whiteColor, fontSize: 14),
+                    ),
+                    if (widget != null)
+                      const SizedBox(
+                        width: 20,
+                      ),
+                    if (widget != null) widget!,
+                  ],
                 ),
               ),
       ),

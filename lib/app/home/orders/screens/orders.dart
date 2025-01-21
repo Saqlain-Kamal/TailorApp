@@ -3,10 +3,12 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/extension/padding.dart';
 import 'package:tailor_app/app/home/dashboard/widgets/recent_order_card.dart';
 import 'package:tailor_app/app/home/orders/screens/new_orders.dart';
+import 'package:tailor_app/app/home/orders/screens/order_summary.dart';
 import 'package:tailor_app/app/model/user_model.dart';
 import 'package:tailor_app/app/utils/colors.dart';
 
@@ -20,7 +22,8 @@ class Orders extends StatefulWidget {
 class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  String _appBarTitle = 'New Orders';
+  final ValueNotifier<String> _appBarTitleNotifier =
+      ValueNotifier<String>('New Orders');
 
   @override
   void initState() {
@@ -30,23 +33,29 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
       vsync: this,
       initialIndex: widget.initialIndex,
     );
+    _updateTitle(widget.initialIndex);
 
     // Listen to tab changes and update the title
     _tabController.addListener(() {
-      setState(() {
-        switch (_tabController.index) {
-          case 0:
-            _appBarTitle = 'New Orders';
-            break;
-          case 1:
-            _appBarTitle = 'In Progress';
-            break;
-          case 2:
-            _appBarTitle = 'Pending';
-            break;
-        }
-      });
+      if (_tabController.indexIsChanging) {
+        _updateTitle(_tabController.index);
+      }
     });
+  }
+
+  void _updateTitle(int index) {
+    switch (index) {
+      case 0:
+        _appBarTitleNotifier.value = 'New Orders';
+        break;
+      case 1:
+        _appBarTitleNotifier.value = 'In Progress';
+        break;
+      case 2:
+        _appBarTitleNotifier.value = 'Pending';
+        break;
+      default:
+    }
   }
 
   @override
@@ -61,13 +70,17 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(_appBarTitle),
-        ),
+            title: ValueListenableBuilder(
+          valueListenable: _appBarTitleNotifier,
+          builder: (context, value, child) {
+            return Text(value);
+          },
+        )),
         body: Column(
           children: [
             TabBar(
               controller: _tabController,
-              indicatorSize: TabBarIndicatorSize.label,
+              indicatorSize: TabBarIndicatorSize.tab,
               labelColor: AppColors.darkBlueColor,
               indicatorColor: AppColors.darkBlueColor,
               dividerColor: Colors.transparent,
@@ -80,6 +93,7 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
             ).paddingSymmetric(horizontal: 15),
             Expanded(
               child: TabBarView(
+                physics: const NeverScrollableScrollPhysics(),
                 controller: _tabController,
                 children: [
                   StreamBuilder(
@@ -116,6 +130,11 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
                         itemBuilder: (context, index) {
                           final user = data[index]['user'];
                           final docId = data[index]['docId'].toString();
+                          final date = data[index]['timetamp'];
+                          final dateTime = date.toDate();
+                          final formattedDate =
+                              DateFormat('dd MMMM yyyy, hh:mm:ss a')
+                                  .format(dateTime);
                           final orderId = data[index]['orderId'].toString();
 
                           return GestureDetector(
@@ -127,6 +146,7 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
                                     user: user,
                                     docId: docId,
                                     orderId: orderId,
+                                    date: formattedDate,
                                   ),
                                 ),
                               );
@@ -148,14 +168,65 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
                       ).paddingOnly(top: 2, bottom: 3);
                     },
                   ),
-                  ListView.builder(
-                    itemCount: 5,
-                    itemBuilder: (context, index) {
-                      return const RecentOrdersCard(
-                        status: 'Pending',
-                      ).paddingOnly(top: 2, bottom: 3);
-                    },
-                  ),
+                  StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(context.read<AuthCubit>().appUser!.id)
+                          .collection('pendingOrders')
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return const Text('data');
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.docs.isEmpty) {
+                          return const Center(child: Text('NO ORDERS'));
+                        }
+                        final data = snapshot.data!.docs.map((e) {
+                          final orderData = e.data();
+                          return {
+                            'user': UserModel.fromJson(orderData['user']),
+                            'docId': orderData['docId'],
+                            'timetamp': orderData['timestamp'],
+                            'orderId': orderData['orderId'],
+                          };
+                        }).toList();
+                        return ListView.builder(
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            final user = data[index]['user'];
+                            final date = data[index]['timetamp'];
+                            final dateTime = date.toDate();
+                            final formattedDate =
+                                DateFormat('dd MMMM yyyy, hh:mm:ss a')
+                                    .format(dateTime);
+                            final docId = data[index]['docId'].toString();
+                            final orderId = data[index]['orderId'].toString();
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OrderSummary(
+                                      user: user,
+                                      docId: docId,
+                                      orderId: orderId,
+                                      date: formattedDate,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: RecentOrdersCard(
+                                user: user,
+                                status: 'Pending',
+                              ).paddingOnly(top: 2, bottom: 3),
+                            );
+                          },
+                        );
+                      }),
                 ],
               ),
             ),

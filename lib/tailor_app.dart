@@ -6,6 +6,7 @@ import 'package:tailor_app/app/auth/screens/auth_page.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/auth/viewmodel/states/auth_states.dart';
 import 'package:tailor_app/app/cubit/favorite_cubit/favorite_cubit.dart';
+import 'package:tailor_app/app/cubit/location_cubit/location_cubit.dart';
 import 'package:tailor_app/app/cubit/measurment_cubit/measurment_cubit.dart';
 import 'package:tailor_app/app/cubit/profile_cubit/profile_cubit.dart';
 import 'package:tailor_app/app/cubit/review_cubit/review_cubit.dart';
@@ -46,6 +47,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => SendRequestCubit(),
         ),
+        BlocProvider(
+          create: (context) => LocationCubit(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -58,6 +62,7 @@ class MyApp extends StatelessWidget {
         home: BlocConsumer<AuthCubit, AuthStates>(
           listener: (context, state) {
             if (state is ErrorState) {
+              log('I am There');
               log(state.message.toString());
               context.mySnackBar(text: state.message, color: Colors.red);
             }

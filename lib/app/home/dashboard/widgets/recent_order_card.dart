@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
+import 'package:tailor_app/app/cubit/send_request_cubit/send_request_cubit.dart';
+import 'package:tailor_app/app/extension/snackbar.dart';
 import 'package:tailor_app/app/home/dashboard/widgets/recent_orders_button.dart';
 import 'package:tailor_app/app/model/user_model.dart';
 import 'package:tailor_app/app/utils/colors.dart';
+import 'package:tailor_app/app/utils/mediaquery.dart';
 
 class RecentOrdersCard extends StatelessWidget {
   const RecentOrdersCard({
@@ -34,7 +39,7 @@ class RecentOrdersCard extends StatelessWidget {
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(user?.location ?? ''),
+                  Text(user?.place ?? ''),
                   const Text('Delivery Date: oct 15,2024')
                 ],
               ),
@@ -68,11 +73,94 @@ class RecentOrdersCard extends StatelessWidget {
                     width: 25,
                   ),
                 if (showBtn)
-                  const RecentOrdersButton(
-                    text: 'Update Status',
+                  GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CustomAlertDialogue(
+                            user: user!,
+                          );
+                        },
+                      );
+                    },
+                    child: const RecentOrdersButton(
+                      text: 'Update Status',
+                    ),
                   ),
               ],
             )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CustomAlertDialogue extends StatefulWidget {
+  const CustomAlertDialogue({
+    required this.user,
+    super.key,
+  });
+  final UserModel user;
+  @override
+  State<CustomAlertDialogue> createState() => _CustomAlertDialogueState();
+}
+
+class _CustomAlertDialogueState extends State<CustomAlertDialogue> {
+  int? selectedValue;
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      contentPadding: const EdgeInsets.all(8),
+      content: SizedBox(
+        width: screenWidth(context),
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // Adjust size to fit content
+          children: [
+            RadioListTile<int>(
+              title: const Text('Pending'),
+              value: 1, // Unique value for this option
+              groupValue: selectedValue,
+              onChanged: (value) async {
+                setState(() {
+                  selectedValue = value;
+                });
+
+                Navigator.pop(context);
+              },
+            ),
+            RadioListTile<int>(
+              title: const Text('In Progress'),
+              value: 2, // Unique value for this option
+              groupValue: selectedValue,
+              onChanged: (value) async {
+                setState(() {
+                  selectedValue = value;
+                });
+                try {
+                  await context.read<SendRequestCubit>().moveOrderToInProgress(
+                      myUid: context.read<AuthCubit>().appUser!.id!,
+                      otherUid: widget.user.id!);
+                } catch (e) {
+                  if (context.mounted) {
+                    context.mySnackBar(text: e.toString(), color: Colors.red);
+                  }
+                }
+                Navigator.pop(context);
+              },
+            ),
+            RadioListTile<int>(
+              title: const Text('Completed'),
+              value: 3, // Unique value for this option
+              groupValue: selectedValue,
+              onChanged: (value) {
+                setState(() {
+                  selectedValue = value;
+                });
+                Navigator.pop(context);
+              },
+            ),
           ],
         ),
       ),

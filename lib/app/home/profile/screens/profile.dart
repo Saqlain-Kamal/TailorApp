@@ -106,7 +106,7 @@ class _ProfileState extends State<Profile> {
                   DropDownType(
                     isNotification: true,
                     prefixImage: 'assets/images/notificationBorder.png',
-                    hintText: 'Notification Setting',
+                    hintText: 'Notification',
                     selectedValue: notificationSelectedValue,
                     items: notificationItems,
                     onChanged: (p0) {

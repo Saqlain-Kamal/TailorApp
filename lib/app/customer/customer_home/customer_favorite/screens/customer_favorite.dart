@@ -93,7 +93,7 @@ class _CustomerFavoriteState extends State<CustomerFavorite> {
                                   );
                                 },
                                 child: TailorListingCard(
-                                  cityName: tailor.location ?? '',
+                                  cityName: tailor.place ?? '',
                                   name: tailor.name!,
                                   showFavorite: false,
                                   image: 'assets/images/avatar3.png',

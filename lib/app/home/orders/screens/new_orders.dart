@@ -13,15 +13,17 @@ import 'package:tailor_app/app/utils/container_decoration.dart';
 import 'package:tailor_app/app/utils/custom_button.dart';
 
 class NewOrders extends StatelessWidget {
-  const NewOrders({
-    super.key,
-    required this.user,
-    required this.orderId,
-    required this.docId,
-  });
+  const NewOrders(
+      {super.key,
+      required this.user,
+      required this.orderId,
+      required this.docId,
+      required this.date});
   final UserModel user;
   final String orderId;
   final String docId;
+  final String date;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +40,7 @@ class NewOrders extends StatelessWidget {
                   backgroundImage: AssetImage('assets/images/avatar3.png'),
                 ),
                 title: Text(user.name!),
-                subtitle: Text(user.location!),
+                subtitle: Text(user.place!),
               ),
               const SizedBox(
                 height: 5,
@@ -79,8 +81,8 @@ class NewOrders extends StatelessWidget {
                           AppStrings.orderDate,
                           style: TextStyle(color: Colors.grey.shade500),
                         ),
-                        const Text(
-                          '01/10/24',
+                        Text(
+                          date,
                         ),
                       ],
                     ),
@@ -154,6 +156,12 @@ class NewOrders extends StatelessWidget {
                         //   });
                         // }
 
+                        if (state is RequestAcceptedStates) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Navigator.popUntil(
+                                context, (route) => route.isFirst);
+                          });
+                        }
                         return CustomButton(
                           onTap: () async {
                             try {
@@ -192,11 +200,76 @@ class NewOrders extends StatelessWidget {
                     width: 8,
                   ),
                   Expanded(
-                    child: CustomButton(
-                      onTap: () {},
-                      text: 'REJECT',
-                      firstColor: Colors.red,
-                      secondColor: Colors.red,
+                    child: BlocConsumer<SendRequestCubit, SendRequestStates>(
+                      listener: (context, state) {
+                        if (state is OrderNotApprovedState) {
+                          log('ji');
+                          context.mySnackBar(
+                              text: 'Order Rejected ! Hope For The Next Order',
+                              color: AppColors.darkBlueColor);
+                        }
+                        if (state is OrderNotFoundState) {
+                          log('ji');
+                          context.mySnackBar(
+                              text: 'Order Not Found', color: Colors.red);
+                        }
+                        if (state is ErrorState) {
+                          log('here');
+                          context.mySnackBar(
+                              text: state.message, color: Colors.red);
+                        }
+                        // TODO: implement listener
+                      },
+                      builder: (context, state) {
+                        if (state is RejectLoadingStates) {
+                          return CustomButton(
+                            onTap: () {},
+                            text: 'text',
+                            isloading: true,
+                            firstColor: Colors.red.shade600,
+                            secondColor: Colors.red.shade600,
+                          );
+                        }
+
+                        if (state is OrderNotApprovedState) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Navigator.popUntil(
+                                context, (route) => route.isFirst);
+                          });
+                        }
+
+                        return CustomButton(
+                          onTap: () async {
+                            try {
+                              await context
+                                  .read<SendRequestCubit>()
+                                  .rejectOrder(
+                                      myUid: context
+                                          .read<AuthCubit>()
+                                          .appUser!
+                                          .id!,
+                                      otherUid: user.id!);
+                            } catch (e) {
+                              if (context.mounted) {
+                                context.mySnackBar(
+                                    text: e.toString(), color: Colors.red);
+                              }
+                            }
+
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => CustomerPayment(
+                            //       user: tailor,
+                            //     ),
+                            //   ),
+                            // );
+                          },
+                          text: 'REJECT',
+                          firstColor: Colors.red.shade600,
+                          secondColor: Colors.red.shade600,
+                        );
+                      },
                     ),
                   ),
                 ],

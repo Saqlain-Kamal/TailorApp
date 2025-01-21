@@ -15,7 +15,10 @@ class RecentOrdersButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(width: 1, color: AppColors.borderGreyColor),
       ),
-      child: Text(text),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 12),
+      ),
     );
   }
 }

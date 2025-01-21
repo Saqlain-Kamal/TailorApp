@@ -12,6 +12,11 @@ class SendRequestCubit extends Cubit<SendRequestStates> {
   String orderId = '';
   bool isOrderAlreadySend = false;
   bool isApproved = false;
+  int newOrderLength = 0;
+  int pendingOrderLength = 0;
+  int progressOrderLength = 0;
+
+  String appBarTitle = 'New Orders';
   Future<void> sendOrderRequest({
     required String senderUid,
     required String recieverUid,
@@ -67,6 +72,58 @@ class SendRequestCubit extends Cubit<SendRequestStates> {
     }
   }
 
+  Future<void> moveOrderToInProgress({
+    required String myUid,
+    required String otherUid,
+  }) async {
+    try {
+      log('sending');
+      emit(LoadingStates());
+
+      final isOrderMovedToInProgress =
+          await db.moveOrderToInProgress(myUid: myUid, otherUserUid: otherUid);
+
+      if (isOrderMovedToInProgress) {
+        emit(RequestAcceptedStates());
+      } else {
+        emit(OrderNotFoundState());
+      }
+    } catch (e) {
+      emit(
+        ErrorState(
+          message: e.toString(),
+        ),
+      );
+      rethrow;
+    }
+  }
+
+  Future<void> rejectOrder({
+    required String myUid,
+    required String otherUid,
+  }) async {
+    try {
+      log('sending');
+      emit(RejectLoadingStates());
+
+      final isOrderRejected =
+          await db.rejectOrder(myUid: myUid, otherUserUid: otherUid);
+
+      if (isOrderRejected) {
+        emit(OrderNotApprovedState());
+      } else {
+        emit(OrderNotFoundState());
+      }
+    } catch (e) {
+      emit(
+        ErrorState(
+          message: e.toString(),
+        ),
+      );
+      rethrow;
+    }
+  }
+
   String generateOrderID() {
     orderId = DateTime.now().millisecondsSinceEpoch.toString();
     return orderId;
@@ -92,6 +149,36 @@ class SendRequestCubit extends Cubit<SendRequestStates> {
   }) async {
     try {
       isApproved = await db.isOrderApprove(myUid: myUid, otherUid: otherUid);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> getNewOrdersLength({required String uid}) async {
+    try {
+      newOrderLength = await db.getNewOrdersLength(uid);
+      emit(OrderCount());
+      log(newOrderLength.toString());
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> getPendingOrdersLength({required String uid}) async {
+    try {
+      pendingOrderLength = await db.getPendingOrdersLength(uid);
+      emit(OrderCount());
+      log(pendingOrderLength.toString());
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> getProgressOrdersLength({required String uid}) async {
+    try {
+      progressOrderLength = await db.getProgressOrdersLength(uid);
+      emit(OrderCount());
+      log(progressOrderLength.toString());
     } catch (e) {
       rethrow;
     }

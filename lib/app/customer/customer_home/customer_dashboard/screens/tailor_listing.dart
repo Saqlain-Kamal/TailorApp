@@ -105,7 +105,7 @@ class _TailorListingState extends State<TailorListing> {
                                   );
                                 },
                                 child: TailorListingCard(
-                                  cityName: tailor.location ?? '',
+                                  cityName: tailor.place ?? '',
                                   name: tailor.name!,
                                   showFavorite: true,
                                   image: 'assets/images/avatar3.png',
