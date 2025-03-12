@@ -54,7 +54,7 @@ class AuthCubit extends Cubit<AuthStates> {
   Future<UserCredential> sighUpWithEmailAndPassword(
       UserModel user, String password) async {
     try {
-      emit(LoadingState());
+      emit(LocationLoadingState());
       await Future.delayed(const Duration(seconds: 2));
       log('Loading State');
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
@@ -70,13 +70,10 @@ class AuthCubit extends Cubit<AuthStates> {
       log('Authenticated State');
 
       return userCredential;
-    } on FirebaseAuthException catch (e) {
-      emit(ErrorState(message: e.message!));
-      throw Exception('error is${e.message}');
     } catch (e) {
       log('Unknown exception: $e');
       emit(ErrorState(message: 'An unknown error occurred.'));
-      throw Exception('Error is: $e');
+      rethrow;
     }
   }
 
@@ -180,7 +177,7 @@ class AuthCubit extends Cubit<AuthStates> {
   // }
 
   Future<void> getPermission() async {
-    emit(LoadingState());
+    emit(LocationLoadingState());
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -207,4 +204,10 @@ class AuthCubit extends Cubit<AuthStates> {
       emit(LocationAccessedStates());
     }
   }
+
+  void goToCreateAccount() => emit(AccountCreateScreenState());
+  void goToContinueProfile(UserModel user, String password) =>
+      emit(ContinueProfileScreenState(user: user, password: password));
+  void goToLocationScreen(UserModel user, String password) =>
+      emit(LocationAccessScreenState(user: user, password: password));
 }

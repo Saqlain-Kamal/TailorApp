@@ -43,9 +43,10 @@ class CustomAlertDialogue extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-           Text(
+          Text(
             title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
@@ -55,10 +56,7 @@ class CustomAlertDialogue extends StatelessWidget {
         style: TextStyle(color: Colors.grey.shade500, fontSize: 13),
       ),
       actions: [
-        if(showBtn1)
-        BorderCustomButton(
-            onTap: btnOnTap1,
-            text: btnText1),
+        if (showBtn1) BorderCustomButton(onTap: btnOnTap1, text: btnText1),
         const SizedBox(
           height: 10,
         ),
@@ -82,9 +80,7 @@ class CustomAlertDialogue extends StatelessWidget {
               );
             }
 
-            return CustomButton(
-                onTap: btnOnTap2,
-                text: btnText2);
+            return CustomButton(onTap: btnOnTap2, text: btnText2);
           },
         ),
       ],

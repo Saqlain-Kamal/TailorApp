@@ -26,7 +26,7 @@ class ContinueEditProfile extends StatefulWidget {
 class _ContinueEditProfileState extends State<ContinueEditProfile> {
   final shopNameController = TextEditingController();
   final experienceController = TextEditingController();
-  final stichingController = TextEditingController();
+  // final stichingController = TextEditingController();
   final startingPriceController = TextEditingController();
   @override
   void initState() {
@@ -38,8 +38,8 @@ class _ContinueEditProfileState extends State<ContinueEditProfile> {
         shopNameController.text = user.shopName!; // Set name in the controller
         experienceController.text =
             user.experience!; // Set email in the controller
-        stichingController.text =
-            user.stichingService!; // Set phone in the controller
+        // stichingController.text =
+        //     user.stichingService!; // Set phone in the controller
         startingPriceController.text =
             user.startingPrice!; // Set location in the controller
       }
@@ -62,7 +62,6 @@ class _ContinueEditProfileState extends State<ContinueEditProfile> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
-                height: screenHeight(context) * 0.46,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,18 +91,18 @@ class _ContinueEditProfileState extends State<ContinueEditProfile> {
                       controller: experienceController,
                       hint: 'Experience',
                     ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 6),
-                      child: Text(
-                        AppStrings.stichingService,
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    CustomeTextField(
-                      controller: stichingController,
-                      hint: 'Stiching Service',
-                    ),
+                    // const Padding(
+                    //   padding: EdgeInsets.symmetric(horizontal: 6),
+                    //   child: Text(
+                    //     AppStrings.stichingService,
+                    //     style: TextStyle(
+                    //         fontSize: 15, fontWeight: FontWeight.bold),
+                    //   ),
+                    // ),
+                    // CustomeTextField(
+                    //   controller: stichingController,
+                    //   hint: 'Stiching Service',
+                    // ),
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 6),
                       child: Text(
@@ -119,7 +118,7 @@ class _ContinueEditProfileState extends State<ContinueEditProfile> {
                   ],
                 ),
               ),
-              SizedBox(height: screenHeight(context) * 0.3), // Rep
+              SizedBox(height: screenHeight(context) * 0.5), // Rep
               BlocConsumer<ProfileCubit, ProfileStates>(
                 listener: (ctx, state) {
                   // TODO: implement listener
@@ -168,12 +167,12 @@ class _ContinueEditProfileState extends State<ContinueEditProfile> {
                           phoneNumber: widget.user.phoneNumber,
                           id: myUser.id,
                           userId: myUser.userId,
-                          lat: widget.user.lat,
-                          lon: widget.user.lon,
+                          lat: myUser.lat,
+                          lon: myUser.lon,
                           role: myUser.role,
                           shopName: shopNameController.text.trim(),
                           experience: experienceController.text.trim(),
-                          stichingService: stichingController.text.trim(),
+                          stichingService: myUser.stichingService,
                           startingPrice: startingPriceController.text.trim(),
                         );
                         if (widget.user.name!.isNotEmpty) {

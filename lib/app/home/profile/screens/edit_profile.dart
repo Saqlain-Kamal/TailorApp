@@ -35,8 +35,7 @@ class _EditProfileState extends State<EditProfile> {
         emailController.text = user.email!; // Set email in the controller
         phoneController.text =
             user.phoneNumber ?? ''; // Set phone in the controller
-        // locationController.text =
-        //     user.location!; // Set location in the controller
+        locationController.text = user.place!; // Set location in the controller
       }
     });
     super.initState();
@@ -147,6 +146,7 @@ class _EditProfileState extends State<EditProfile> {
                           name: nameController.text.trim(),
                           email: emailController.text.trim(),
                           phoneNumber: phoneController.text.trim(),
+                          place: context.read<AuthCubit>().appUser!.place,
                         );
                         Navigator.push(
                           context,

@@ -6,8 +6,10 @@ import 'package:tailor_app/app/auth/screens/auth_page.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/auth/viewmodel/states/auth_states.dart';
 import 'package:tailor_app/app/customer/customer_home/customer_home.dart';
+import 'package:tailor_app/app/extension/snackbar.dart';
 import 'package:tailor_app/app/home/home.dart';
 import 'package:tailor_app/app/model/user_model.dart';
+import 'package:tailor_app/app/utils/colors.dart';
 import 'package:tailor_app/app/utils/custom_button.dart';
 import 'package:tailor_app/app/utils/mediaquery.dart';
 import 'package:uuid/uuid.dart';
@@ -28,6 +30,12 @@ class LocationAccessScreen extends StatefulWidget {
 class _LocationAccessScreenState extends State<LocationAccessScreen> {
   bool isloading = false;
   @override
+  void initState() {
+    context.read<AuthCubit>().emit(InitialState());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double height = screenHeight(context);
     double width = screenWidth(context);
@@ -41,13 +49,12 @@ class _LocationAccessScreenState extends State<LocationAccessScreen> {
           //       text: state.message, color: Colors.red);
           // }
 
-          // if (state is AuthenticatedState) {
-          //   // state.message != null
-          //   //     ? context.mySnackBar(
-          //   //         text: state.message!,
-          //   //         color: AppColors.darkBlueColor)
-          //   //     : const SizedBox();
-
+          if (state is AuthenticatedState) {
+            state.message != null
+                ? context.mySnackBar(
+                    text: state.message!, color: AppColors.darkBlueColor)
+                : const SizedBox();
+          }
           //   final role = context.read<AuthCubit>().appUser!.role;
           //   if (role == 'Tailor') {
           //     Navigator.pushReplacement(
@@ -70,6 +77,7 @@ class _LocationAccessScreenState extends State<LocationAccessScreen> {
           if (state is UnAuthenticatedState) {
             return const AuthPage();
           }
+          log('asdasdasdasdadasdasd');
           log(state.toString());
           if (state is AuthenticatedState) {
             final role = context.read<AuthCubit>().appUser!.role;
@@ -80,6 +88,17 @@ class _LocationAccessScreenState extends State<LocationAccessScreen> {
                 : const CustomerHome();
           }
           if (state is LoadingState) {
+            log('messsssssage');
+
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.greyColor,
+                ),
+              ),
+            );
+          }
+          if (state is LocationLoadingState) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -162,8 +181,7 @@ class _LocationAccessScreenState extends State<LocationAccessScreen> {
                         role: widget.user!.role,
                         shopName: widget.user!.shopName ?? ''.trim(),
                         experience: widget.user!.experience ?? ''.trim(),
-                        stichingService:
-                            widget.user!.stichingService ?? ''.trim(),
+                        stichingService: widget.user!.stichingService ?? [],
                         startingPrice: widget.user!.startingPrice ?? ''.trim(),
                         lat: context
                             .read<AuthCubit>()

@@ -1,5 +1,8 @@
+import 'package:intl/intl.dart';
+
 extension CustomDate on DateTime {
   get myDate {
-    return '$month $day, $year'.toString();
+    String monthName = DateFormat.MMMM().format(this);
+    return '$day $monthName, $year'.toString();
   }
 }

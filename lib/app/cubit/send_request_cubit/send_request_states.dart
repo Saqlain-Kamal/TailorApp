@@ -6,6 +6,8 @@ class LoadingStates extends SendRequestStates {}
 
 class RejectLoadingStates extends SendRequestStates {}
 
+class CheckingLoadingStates extends SendRequestStates {}
+
 class RequestSendedStates extends SendRequestStates {}
 
 class RequestAcceptedStates extends SendRequestStates {}

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
@@ -14,10 +16,14 @@ class RecentOrdersCard extends StatelessWidget {
     this.user,
     required this.status,
     this.showBtn = true,
+    this.value,
+    this.orderDate,
   });
   final String status;
+  final String? orderDate;
   final bool showBtn;
   final UserModel? user;
+  final int? value;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,7 +32,7 @@ class RecentOrdersCard extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             border: Border.all(width: 1, color: AppColors.borderGreyColor)),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         child: Column(
           children: [
             ListTile(
@@ -40,12 +46,15 @@ class RecentOrdersCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(user?.place ?? ''),
-                  const Text('Delivery Date: oct 15,2024')
+                  Text(
+                    'Delivery Date: ${orderDate ?? 'oct 15,2024'}',
+                    style: const TextStyle(fontSize: 11),
+                  )
                 ],
               ),
               trailing: Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                     color: status == 'In Progress'
                         ? AppColors.blueColor
@@ -54,7 +63,7 @@ class RecentOrdersCard extends StatelessWidget {
                             : Colors.green,
                     borderRadius: BorderRadius.circular(8)),
                 child: Text(
-                  status,
+                  status.isEmpty ? 'request send' : status,
                   style: const TextStyle(color: Colors.white),
                 ),
               ),
@@ -80,6 +89,7 @@ class RecentOrdersCard extends StatelessWidget {
                         builder: (context) {
                           return CustomAlertDialogue(
                             user: user!,
+                            value: value!, //index pass
                           );
                         },
                       );
@@ -100,15 +110,25 @@ class RecentOrdersCard extends StatelessWidget {
 class CustomAlertDialogue extends StatefulWidget {
   const CustomAlertDialogue({
     required this.user,
+    required this.value,
     super.key,
   });
   final UserModel user;
+  final int value;
   @override
   State<CustomAlertDialogue> createState() => _CustomAlertDialogueState();
 }
 
 class _CustomAlertDialogueState extends State<CustomAlertDialogue> {
   int? selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedValue = widget.value;
+    log(selectedValue.toString()); // Initialize inside initState()
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -118,28 +138,77 @@ class _CustomAlertDialogueState extends State<CustomAlertDialogue> {
         child: Column(
           mainAxisSize: MainAxisSize.min, // Adjust size to fit content
           children: [
+            widget.value == 1 || widget.value == 2
+                ? const SizedBox()
+                : RadioListTile<int>(
+                    title: const Text('Pending'),
+                    value: 3, // Unique value for this option
+                    groupValue: selectedValue,
+                    onChanged: (value) async {
+                      setState(() {
+                        selectedValue = value;
+                      });
+                      // try {
+                      //   await context
+                      //       .read<SendRequestCubit>()
+                      //       .moveOrderToPending(
+                      //           myUid: context.read<AuthCubit>().appUser!.id!,
+                      //           otherUid: widget.user.id!);
+                      // } catch (e) {
+                      //   if (context.mounted) {
+                      //     context.mySnackBar(
+                      //         text: e.toString(), color: Colors.red);
+                      //   }
+                      // }
+
+                      Navigator.pop(context);
+                    },
+                  ),
+            widget.value == 1
+                ? const SizedBox()
+                : RadioListTile<int>(
+                    title: const Text('In Progress'),
+                    value: 2, // Unique value for this option
+                    groupValue: selectedValue,
+
+                    onChanged: (value) async {
+                      log('asdasdas');
+                      if (widget.value == 2) {
+                        log('asdasdasdasd');
+                        // If already in progress, just close the dialog
+                        Navigator.pop(context);
+                        return;
+                      }
+                      setState(() {
+                        selectedValue = value;
+                      });
+
+                      try {
+                        await context
+                            .read<SendRequestCubit>()
+                            .moveOrderToInProgress(
+                                myUid: context.read<AuthCubit>().appUser!.id!,
+                                otherUid: widget.user.id!);
+                      } catch (e) {
+                        if (context.mounted) {
+                          context.mySnackBar(
+                              text: e.toString(), color: Colors.red);
+                        }
+                      }
+                      Navigator.pop(context);
+                    },
+                  ),
             RadioListTile<int>(
-              title: const Text('Pending'),
+              title: const Text('Completed'),
               value: 1, // Unique value for this option
               groupValue: selectedValue,
               onChanged: (value) async {
                 setState(() {
                   selectedValue = value;
                 });
-
-                Navigator.pop(context);
-              },
-            ),
-            RadioListTile<int>(
-              title: const Text('In Progress'),
-              value: 2, // Unique value for this option
-              groupValue: selectedValue,
-              onChanged: (value) async {
-                setState(() {
-                  selectedValue = value;
-                });
+                log(selectedValue.toString());
                 try {
-                  await context.read<SendRequestCubit>().moveOrderToInProgress(
+                  await context.read<SendRequestCubit>().moveOrderToCompleted(
                       myUid: context.read<AuthCubit>().appUser!.id!,
                       otherUid: widget.user.id!);
                 } catch (e) {
@@ -147,20 +216,44 @@ class _CustomAlertDialogueState extends State<CustomAlertDialogue> {
                     context.mySnackBar(text: e.toString(), color: Colors.red);
                   }
                 }
+
                 Navigator.pop(context);
               },
             ),
-            RadioListTile<int>(
-              title: const Text('Completed'),
-              value: 3, // Unique value for this option
-              groupValue: selectedValue,
-              onChanged: (value) {
-                setState(() {
-                  selectedValue = value;
-                });
-                Navigator.pop(context);
-              },
-            ),
+            widget.value == 1
+                ? RadioListTile<int>(
+                    title: const Text('Delivered'),
+                    value: 2, // Unique value for this option
+                    groupValue: selectedValue,
+
+                    onChanged: (value) async {
+                      log('asdasdas');
+                      if (widget.value == 2) {
+                        log('asdasdasdasd');
+                        // If already in progress, just close the dialog
+                        Navigator.pop(context);
+                        return;
+                      }
+                      setState(() {
+                        selectedValue = value;
+                      });
+
+                      try {
+                        await context
+                            .read<SendRequestCubit>()
+                            .moveOrderToDelivered(
+                                myUid: context.read<AuthCubit>().appUser!.id!,
+                                otherUid: widget.user.id!);
+                      } catch (e) {
+                        if (context.mounted) {
+                          context.mySnackBar(
+                              text: e.toString(), color: Colors.red);
+                        }
+                      }
+                      Navigator.pop(context);
+                    },
+                  )
+                : const SizedBox(),
           ],
         ),
       ),

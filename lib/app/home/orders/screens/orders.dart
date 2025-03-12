@@ -9,6 +9,7 @@ import 'package:tailor_app/app/extension/padding.dart';
 import 'package:tailor_app/app/home/dashboard/widgets/recent_order_card.dart';
 import 'package:tailor_app/app/home/orders/screens/new_orders.dart';
 import 'package:tailor_app/app/home/orders/screens/order_summary.dart';
+import 'package:tailor_app/app/model/measurment_model.dart';
 import 'package:tailor_app/app/model/user_model.dart';
 import 'package:tailor_app/app/utils/colors.dart';
 
@@ -119,8 +120,14 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
                           'user': UserModel.fromJson(
                             orderData['user'],
                           ),
+                          'measurements': (orderData['measurements'] != null &&
+                                  orderData['measurements'].isNotEmpty)
+                              ? MeasurmentModel.fromJson(
+                                  orderData['measurements'])
+                              : null,
                           'docId': orderData['docId'],
-                          'timetamp': orderData['timestamp'],
+                          'timestamp': orderData['timestamp'],
+                          'deliveryDate': orderData['deliveryDate'],
                           'orderId': orderData['orderId'],
                         };
                       }).toList();
@@ -129,12 +136,14 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
                         itemCount: data.length,
                         itemBuilder: (context, index) {
                           final user = data[index]['user'];
+                          final measurements = data[index]['measurements'];
                           final docId = data[index]['docId'].toString();
-                          final date = data[index]['timetamp'];
+                          final date = data[index]['timestamp'];
+                          final deliveryDate = data[index]['deliveryDate'];
+
                           final dateTime = date.toDate();
                           final formattedDate =
-                              DateFormat('dd MMMM yyyy, hh:mm:ss a')
-                                  .format(dateTime);
+                              DateFormat('dd MMMM yyyy').format(dateTime);
                           final orderId = data[index]['orderId'].toString();
 
                           return GestureDetector(
@@ -143,6 +152,8 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => NewOrders(
+                                    measurmentModel: measurements,
+                                    deliveryDate: deliveryDate,
                                     user: user,
                                     docId: docId,
                                     orderId: orderId,
@@ -152,22 +163,90 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
                               );
                             },
                             child: RecentOrdersCard(
+                              value: 1,
                               user: user,
                               status: 'New',
+                              showBtn: false,
                             ).paddingOnly(top: 2, bottom: 3),
                           );
                         },
                       );
                     },
                   ),
-                  ListView.builder(
-                    itemCount: 5,
-                    itemBuilder: (context, index) {
-                      return const RecentOrdersCard(
-                        status: 'In Progress',
-                      ).paddingOnly(top: 2, bottom: 3);
-                    },
-                  ),
+                  StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(context.read<AuthCubit>().appUser!.id)
+                          .collection('inProgressOrders')
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return const Text('data');
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.docs.isEmpty) {
+                          return const Center(child: Text('NO ORDERS'));
+                        }
+                        final data = snapshot.data!.docs.map((e) {
+                          final orderData = e.data();
+                          return {
+                            'user': UserModel.fromJson(orderData['user']),
+                            'docId': orderData['docId'],
+                            'timetamp': orderData['timestamp'],
+                            'orderId': orderData['orderId'],
+                            'measurements':
+                                (orderData['measurements'] != null &&
+                                        orderData['measurements'].isNotEmpty)
+                                    ? MeasurmentModel.fromJson(
+                                        orderData['measurements'])
+                                    : null,
+                            'deliveryDate': orderData['deliveryDate'],
+                            'orderStatus': orderData['orderStatus'],
+                          };
+                        }).toList();
+                        return ListView.builder(
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            final user = data[index]['user'];
+                            final measurements = data[index]['measurements'];
+                            final deliveryDate = data[index]['deliveryDate'];
+                            final orderStatus = data[index]['orderStatus'];
+
+                            final date = data[index]['timetamp'];
+                            final dateTime = date.toDate();
+                            final formattedDate =
+                                DateFormat('dd MMMM yyyy').format(dateTime);
+                            final docId = data[index]['docId'].toString();
+                            final orderId = data[index]['orderId'].toString();
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OrderSummary(
+                                      status: orderStatus,
+                                      deliveryDate: deliveryDate,
+                                      measurmentModel: measurements,
+                                      user: user,
+                                      docId: docId,
+                                      orderId: orderId,
+                                      date: formattedDate,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: RecentOrdersCard(
+                                value: 2,
+                                user: user,
+                                status: 'In Progress',
+                              ).paddingOnly(top: 2, bottom: 3),
+                            );
+                          },
+                        );
+                      }),
                   StreamBuilder(
                       stream: FirebaseFirestore.instance
                           .collection('users')
@@ -190,19 +269,30 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
                           return {
                             'user': UserModel.fromJson(orderData['user']),
                             'docId': orderData['docId'],
-                            'timetamp': orderData['timestamp'],
+                            'timestamp': orderData['timestamp'],
                             'orderId': orderData['orderId'],
+                            'measurements':
+                                (orderData['measurements'] != null &&
+                                        orderData['measurements'].isNotEmpty)
+                                    ? MeasurmentModel.fromJson(
+                                        orderData['measurements'])
+                                    : null,
+                            'deliveryDate': orderData['deliveryDate'],
+                            'orderStatus': orderData['orderStatus'],
                           };
                         }).toList();
                         return ListView.builder(
                           itemCount: data.length,
                           itemBuilder: (context, index) {
                             final user = data[index]['user'];
-                            final date = data[index]['timetamp'];
+                            final measurements = data[index]['measurements'];
+                            final deliveryDate = data[index]['deliveryDate'];
+                            final orderStatus = data[index]['orderStatus'];
+
+                            final date = data[index]['timestamp'];
                             final dateTime = date.toDate();
                             final formattedDate =
-                                DateFormat('dd MMMM yyyy, hh:mm:ss a')
-                                    .format(dateTime);
+                                DateFormat('dd MMMM yyyy').format(dateTime);
                             final docId = data[index]['docId'].toString();
                             final orderId = data[index]['orderId'].toString();
                             return GestureDetector(
@@ -211,6 +301,9 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => OrderSummary(
+                                      status: orderStatus,
+                                      deliveryDate: deliveryDate,
+                                      measurmentModel: measurements,
                                       user: user,
                                       docId: docId,
                                       orderId: orderId,
@@ -220,6 +313,7 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
                                 );
                               },
                               child: RecentOrdersCard(
+                                value: 3,
                                 user: user,
                                 status: 'Pending',
                               ).paddingOnly(top: 2, bottom: 3),

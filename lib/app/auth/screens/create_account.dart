@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/auth/screens/continue_profile.dart';
 import 'package:tailor_app/app/auth/screens/location_access.dart';
+import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
 import 'package:tailor_app/app/auth/widgets/drop_down_type.dart';
 import 'package:tailor_app/app/model/user_model.dart';
@@ -121,22 +123,22 @@ class _CreateAccountState extends State<CreateAccount> {
                     );
 
                     if (selectedValue == 'Customer') {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => LocationAccessScreen(
-                            user: user,
                             password: passwordController.text.trim(),
+                            user: user,
                           ),
                         ),
                       );
                     } else {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => ContinueProfile(
-                            user: user,
                             password: passwordController.text.trim(),
+                            user: user,
                           ),
                         ),
                       );

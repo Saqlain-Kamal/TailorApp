@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/auth/screens/create_account.dart';
+import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/utils/colors.dart';
 import 'package:tailor_app/app/utils/mediaquery.dart';
 
@@ -12,7 +14,7 @@ class CreateAccountTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => const CreateAccount(),

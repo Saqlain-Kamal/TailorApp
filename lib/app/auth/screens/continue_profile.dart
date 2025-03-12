@@ -198,11 +198,21 @@ class _ContinueProfileState extends State<ContinueProfile> {
   final stichingServiceController = TextEditingController();
   final startingPriceController = TextEditingController();
 
+  List<TextEditingController> controllers = [];
+
   @override
   void initState() {
     // TODO: implement initState
     context.read<AuthCubit>().emit(InitialState());
+
+    controllers.add(TextEditingController());
     super.initState();
+  }
+
+  void _addTextField() {
+    setState(() {
+      controllers.add(TextEditingController());
+    });
   }
 
   @override
@@ -240,13 +250,13 @@ class _ContinueProfileState extends State<ContinueProfile> {
 
           // Default UI when no specific state is triggered
           SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Padding(
           padding:
               const EdgeInsets.only(top: 50, left: 15, right: 15, bottom: 10),
           child: SizedBox(
             height: screenHeight(context) * 0.9,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Column(
                   children: [
@@ -274,7 +284,7 @@ class _ContinueProfileState extends State<ContinueProfile> {
                       radius: 50,
                       backgroundColor: AppColors.borderGreyColor,
                       child:
-                          Image(image: AssetImage('assets/images/Camera.png')),
+                          Image(image: AssetImage('assets/images/camera.png')),
                     ),
                     SizedBox(
                       height: 10,
@@ -286,11 +296,14 @@ class _ContinueProfileState extends State<ContinueProfile> {
                   ],
                 ),
                 SizedBox(
-                  height: screenHeight(context) * 0.46,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  height: screenHeight(context) * 0.55,
+                  child: ListView(
+                    shrinkWrap: true,
+                    physics: const BouncingScrollPhysics(),
                     children: [
+                      const SizedBox(
+                        height: 20,
+                      ),
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 6),
                         child: Text(
@@ -324,9 +337,53 @@ class _ContinueProfileState extends State<ContinueProfile> {
                               fontSize: 15, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      CustomeTextField(
-                        controller: stichingServiceController,
-                        hint: 'Stiching Service',
+                      SingleChildScrollView(
+                        child: Column(
+                          children: List.generate(
+                            growable: true,
+                            controllers.length,
+                            (index) => Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 5.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      child: CustomeTextField(
+                                    hint: 'Service',
+                                    controller: controllers[index],
+                                  )),
+                                  if (index ==
+                                      controllers.length -
+                                          1) // Show add button only on last field
+                                    GestureDetector(
+                                      onTap: _addTextField,
+                                      child: Container(
+                                        margin: const EdgeInsets.only(left: 10),
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          gradient: const LinearGradient(
+                                            colors: [
+                                              AppColors
+                                                  .darkBlueColor, // Use your AppColors here
+                                              AppColors.blueColor,
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                        ),
+                                        child: const Icon(
+                                          Icons.add,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 6),
@@ -343,10 +400,14 @@ class _ContinueProfileState extends State<ContinueProfile> {
                     ],
                   ),
                 ),
+                const Spacer(),
                 CustomButton(
                   text: 'Save',
                   onTap: () async {
                     try {
+                      List<String> services = controllers
+                          .map((controller) => controller.text.trim())
+                          .toList();
                       final createUser = UserModel(
                         name: widget.user.name,
                         email: widget.user.email,
@@ -355,10 +416,10 @@ class _ContinueProfileState extends State<ContinueProfile> {
                         role: widget.user.role,
                         shopName: shopNameController.text.trim(),
                         experience: experienceController.text.trim(),
-                        stichingService: stichingServiceController.text.trim(),
+                        stichingService: services,
                         startingPrice: startingPriceController.text.trim(),
                       );
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => LocationAccessScreen(

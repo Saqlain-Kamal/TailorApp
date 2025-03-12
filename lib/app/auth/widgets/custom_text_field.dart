@@ -8,6 +8,7 @@ class CustomeTextField extends StatelessWidget {
     this.prefixIcon,
     this.controller,
     this.readOnly,
+    this.isShowArrow,
     this.onTap,
     this.keyboardType,
     this.textInputAction,
@@ -17,6 +18,7 @@ class CustomeTextField extends StatelessWidget {
   final String hint;
   final TextEditingController? controller;
   final bool? readOnly;
+  final bool? isShowArrow;
   final void Function()? onTap;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
@@ -44,7 +46,7 @@ class CustomeTextField extends StatelessWidget {
                   ),
                 )
               : null,
-          suffixIcon: readOnly != null
+          suffixIcon: readOnly != null && isShowArrow != null
               ? Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 2, vertical: 12),
@@ -61,12 +63,12 @@ class CustomeTextField extends StatelessWidget {
           hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 12),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(width: 1, color: Colors.grey.shade200),
+            borderSide: BorderSide(width: 1, color: Colors.grey.shade400),
           ),
           focusedBorder: readOnly != null
               ? OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(width: 1, color: Colors.grey.shade200),
+                  borderSide: BorderSide(width: 1, color: Colors.grey.shade400),
                 )
               : OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),

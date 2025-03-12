@@ -29,15 +29,12 @@ class DashboardTop extends StatelessWidget {
             radius: 40,
           ),
           title: Text(
-            user.name!,
-            style: const TextStyle(color: Colors.white),
+            user.shopName!,
+            style: const TextStyle(
+                color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
           ),
           subtitle: Row(
             children: [
-              const Text(
-                '20 orders.',
-                style: TextStyle(color: Colors.white),
-              ),
               Image.asset('assets/images/star.png'),
               const Text(
                 '4.8',

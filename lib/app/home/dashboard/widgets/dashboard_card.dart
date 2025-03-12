@@ -26,8 +26,16 @@ class DashboardCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(5),
         width: screenWidth(context) * 0.45,
-        height: screenHeight(context) * 0.12,
+        height: screenHeight(context) * 0.13,
         decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  blurRadius: 5,
+                  spreadRadius: 2,
+                  color: Colors.grey.shade300,
+                  offset: const Offset(1, 2)),
+            ],
+            color: Colors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(width: 1, color: AppColors.borderGreyColor)),
         child: Column(

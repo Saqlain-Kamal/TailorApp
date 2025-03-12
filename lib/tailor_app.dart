@@ -3,6 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/auth/screens/auth_page.dart';
+import 'package:tailor_app/app/auth/screens/continue_profile.dart';
+import 'package:tailor_app/app/auth/screens/create_account.dart';
+import 'package:tailor_app/app/auth/screens/location_access.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/auth/viewmodel/states/auth_states.dart';
 import 'package:tailor_app/app/cubit/favorite_cubit/favorite_cubit.dart';
@@ -60,6 +63,15 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         home: BlocConsumer<AuthCubit, AuthStates>(
+          buildWhen: (previousState, currentState) {
+            log(previousState.toString(), name: 'Here is my previous state');
+            log(currentState.toString(), name: 'Here is my current state');
+            if (previousState is AuthenticatedState &&
+                currentState is AuthenticatedState) {
+              return previousState.user != currentState.user;
+            }
+            return true;
+          },
           listener: (context, state) {
             if (state is ErrorState) {
               log('I am There');
@@ -77,6 +89,34 @@ class MyApp extends StatelessWidget {
                       text: state.message!, color: AppColors.darkBlueColor)
                   : const SizedBox();
             }
+
+            // if (state is AccountCreateScreenState) {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(builder: (context) => const CreateAccount()),
+            //   );
+            // }
+            // if (state is ContinueProfileScreenState) {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => ContinueProfile(
+            //               user: state.user,
+            //               password: state.password,
+            //             )),
+            //   );
+            // }
+            // if (state is LocationAccessScreenState) {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => LocationAccessScreen(
+            //               user: state.user,
+            //               password: state.password,
+            //             )),
+            //   );
+            // }
+
             // if (state is TailorInfoChangedState) {
             //   log('ji');
             //   context.mySnackBar(
@@ -91,6 +131,7 @@ class MyApp extends StatelessWidget {
               log('HIiiiii');
               return const AuthPage();
             }
+
             if (state is AuthenticatedState) {
               log('Home');
               final role = context.read<AuthCubit>().appUser!.role;

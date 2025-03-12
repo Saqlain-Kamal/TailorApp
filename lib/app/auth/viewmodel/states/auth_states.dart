@@ -16,6 +16,22 @@ class LocationAccessedStates extends AuthStates {}
 
 class AccountDeletedState extends AuthStates {}
 
+class AccountCreateScreenState extends AuthStates {}
+
+class ContinueProfileScreenState extends AuthStates {
+  final UserModel user;
+  final String password;
+
+  ContinueProfileScreenState({required this.user, required this.password});
+}
+
+class LocationAccessScreenState extends AuthStates {
+  final UserModel user;
+  final String password;
+
+  LocationAccessScreenState({required this.user, required this.password});
+}
+
 class AuthenticatedState extends AuthStates {
   final UserModel user;
   final String? message;

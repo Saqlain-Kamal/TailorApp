@@ -4,6 +4,7 @@ import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
+
 import 'package:tailor_app/app/cubit/review_cubit/review_cubit.dart';
 import 'package:tailor_app/app/cubit/review_cubit/review_states.dart';
 import 'package:tailor_app/app/model/review_model.dart';
@@ -14,14 +15,15 @@ import 'package:tailor_app/app/utils/mediaquery.dart';
 
 import '../../../../utils/colors.dart';
 
-class Review extends StatelessWidget {
-  Review({super.key, required this.user});
+class AddReview extends StatelessWidget {
+  AddReview({super.key, required this.user});
   final TextEditingController reviewController = TextEditingController();
   final UserModel user;
   double rating = 0.0;
   @override
   Widget build(BuildContext context) {
     log(user.toJson().toString());
+    context.read<ReviewCubit>().emit(ReviewInitialState());
     return Scaffold(
       appBar: AppBar(
         title: const Text('Rate your Experience'),
@@ -78,7 +80,7 @@ class Review extends StatelessWidget {
                           Text(
                             "Delivered",
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 14,
                               color: AppColors.greenColor,
                             ),
                           ),
@@ -127,8 +129,8 @@ class Review extends StatelessWidget {
                         TextStyle(color: Colors.grey.shade500, fontSize: 13),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                          width: 1, color: AppColors.greyColor),
+                      borderSide:
+                          BorderSide(width: 1, color: Colors.grey.shade300),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -146,8 +148,8 @@ class Review extends StatelessWidget {
                     onTap: () {},
                     text: "Skip",
                     textColor: Colors.black,
-                    firstColor: AppColors.greyColor,
-                    secondColor: AppColors.greyColor,
+                    firstColor: AppColors.darkBlueColor,
+                    secondColor: AppColors.blueColor,
                   )),
                   SizedBox(
                     width: screenWidth(context) * 0.05,
@@ -166,6 +168,11 @@ class Review extends StatelessWidget {
                       }
                     },
                     builder: (context, state) {
+                      if (state is ReviewLoadedState) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          Navigator.pop(context);
+                        });
+                      }
                       if (state is ReviewLoadingState) {
                         return CustomButton(
                           onTap: () {},

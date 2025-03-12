@@ -27,6 +27,14 @@ class CustomerDashboardCard extends StatelessWidget {
         width: screenWidth(context) * 0.28,
         height: screenHeight(context) * 0.14,
         decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  blurRadius: 5,
+                  spreadRadius: 2,
+                  color: Colors.grey.shade300,
+                  offset: const Offset(1, 2)),
+            ],
+            color: Colors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(width: 1, color: AppColors.borderGreyColor)),
         child: Column(
@@ -35,28 +43,35 @@ class CustomerDashboardCard extends StatelessWidget {
           children: [
             svg != null
                 ? Padding(
-              padding: const EdgeInsets.only(left: 6),
-              child: SvgPicture.asset(svg!),
-            )
+                    padding: const EdgeInsets.only(left: 6),
+                    child: SvgPicture.asset(svg!),
+                  )
                 : Padding(
-              padding: const EdgeInsets.only(left: 6),
-              child: Image.asset(
-                asset!,
-                height: 26,
-              ),
-            ),
-            Text(text,style: const TextStyle(fontSize: 12),).paddingOnly(left: 6),
-             Row(
+                    padding: const EdgeInsets.only(left: 6),
+                    child: Image.asset(
+                      asset!,
+                      height: 26,
+                    ),
+                  ),
+            Text(
+              text,
+              style: const TextStyle(fontSize: 13),
+            ).paddingOnly(left: 6),
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 6),
-                  child: Text(countText),
+                  child: Text(
+                    countText.padLeft(2, '0'),
+                    style: const TextStyle(fontSize: 18),
+                  ),
                 ),
-                const Icon(Icons.arrow_forward_rounded)
               ],
             ),
-            SizedBox(height: screenHeight(context)*0.01,)
+            SizedBox(
+              height: screenHeight(context) * 0.01,
+            )
           ],
         ),
       ),

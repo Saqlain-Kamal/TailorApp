@@ -3,9 +3,11 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
+import 'package:tailor_app/app/cubit/favorite_cubit/favorite_cubit.dart';
 import 'package:tailor_app/app/cubit/measurment_cubit/measurment_cubit.dart';
 import 'package:tailor_app/app/cubit/send_request_cubit/send_request_cubit.dart';
 import 'package:tailor_app/app/cubit/send_request_cubit/send_request_states.dart';
+import 'package:tailor_app/app/customer/customer_home/customer_dashboard/screens/start_order.dart';
 import 'package:tailor_app/app/customer/customer_home/customer_dashboard/widgets/tailor_detail_card.dart';
 import 'package:tailor_app/app/extension/padding.dart';
 import 'package:tailor_app/app/extension/snackbar.dart';
@@ -25,22 +27,59 @@ class TailorDetail extends StatefulWidget {
 }
 
 class _TailorDetailState extends State<TailorDetail> {
-  String value = '';
-
+  MeasurmentModel? measurmentModel;
+  bool isFavorite = false;
   @override
   void initState() {
-    context.read<SendRequestCubit>().isOrderApprove(
-        myUid: context.read<AuthCubit>().appUser!.id!,
-        otherUid: widget.tailor.id!);
+    context
+        .read<FavoriteCubit>()
+        .isFavorite(widget.tailor, context)
+        .then((value) {
+      setState(() {
+        isFavorite = value;
+      });
+    });
+
+    checkIsApproved();
     context.read<SendRequestCubit>().isOrderSend(
         myUid: context.read<AuthCubit>().appUser!.id!,
         otherUid: widget.tailor.id!);
 
-    context
-        .read<MeasurmentCubit>()
-        .getMeasurments(uid: context.read<AuthCubit>().appUser!.id!);
+    // context
+    //     .read<MeasurmentCubit>()
+    //     .getMeasurments(uid: context.read<AuthCubit>().appUser!.id!);
     super.initState();
   }
+
+  void checkIsApproved() async {
+    await context.read<SendRequestCubit>().isOrderApprove(
+        myUid: context.read<AuthCubit>().appUser!.id!,
+        otherUid: widget.tailor.id!);
+  }
+
+  void toggleFavorite({required UserModel user}) {
+    setState(() {
+      isFavorite = !isFavorite; // Update UI immediately
+    });
+
+    if (isFavorite) {
+      context
+          .read<FavoriteCubit>()
+          .addToFav(user: user, uid: context.read<AuthCubit>().appUser!.id!);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.all(5),
+        duration: Duration(seconds: 2),
+        backgroundColor: AppColors.darkBlueColor,
+        content: Text("Added To Favorites"),
+      ));
+    } else {
+      context.read<FavoriteCubit>().removeItemFromCart(
+          user: user, uid: context.read<AuthCubit>().appUser!.id!);
+    }
+  }
+
+  String? selectedValue = '';
 
   @override
   Widget build(BuildContext context) {
@@ -54,12 +93,19 @@ class _TailorDetailState extends State<TailorDetail> {
           widget.tailor.name!,
           style: const TextStyle(fontSize: 20),
         ),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 8.0),
-            child: Icon(Icons.favorite_border),
+        actions: [
+          GestureDetector(
+            onTap: () => toggleFavorite(user: widget.tailor),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Icon(
+                isFavorite ? Icons.favorite : Icons.favorite_border,
+                size: 30,
+                color: isFavorite ? Colors.red : Colors.grey,
+              ),
+            ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(right: 15.0),
             child: Icon(Icons.notifications_outlined),
           ),
@@ -82,10 +128,11 @@ class _TailorDetailState extends State<TailorDetail> {
             SizedBox(
               height: screenHeight(context) * 0.01,
             ),
-            const Center(
+            Center(
               child: Text(
-                "15 year experience in stitching",
-                style: TextStyle(fontSize: 16, color: AppColors.greyColor),
+                "${widget.tailor.experience} year experience in stitching",
+                style:
+                    const TextStyle(fontSize: 16, color: AppColors.greyColor),
               ),
             ),
             SizedBox(
@@ -138,12 +185,24 @@ class _TailorDetailState extends State<TailorDetail> {
             SizedBox(
               height: screenHeight(context) * 0.02,
             ),
-            const Text(
-              "Customer Reviews",
-              style: TextStyle(fontSize: 20),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Customer Reviews",
+                  style: TextStyle(fontSize: 20),
+                ),
+                Text(
+                  "See All",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: AppColors.darkBlueColor,
+                  ),
+                ),
+              ],
             ),
             SizedBox(
-              height: screenHeight(context) * 0.01,
+              height: screenHeight(context) * 0.015,
             ),
             Expanded(
               child: ListView.builder(
@@ -155,52 +214,15 @@ class _TailorDetailState extends State<TailorDetail> {
                   }),
             ),
             SizedBox(
-              height: screenHeight(context) * 0.02,
-            ),
-            SizedBox(
-              child: DropdownMenu(
-                label: const Text('Pick Measurments'),
-                enabled: true,
-                enableSearch: true,
-                width: screenWidth(context) * 0.7,
-                dropdownMenuEntries: <DropdownMenuEntry<MeasurmentModel>>[
-                  for (MeasurmentModel measurment
-                      in context.watch<MeasurmentCubit>().measurementsList)
-                    DropdownMenuEntry(
-                      value: measurment,
-                      label: measurment
-                          .name, // Assuming there's a property called 'label' in AddressModel
-                    ),
-
-                  // const DropdownMenuEntry(
-                  //   value: 'value',
-                  //   label: 'label1',
-                  // ),
-                  // const DropdownMenuEntry(
-                  //   value: 'value',
-                  //   label: 'label',
-                  // ),
-                  // const DropdownMenuEntry(
-                  //   value: 'value',
-                  //   label: 'label1',
-                  // ),
-                ],
-                onSelected: (model) {
-                  value = model!.name;
-                  log(value);
-                },
-              ),
-            ),
-            SizedBox(
-              height: screenHeight(context) * 0.02,
+              height: screenHeight(context) * 0.01,
             ),
             BlocConsumer<SendRequestCubit, SendRequestStates>(
               listener: (context, state) {
                 if (state is RequestSendedStates) {
                   log('ji');
-                  context.mySnackBar(
-                      text: 'Request Send Successfully',
-                      color: AppColors.darkBlueColor);
+                  // context.mySnackBar(
+                  //     text: 'Request Send Successfully',
+                  //     color: AppColors.darkBlueColor);
                 }
                 if (state is ErrorState) {
                   log('here');
@@ -216,6 +238,13 @@ class _TailorDetailState extends State<TailorDetail> {
                     isloading: true,
                   );
                 }
+                if (state is CheckingLoadingStates) {
+                  return const Center(
+                      child: SizedBox(
+                          height: 10,
+                          width: 10,
+                          child: CircularProgressIndicator()));
+                }
                 // if (state is RequestSendedStates) {
                 //   WidgetsBinding.instance.addPostFrameCallback((_) {
                 //     Navigator.popUntil(context, (route) => route.isFirst);
@@ -224,37 +253,42 @@ class _TailorDetailState extends State<TailorDetail> {
 
                 return CustomButton(
                   onTap: () async {
-                    try {
-                      context.read<SendRequestCubit>().isOrderAlreadySend
-                          ? null
-                          : await context
-                              .read<SendRequestCubit>()
-                              .sendOrderRequest(
-                                  senderUser:
-                                      context.read<AuthCubit>().appUser!,
-                                  recieverUser: widget.tailor,
-                                  senderUid:
-                                      context.read<AuthCubit>().appUser!.id!,
-                                  recieverUid: widget.tailor.id!);
-                    } catch (e) {
-                      if (context.mounted) {
-                        context.mySnackBar(
-                            text: e.toString(), color: Colors.red);
-                      }
-                    }
-
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => CustomerPayment(
-                    //       user: tailor,
-                    //     ),
-                    //   ),
-                    // );
+                    // try {
+                    //   if (measurmentModel == null) {
+                    //     return context.mySnackBar(
+                    //         text: 'Select Measurements', color: Colors.red);
+                    //   } else {}
+                    //   context.read<SendRequestCubit>().isOrderAlreadySend
+                    //       ? null
+                    //       : await context
+                    //           .read<SendRequestCubit>()
+                    //           .sendOrderRequest(
+                    //               senderUser:
+                    //                   context.read<AuthCubit>().appUser!,
+                    //               recieverUser: widget.tailor,
+                    //               senderUid:
+                    //                   context.read<AuthCubit>().appUser!.id!,
+                    //               recieverUid: widget.tailor.id!);
+                    // } catch (e) {
+                    //   if (context.mounted) {
+                    //     context.mySnackBar(
+                    //         text: e.toString(), color: Colors.red);
+                    //   }
+                    // }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => StartOrder(
+                          tailor: widget.tailor,
+                        ),
+                      ),
+                    );
                   },
-                  text: context.watch<SendRequestCubit>().isOrderAlreadySend
-                      ? "Request Sended"
-                      : "Start Order",
+                  text: context.watch<SendRequestCubit>().isApproved
+                      ? 'Request Approved'
+                      : context.watch<SendRequestCubit>().isOrderAlreadySend
+                          ? "Request Sended"
+                          : "Start Order",
                 );
               },
             ),

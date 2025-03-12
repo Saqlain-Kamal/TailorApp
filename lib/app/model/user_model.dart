@@ -12,7 +12,7 @@ class UserModel {
   String? userImage;
   String? shopName;
   String? experience;
-  String? stichingService;
+  List<String?>? stichingService;
   String? startingPrice;
   String? place;
 
@@ -50,7 +50,11 @@ class UserModel {
       experience: json['experience'],
       lat: json['lat'],
       lon: json['lon'],
-      stichingService: json['stichingService'],
+      stichingService: json['stichingService'] is String
+          ? [json['stichingService']] // Convert single string to a list
+          : (json['stichingService'] as List<dynamic>?)
+              ?.map((e) => e as String?)
+              .toList(),
       startingPrice: json['startingPrice'],
       place: json['place'],
     );

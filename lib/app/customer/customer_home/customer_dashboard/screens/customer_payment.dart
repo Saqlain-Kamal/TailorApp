@@ -66,7 +66,7 @@ class _CustomerPaymentState extends State<CustomerPayment> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Review(
+                            builder: (context) => AddReview(
                               user: widget.user,
                             ),
                           ),

@@ -13,7 +13,7 @@ class DropDownType extends StatelessWidget {
   });
 
   final String? selectedValue;
-  final List<String> items;
+  final List<String?>? items;
   final void Function(String?)? onChanged;
   final String hintText;
   final String? prefixImage;
@@ -42,7 +42,7 @@ class DropDownType extends StatelessWidget {
                 )
               : null,
           suffixIcon: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             child: SizedBox(
               child: DropdownButton<String>(
                 borderRadius: BorderRadius.circular(12),
@@ -54,7 +54,7 @@ class DropDownType extends StatelessWidget {
                 ),
                 underline: Container(), // Removes the default underline
                 onChanged: onChanged,
-                items: items.map<DropdownMenuItem<String>>((String value) {
+                items: items?.map<DropdownMenuItem<String>>((String? value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: isNotification
@@ -65,7 +65,7 @@ class DropDownType extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    value,
+                                    value!,
                                     style: TextStyle(
                                         color: Colors.grey.shade500,
                                         fontSize: 13),
@@ -80,7 +80,7 @@ class DropDownType extends StatelessWidget {
                         : SizedBox(
                             width: 150,
                             child: Text(
-                              value,
+                              value!,
                               style: TextStyle(color: Colors.grey.shade500),
                             ),
                           ),
@@ -96,7 +96,7 @@ class DropDownType extends StatelessWidget {
           hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(width: 1, color: Colors.grey.shade200),
+            borderSide: BorderSide(width: 2, color: Colors.grey.shade200),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),

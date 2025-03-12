@@ -15,7 +15,8 @@ class MeasurmentCubit extends Cubit<MeasurmentStates> {
     try {
       emit(LoadingStates());
       await db.addMeasurments(measurement: measurement);
-      emit(MeasurementUploadedState());
+      await getMeasurments(uid: measurement.uid);
+      // emit(MeasurementUploadedState());
     } catch (e) {
       emit(
         ErrorState(

@@ -35,14 +35,18 @@ class AuthRepo {
   }
 
   Future<UserModel?> getUserById({required String uid}) async {
-    final snapshot =
-        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
-    final data = snapshot.data();
-    if (data != null) {
-      return UserModel.fromJson(data);
-    } else {
-      return null; // Return null if data is null
+      final data = snapshot.data();
+      if (data != null) {
+        return UserModel.fromJson(data);
+      } else {
+        return null; // Return null if data is null
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 
