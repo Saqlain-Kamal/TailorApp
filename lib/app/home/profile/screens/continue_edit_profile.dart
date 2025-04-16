@@ -32,7 +32,7 @@ class _ContinueEditProfileState extends State<ContinueEditProfile> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final user = context.read<AuthCubit>().appUser;
+      final user = context.read<AuthController>().appUser;
 
       if (user != null) {
         shopNameController.text = user.shopName!; // Set name in the controller
@@ -48,8 +48,8 @@ class _ContinueEditProfileState extends State<ContinueEditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final myUser = context.read<AuthCubit>().appUser!;
-    // final user = context.watch<AuthCubit>().appUser;
+    final myUser = context.read<AuthController>().appUser!;
+    // final user = context.watch<AuthController>().appUser;
     log(myUser.toJson().toString());
     return Scaffold(
       appBar: AppBar(
@@ -119,72 +119,46 @@ class _ContinueEditProfileState extends State<ContinueEditProfile> {
                 ),
               ),
               SizedBox(height: screenHeight(context) * 0.5), // Rep
-              BlocConsumer<ProfileCubit, ProfileStates>(
-                listener: (ctx, state) {
-                  // TODO: implement listener
-                  if (state is TailorInfoChangedState) {
-                    log('ji');
-                    context.mySnackBar(
-                        text: 'Info Updated Successfully',
-                        color: AppColors.darkBlueColor);
 
-                    // WidgetsBinding.instance.addPostFrameCallback((_) {
-                    //   Navigator.pushReplacement(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) => const Home(index: 3),
-                    //     ),
-                    //   );
-                    // });
-                  }
+              CustomButton(
+                  isloading: context.watch<ProfileController>().isloading,
+                  onTap: () async {
+                    try {
+                      log(myUser.role!);
+                      final createUser = UserModel(
+                        name: widget.user.name,
+                        email: widget.user.email,
+                        phoneNumber: widget.user.phoneNumber,
+                        id: myUser.id,
+                        userId: myUser.userId,
+                        lat: myUser.lat,
+                        lon: myUser.lon,
+                        role: myUser.role,
+                        shopName: shopNameController.text.trim(),
+                        experience: experienceController.text.trim(),
+                        stichingService: myUser.stichingService,
+                        startingPrice: startingPriceController.text.trim(),
+                      );
+                      if (widget.user.name!.isNotEmpty) {
+                        await context
+                            .read<ProfileController>()
+                            .updateTailorDetails(
+                                user: createUser, context: context);
+                      }
+                      context.mySnackBar(
+                          text: 'Profile Edited Successfully',
+                          color: AppColors.darkBlueColor);
 
-                  if (state is ErrorState) {
-                    log('here');
-                    context.mySnackBar(text: state.message, color: Colors.red);
-                  }
-                },
-                builder: (ctx, state) {
-                  log(state.toString());
-                  if (state is LoadingStates) {
-                    return CustomButton(
-                      onTap: () {},
-                      text: 'text',
-                      isloading: true,
-                    );
-                  }
-                  if (state is TailorInfoChangedState) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      Navigator.popUntil(context, (route) => route.isFirst);
-                    });
-                  }
-
-                  return CustomButton(
-                      onTap: () async {
-                        log(myUser.role!);
-                        final createUser = UserModel(
-                          name: widget.user.name,
-                          email: widget.user.email,
-                          phoneNumber: widget.user.phoneNumber,
-                          id: myUser.id,
-                          userId: myUser.userId,
-                          lat: myUser.lat,
-                          lon: myUser.lon,
-                          role: myUser.role,
-                          shopName: shopNameController.text.trim(),
-                          experience: experienceController.text.trim(),
-                          stichingService: myUser.stichingService,
-                          startingPrice: startingPriceController.text.trim(),
-                        );
-                        if (widget.user.name!.isNotEmpty) {
-                          await context
-                              .read<ProfileCubit>()
-                              .updateTailorDetails(
-                                  user: createUser, context: context);
-                        }
-                      },
-                      text: 'Save Changes');
-                },
-              )
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    } catch (e) {
+                      context.mySnackBar(
+                          text: e.toString(), color: AppColors.darkBlueColor);
+                      rethrow;
+                    }
+                  },
+                  text: 'Save Changes'),
             ],
           ),
         ),

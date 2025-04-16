@@ -41,7 +41,7 @@ class CustomButton extends StatelessWidget {
                 ),
           color: isDisabled ? Colors.grey : null,
         ),
-        child: isloading != null
+        child: isloading == true
             ? Lottie.asset(
                 'assets/images/whiteLoading.json',
                 height: 100,

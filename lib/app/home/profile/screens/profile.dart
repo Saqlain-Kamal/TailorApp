@@ -30,7 +30,7 @@ class _ProfileState extends State<Profile> {
   final manageAccountController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final user = context.watch<AuthCubit>().appUser;
+    final user = context.watch<AuthController>().appUser;
     log(user!.toJson().toString());
     return Scaffold(
       body: Padding(

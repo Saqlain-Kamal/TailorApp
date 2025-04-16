@@ -35,7 +35,7 @@ class _AddMeasurementsState extends State<AddMeasurements> {
 
   @override
   void initState() {
-    context.read<MeasurmentCubit>().emit(InitialStates());
+    // context.read<MeasurmentCubit>().emit(InitialStates());
     super.initState();
   }
 
@@ -255,80 +255,46 @@ class _AddMeasurementsState extends State<AddMeasurements> {
                                 )
                               ],
                             ),
-                            BlocConsumer<MeasurmentCubit, MeasurmentStates>(
-                              listener: (context, state) {
-                                if (state is MeasurementUploadedState) {
-                                  log('ji');
-                                  context.mySnackBar(
-                                      text: 'Measurements Added Successfully',
-                                      color: AppColors.darkBlueColor);
-                                }
-                                if (state is ErrorState) {
-                                  log('here');
-                                  context.mySnackBar(
-                                      text: state.message, color: Colors.red);
-                                }
-                                // TODO: implement listener
-                              },
-                              builder: (context, state) {
-                                if (state is LoadingStates) {
-                                  return CustomButton(
-                                    onTap: () {},
-                                    text: 'text',
-                                    isloading: true,
-                                  );
-                                }
-                                if (state is MeasurementUploadedState) {
-                                  WidgetsBinding.instance
-                                      .addPostFrameCallback((_) {
-                                    Navigator.popUntil(
-                                        context, (route) => route.isFirst);
-                                  });
-                                }
 
-                                return CustomButton(
-                                  onTap: label.isNotEmpty
-                                      ? () async {
-                                          if (formKey.currentState!
-                                              .validate()) {}
-                                          log('message');
-                                          try {
-                                            final measurement = MeasurmentModel(
-                                                chest: int.parse(
-                                                    chestController.text),
-                                                collar: int.parse(
-                                                    collarController.text),
-                                                shoulder: int.parse(
-                                                    shoulderController.text),
-                                                sleeves: int.parse(
-                                                    sleevesController.text),
-                                                length: int.parse(
-                                                    lengthController.text),
-                                                waist: int.parse(
-                                                    waistController.text),
-                                                uid: context
-                                                    .read<AuthCubit>()
-                                                    .appUser!
-                                                    .id!,
-                                                label: label,
-                                                name:
-                                                    nameController.text.trim());
+                            CustomButton(
+                              onTap: label.isNotEmpty
+                                  ? () async {
+                                      if (formKey.currentState!.validate()) {}
+                                      log('message');
+                                      try {
+                                        final measurement = MeasurmentModel(
+                                            chest:
+                                                int.parse(chestController.text),
+                                            collar: int.parse(
+                                                collarController.text),
+                                            shoulder: int.parse(
+                                                shoulderController.text),
+                                            sleeves: int.parse(
+                                                sleevesController.text),
+                                            length: int.parse(
+                                                lengthController.text),
+                                            waist:
+                                                int.parse(waistController.text),
+                                            uid: context
+                                                .read<AuthController>()
+                                                .appUser!
+                                                .id!,
+                                            label: label,
+                                            name: nameController.text.trim());
 
-                                            context
-                                                .read<MeasurmentCubit>()
-                                                .addMeasurement(
-                                                    measurement: measurement);
-                                          } catch (e) {
-                                            context.mySnackBar(
-                                                text: e.toString(),
-                                                color: Colors.red);
-                                          }
-                                        }
-                                      : null,
-                                  text: 'Save Measurments',
-                                );
-                              },
-                            )
+                                        context
+                                            .read<MeasurmentController>()
+                                            .addMeasurement(
+                                                measurement: measurement);
+                                      } catch (e) {
+                                        context.mySnackBar(
+                                            text: e.toString(),
+                                            color: Colors.red);
+                                      }
+                                    }
+                                  : null,
+                              text: 'Save Measurments',
+                            ),
                           ],
                         ),
                       ),

@@ -7,6 +7,7 @@ import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 
 import 'package:tailor_app/app/cubit/review_cubit/review_cubit.dart';
 import 'package:tailor_app/app/cubit/review_cubit/review_states.dart';
+import 'package:tailor_app/app/extension/snackbar.dart';
 import 'package:tailor_app/app/model/review_model.dart';
 import 'package:tailor_app/app/model/user_model.dart';
 import 'package:tailor_app/app/utils/border_custom_button.dart';
@@ -23,7 +24,7 @@ class AddReview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     log(user.toJson().toString());
-    context.read<ReviewCubit>().emit(ReviewInitialState());
+    // context.read<ReviewCubit>().emit(ReviewInitialState());
     return Scaffold(
       appBar: AppBar(
         title: const Text('Rate your Experience'),
@@ -155,48 +156,32 @@ class AddReview extends StatelessWidget {
                     width: screenWidth(context) * 0.05,
                   ),
                   Expanded(
-                      child: BlocConsumer<ReviewCubit, ReviewStates>(
-                    listener: (context, state) {
-                      if (state is ReviewLoadedState) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                behavior: SnackBarBehavior.floating,
-                                margin: EdgeInsets.all(5),
-                                duration: Duration(seconds: 2),
-                                backgroundColor: AppColors.darkBlueColor,
-                                content: Text("Review Has Been Added")));
-                      }
-                    },
-                    builder: (context, state) {
-                      if (state is ReviewLoadedState) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          Navigator.pop(context);
-                        });
-                      }
-                      if (state is ReviewLoadingState) {
-                        return CustomButton(
-                          onTap: () {},
-                          text: 'text',
-                          isloading: true,
-                        );
-                      }
-                      return CustomButton(
-                        onTap: () async {
+                    child: CustomButton(
+                      onTap: () async {
+                        try {
                           final review = ReviewModel(
                               rating: rating.toInt(),
                               reviewMessage: reviewController.text,
                               reviewTime: DateTime.now(),
-                              name: context.read<AuthCubit>().appUser!.name!,
-                              id: context.read<AuthCubit>().appUser!.id!,
+                              name:
+                                  context.read<AuthController>().appUser!.name!,
+                              id: context.read<AuthController>().appUser!.id!,
                               toId: user.id!);
                           await context
-                              .read<ReviewCubit>()
+                              .read<ReviewController>()
                               .addReview(review: review);
-                        },
-                        text: "Submit",
-                      );
-                    },
-                  ))
+                          context.mySnackBar(
+                              text: 'Review Added Successflly',
+                              color: AppColors.darkBlueColor);
+                        } catch (e) {
+                          context.mySnackBar(
+                              text: e.toString(), color: Colors.red);
+                          rethrow;
+                        }
+                      },
+                      text: "Submit",
+                    ),
+                  )
                 ],
               ),
               SizedBox(

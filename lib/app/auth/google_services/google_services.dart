@@ -32,7 +32,7 @@ class GoogleServices {
           role: role,
         );
 
-        await context.read<AuthCubit>().signupwithGoogle(user: user);
+        await context.read<AuthController>().signupwithGoogle(user: user);
       } catch (e) {
         log(e.toString());
       }

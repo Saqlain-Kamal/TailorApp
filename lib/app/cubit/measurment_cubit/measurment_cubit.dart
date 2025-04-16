@@ -1,28 +1,35 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/cubit/measurment_cubit/measurment_states.dart';
 import 'package:tailor_app/app/model/measurment_model.dart';
 import 'package:tailor_app/app/repo/measurment_repo.dart';
 
-class MeasurmentCubit extends Cubit<MeasurmentStates> {
-  MeasurmentCubit() : super(InitialStates());
-
+class MeasurmentController extends ChangeNotifier {
   final db = MeasurmentRepo();
   List<MeasurmentModel> measurementsList = [];
+  bool isloading = false;
 
   Future<void> addMeasurement({required MeasurmentModel measurement}) async {
     try {
-      emit(LoadingStates());
+      // emit(LoadingStates());
+      isloading = true;
+      notifyListeners();
       await db.addMeasurments(measurement: measurement);
       await getMeasurments(uid: measurement.uid);
+      isloading = false;
+      notifyListeners();
       // emit(MeasurementUploadedState());
     } catch (e) {
-      emit(
-        ErrorState(
-          message: e.toString(),
-        ),
-      );
+      isloading = false;
+      notifyListeners();
+      // emit(
+      //   ErrorState(
+      //     message: e.toString(),
+      //   ),
+      // );
+      rethrow;
     }
   }
 
@@ -33,14 +40,15 @@ class MeasurmentCubit extends Cubit<MeasurmentStates> {
       // categories = getUniqueCategories(productList);
       //categories.sort();
       // log(categories.toString());
-      emit(MeasurementUploadedState());
+      // emit(MeasurementUploadedState());
+      notifyListeners();
       return measurementsList;
     } catch (e) {
-      emit(
-        ErrorState(
-          message: e.toString(),
-        ),
-      );
+      // emit(
+      //   ErrorState(
+      //     message: e.toString(),
+      //   ),
+      // );
       rethrow;
     }
   }

@@ -203,7 +203,6 @@ class _ContinueProfileState extends State<ContinueProfile> {
   @override
   void initState() {
     // TODO: implement initState
-    context.read<AuthCubit>().emit(InitialState());
 
     controllers.add(TextEditingController());
     super.initState();

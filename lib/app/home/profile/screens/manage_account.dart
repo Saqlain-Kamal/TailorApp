@@ -15,7 +15,7 @@ class ManageAccount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.watch<AuthCubit>().appUser;
+    final user = context.watch<AuthController>().appUser;
     log(user!.toJson().toString());
     return Scaffold(
       appBar: AppBar(
@@ -65,7 +65,7 @@ class ManageAccount extends StatelessWidget {
                     },
                     btnOnTap2: () async {
                       await context
-                          .read<AuthCubit>()
+                          .read<AuthController>()
                           .deleteUserAndFirestoreData();
                     },
                   );

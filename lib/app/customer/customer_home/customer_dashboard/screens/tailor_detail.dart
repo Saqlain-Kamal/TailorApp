@@ -32,7 +32,7 @@ class _TailorDetailState extends State<TailorDetail> {
   @override
   void initState() {
     context
-        .read<FavoriteCubit>()
+        .read<FavoriteController>()
         .isFavorite(widget.tailor, context)
         .then((value) {
       setState(() {
@@ -40,20 +40,24 @@ class _TailorDetailState extends State<TailorDetail> {
       });
     });
 
-    checkIsApproved();
-    context.read<SendRequestCubit>().isOrderSend(
-        myUid: context.read<AuthCubit>().appUser!.id!,
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        checkIsApproved();
+      },
+    );
+    context.read<SendRequestController>().isOrderSend(
+        myUid: context.read<AuthController>().appUser!.id!,
         otherUid: widget.tailor.id!);
 
     // context
     //     .read<MeasurmentCubit>()
-    //     .getMeasurments(uid: context.read<AuthCubit>().appUser!.id!);
+    //     .getMeasurments(uid: context.read<AuthController>().appUser!.id!);
     super.initState();
   }
 
   void checkIsApproved() async {
-    await context.read<SendRequestCubit>().isOrderApprove(
-        myUid: context.read<AuthCubit>().appUser!.id!,
+    await context.read<SendRequestController>().isOrderApprove(
+        myUid: context.read<AuthController>().appUser!.id!,
         otherUid: widget.tailor.id!);
   }
 
@@ -63,9 +67,8 @@ class _TailorDetailState extends State<TailorDetail> {
     });
 
     if (isFavorite) {
-      context
-          .read<FavoriteCubit>()
-          .addToFav(user: user, uid: context.read<AuthCubit>().appUser!.id!);
+      context.read<FavoriteController>().addToFav(
+          user: user, uid: context.read<AuthController>().appUser!.id!);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         behavior: SnackBarBehavior.floating,
         margin: EdgeInsets.all(5),
@@ -74,8 +77,10 @@ class _TailorDetailState extends State<TailorDetail> {
         content: Text("Added To Favorites"),
       ));
     } else {
-      context.read<FavoriteCubit>().removeItemFromCart(
-          user: user, uid: context.read<AuthCubit>().appUser!.id!);
+      context.read<FavoriteController>().removeItemFromCart(
+          user: user, uid: context.read<AuthController>().appUser!.id!);
+      context.mySnackBar(
+          text: 'Removed From Favorites', color: AppColors.darkBlueColor);
     }
   }
 
@@ -83,14 +88,14 @@ class _TailorDetailState extends State<TailorDetail> {
 
   @override
   Widget build(BuildContext context) {
-    log(context.read<SendRequestCubit>().isOrderAlreadySend.toString());
+    log(context.read<SendRequestController>().isOrderAlreadySend.toString());
     return Scaffold(
       // backgroundColor: AppColors.whiteColor,
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.transparent,
         title: Text(
-          widget.tailor.name!,
+          widget.tailor.shopName!,
           style: const TextStyle(fontSize: 20),
         ),
         actions: [
@@ -216,87 +221,52 @@ class _TailorDetailState extends State<TailorDetail> {
             SizedBox(
               height: screenHeight(context) * 0.01,
             ),
-            BlocConsumer<SendRequestCubit, SendRequestStates>(
-              listener: (context, state) {
-                if (state is RequestSendedStates) {
-                  log('ji');
-                  // context.mySnackBar(
-                  //     text: 'Request Send Successfully',
-                  //     color: AppColors.darkBlueColor);
-                }
-                if (state is ErrorState) {
-                  log('here');
-                  context.mySnackBar(text: state.message, color: Colors.red);
-                }
-                // TODO: implement listener
-              },
-              builder: (context, state) {
-                if (state is LoadingStates) {
-                  return CustomButton(
-                    onTap: () {},
-                    text: 'text',
-                    isloading: true,
-                  );
-                }
-                if (state is CheckingLoadingStates) {
-                  return const Center(
-                      child: SizedBox(
-                          height: 10,
-                          width: 10,
-                          child: CircularProgressIndicator()));
-                }
-                // if (state is RequestSendedStates) {
-                //   WidgetsBinding.instance.addPostFrameCallback((_) {
-                //     Navigator.popUntil(context, (route) => route.isFirst);
-                //   });
-                // }
-
-                return CustomButton(
-                  onTap: () async {
-                    // try {
-                    //   if (measurmentModel == null) {
-                    //     return context.mySnackBar(
-                    //         text: 'Select Measurements', color: Colors.red);
-                    //   } else {}
-                    //   context.read<SendRequestCubit>().isOrderAlreadySend
-                    //       ? null
-                    //       : await context
-                    //           .read<SendRequestCubit>()
-                    //           .sendOrderRequest(
-                    //               senderUser:
-                    //                   context.read<AuthCubit>().appUser!,
-                    //               recieverUser: widget.tailor,
-                    //               senderUid:
-                    //                   context.read<AuthCubit>().appUser!.id!,
-                    //               recieverUid: widget.tailor.id!);
-                    // } catch (e) {
-                    //   if (context.mounted) {
-                    //     context.mySnackBar(
-                    //         text: e.toString(), color: Colors.red);
-                    //   }
-                    // }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => StartOrder(
-                          tailor: widget.tailor,
+            CustomButton(
+              onTap: context.watch<SendRequestController>().isApproved
+                  ? null
+                  : () async {
+                      // try {
+                      //   if (measurmentModel == null) {
+                      //     return context.mySnackBar(
+                      //         text: 'Select Measurements', color: Colors.red);
+                      //   } else {}
+                      //   context.read<SendRequestController>().isOrderAlreadySend
+                      //       ? null
+                      //       : await context
+                      //           .read<SendRequestController>()
+                      //           .sendOrderRequest(
+                      //               senderUser:
+                      //                   context.read<AuthController>().appUser!,
+                      //               recieverUser: widget.tailor,
+                      //               senderUid:
+                      //                   context.read<AuthController>().appUser!.id!,
+                      //               recieverUid: widget.tailor.id!);
+                      // } catch (e) {
+                      //   if (context.mounted) {
+                      //     context.mySnackBar(
+                      //         text: e.toString(), color: Colors.red);
+                      //   }
+                      // }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => StartOrder(
+                            tailor: widget.tailor,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  text: context.watch<SendRequestCubit>().isApproved
-                      ? 'Request Approved'
-                      : context.watch<SendRequestCubit>().isOrderAlreadySend
-                          ? "Request Sended"
-                          : "Start Order",
-                );
-              },
+                      );
+                    },
+              text: context.watch<SendRequestController>().isApproved
+                  ? 'Request Approved'
+                  : context.watch<SendRequestController>().isOrderAlreadySend
+                      ? "Request Sended"
+                      : "Start Order",
             ),
             SizedBox(
               height: screenHeight(context) * 0.02,
             ),
             const SizedBox(),
-            context.watch<SendRequestCubit>().isApproved
+            context.watch<SendRequestController>().isApproved
                 ? CustomButton(
                     onTap: () {},
                     text: "Chat",

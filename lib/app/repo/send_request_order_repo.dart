@@ -42,6 +42,7 @@ class SendRequestOrderRepo {
         'orderStatus': '',
         'service': selectedValue,
         'deliveryDate': deliveryDate,
+        'tailorId': recieverUid,
         // Add a timestamp field
         // Add other fields as necessary, such as user ID, total price, etc.
       };
@@ -65,6 +66,7 @@ class SendRequestOrderRepo {
         'deliveryDate': deliveryDate,
         'status': 'pending',
         'orderStatus': '',
+        'tailorId': recieverUid,
         // Add a timestamp field
         // Add other fields as necessary, such as user ID, total price, etc.
       };
@@ -78,17 +80,14 @@ class SendRequestOrderRepo {
   Future<bool> acceptOrder({
     required String otherUserUid,
     required String myUid,
+    required String orderId,
   }) async {
     try {
       final firestore = FirebaseFirestore.instance;
 
       // Step 1: Get the order data from the receiveOrders collection
-      final receiveOrderDoc = await firestore
-          .collection('users')
-          .doc(myUid)
-          .collection('receiveOrders')
-          .doc(otherUserUid)
-          .get();
+      final receiveOrderDoc =
+          await firestore.collection('ordersToAdmin').doc(orderId).get();
 
       if (receiveOrderDoc.exists) {
         // Get the order data
@@ -105,9 +104,13 @@ class SendRequestOrderRepo {
           'status': 'Approved',
           'orderStatus': 'Pending',
         });
+        await firestore
+            .collection('ordersToAdmin')
+            .doc(orderId)
+            .update({'status': 'Approved'});
 
         // Step 3: Remove the order from the receiveOrders collection
-        await receiveOrderDoc.reference.delete();
+        // await receiveOrderDoc.reference.delete();
 
         // Step 4: Update the status in the sender's sentOrders
         await firestore
@@ -120,30 +123,120 @@ class SendRequestOrderRepo {
           'orderStatus': 'Pending',
         });
 
-        QuerySnapshot receivedOrdersSnapshot = await firestore
-            .collectionGroup(
-                'receiveOrders') // Get all receiveOrders from any user
-            .where('docId',
-                isEqualTo: otherUserUid) // Ensure it's the same order
-            .get();
+//         QuerySnapshot receivedOrdersSnapshot = await firestore
+//             .collectionGroup(
+//                 'receiveOrders') // Get all receiveOrders from any user
+//             .where('docId',
+//                 isEqualTo: otherUserUid) // Ensure it's the same order
+//             .get();
+
+// // Step 2: Remove the order from all users' receiveOrders collections
+//         for (var doc in receivedOrdersSnapshot.docs) {
+//           await doc.reference.delete();
+//           log('Removed From All Users');
+//         }
+//         QuerySnapshot sendOrdersSnapshot = await firestore
+//             .collectionGroup(
+//                 'sentOrders') // Get all receiveOrders from any user
+//             .where('docId', isNotEqualTo: myUid) // Ensure it's the same order
+//             .get();
+
+// // Step 2: Remove the order from all users' receiveOrders collections
+//         for (var doc in sendOrdersSnapshot.docs) {
+//           await doc.reference.delete();
+//           log('Removed From All Users');
+//         }
+//         log('Order moved to pendingOrders successfully');
+        return true;
+      } else {
+        log('Order does not exist in receiveOrders');
+        return false;
+      }
+    } catch (e) {
+      log('Error moving order: $e');
+      rethrow;
+    }
+  }
+
+  Future<bool> sendOrderRequestToAdmin(
+      {required String otherUserUid,
+      required String myUid,
+      required String orderId}) async {
+    try {
+      final firestore = FirebaseFirestore.instance;
+
+      QuerySnapshot receivedOrdersSnapshot = await firestore
+          .collectionGroup(
+              'receiveOrders') // Get all receiveOrders from any user
+          .where('docId', isEqualTo: otherUserUid)
+          .where('tailorId', isNotEqualTo: myUid) // Ensure it's the same order
+          .get();
 
 // Step 2: Remove the order from all users' receiveOrders collections
-        for (var doc in receivedOrdersSnapshot.docs) {
+      for (var doc in receivedOrdersSnapshot.docs) {
+        await doc.reference.delete();
+        log('Removed From All Users');
+      }
+      QuerySnapshot sentOrdersSnapshot = await firestore
+          .collection('users')
+          .doc(otherUserUid)
+          .collection('sentOrders')
+          .where('orderId', isNotEqualTo: orderId) // Match order ID
+          .get();
+
+      if (sentOrdersSnapshot.docs.isEmpty) {
+        log('No sent orders found for orderId: $orderId');
+        // return false;
+      }
+
+      // Step 2: Remove order from sentOrders for all tailors except the accepted one
+      for (var doc in sentOrdersSnapshot.docs) {
+        if (doc['tailorId'] != myUid) {
           await doc.reference.delete();
-          log('Removed From All Users');
+          log('Removed from sentOrders for tailor: ${doc['tailorId']}');
         }
-        QuerySnapshot sendOrdersSnapshot = await firestore
-            .collectionGroup(
-                'sentOrders') // Get all receiveOrders from any user
-            .where('docId', isNotEqualTo: myUid) // Ensure it's the same order
+      }
+
+      // Step 3: Move the accepted order to 'ordersToAdmin'
+      final receiveOrderDoc = await firestore
+          .collection('users')
+          .doc(myUid)
+          .collection('receiveOrders')
+          .doc(otherUserUid)
+          .get();
+
+      if (receiveOrderDoc.exists) {
+        // Move order to 'ordersToAdmin'
+
+        // Remove from receiveOrders
+        await receiveOrderDoc.reference.delete();
+
+        // Keep the order in sentOrders for the accepted tailor & update status
+        final sendOrderDoc = await firestore
+            .collection('users')
+            .doc(otherUserUid)
+            .collection('sentOrders')
+            .doc(myUid)
             .get();
 
-// Step 2: Remove the order from all users' receiveOrders collections
-        for (var doc in sendOrdersSnapshot.docs) {
-          await doc.reference.delete();
-          log('Removed From All Users');
+        if (sendOrderDoc.exists) {
+          final orderData = sendOrderDoc.data();
+          await firestore
+              .collection('ordersToAdmin')
+              .doc(orderId)
+              .set({...orderData!, 'CustomerId': myUid});
         }
-        log('Order moved to pendingOrders successfully');
+
+        await firestore
+            .collection('users')
+            .doc(otherUserUid)
+            .collection('sentOrders')
+            .doc(myUid)
+            .update({
+          'status': 'Approved',
+          'orderStatus': 'Pending',
+        });
+
         return true;
       } else {
         log('Order does not exist in receiveOrders');

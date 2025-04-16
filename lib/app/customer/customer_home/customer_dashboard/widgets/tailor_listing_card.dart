@@ -34,7 +34,7 @@ class _TailorListingCardState extends State<TailorListingCard> {
   void initState() {
     if (widget.user != null) {
       context
-          .read<FavoriteCubit>()
+          .read<FavoriteController>()
           .isFavorite(widget.user!, context)
           .then((value) {
         setState(() {
@@ -51,9 +51,8 @@ class _TailorListingCardState extends State<TailorListingCard> {
     });
 
     if (isFavorite) {
-      context
-          .read<FavoriteCubit>()
-          .addToFav(user: user, uid: context.read<AuthCubit>().appUser!.id!);
+      context.read<FavoriteController>().addToFav(
+          user: user, uid: context.read<AuthController>().appUser!.id!);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         behavior: SnackBarBehavior.floating,
         margin: EdgeInsets.all(5),
@@ -62,16 +61,23 @@ class _TailorListingCardState extends State<TailorListingCard> {
         content: Text("Added To Favorites"),
       ));
     } else {
-      context.read<FavoriteCubit>().removeItemFromCart(
-          user: user, uid: context.read<AuthCubit>().appUser!.id!);
+      context.read<FavoriteController>().removeItemFromCart(
+          user: user, uid: context.read<AuthController>().appUser!.id!);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: screenWidth(context) * 0.34,
       decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+                blurRadius: 5,
+                spreadRadius: 2,
+                color: Colors.grey.shade300,
+                offset: const Offset(1, 1)),
+          ],
+          color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(width: 1, color: AppColors.borderGreyColor)),
       padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -82,21 +88,21 @@ class _TailorListingCardState extends State<TailorListingCard> {
             contentPadding: EdgeInsets.zero,
             leading: CircleAvatar(
               backgroundImage: AssetImage(widget.image),
-              radius: 20,
+              radius: 30,
             ),
             title: Text(
               widget.user?.name ?? '..',
-              style: const TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 15),
             ),
             subtitle: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(
-                  Icons.location_on_outlined,
-                  size: 15,
-                ),
+                // const Icon(
+                //   Icons.location_on_outlined,
+                //   size: 15,
+                // ),
                 SizedBox(
-                  width: screenWidth(context) * 0.25,
+                  width: screenWidth(context) * 0.23,
                   child: Text(
                     widget.user?.place ?? '',
                     style: const TextStyle(
@@ -143,14 +149,19 @@ class _TailorListingCardState extends State<TailorListingCard> {
           widget.user != null
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    const Column(
-                      children: [
-                        Text("PKR 2000 - 8000", style: TextStyle(fontSize: 12)),
-                        Text("Custom Stitching",
-                            style: TextStyle(fontSize: 12)),
-                      ],
+                    const SizedBox(
+                      height: 50,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("PKR 2000 - 8000",
+                              style: TextStyle(fontSize: 15)),
+                          Text("Custom Stitching",
+                              style: TextStyle(fontSize: 15)),
+                        ],
+                      ),
                     ),
                     if (widget.showFavorite)
                       GestureDetector(

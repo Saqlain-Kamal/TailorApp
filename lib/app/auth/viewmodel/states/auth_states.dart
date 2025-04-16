@@ -41,6 +41,15 @@ class AuthenticatedState extends AuthStates {
   });
 }
 
+class AdminAuthenticatedState extends AuthStates {
+  final String? email;
+  final String? message;
+  AdminAuthenticatedState({
+    this.email,
+    this.message,
+  });
+}
+
 class LoadedState extends AuthStates {
   final UserModel user;
   LoadedState({required this.user});

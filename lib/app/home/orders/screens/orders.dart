@@ -100,7 +100,7 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
                   StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection('users')
-                        .doc(context.read<AuthCubit>().appUser!.id)
+                        .doc(context.read<AuthController>().appUser!.id)
                         .collection('receiveOrders')
                         .snapshots(),
                     builder: (context, snapshot) {
@@ -148,6 +148,7 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
 
                           return GestureDetector(
                             onTap: () {
+                              log('message');
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -161,6 +162,7 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
                                   ),
                                 ),
                               );
+                              log('asdasda');
                             },
                             child: RecentOrdersCard(
                               value: 1,
@@ -176,7 +178,7 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
                   StreamBuilder(
                       stream: FirebaseFirestore.instance
                           .collection('users')
-                          .doc(context.read<AuthCubit>().appUser!.id)
+                          .doc(context.read<AuthController>().appUser!.id)
                           .collection('inProgressOrders')
                           .snapshots(),
                       builder: (context, snapshot) {
@@ -250,7 +252,7 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
                   StreamBuilder(
                       stream: FirebaseFirestore.instance
                           .collection('users')
-                          .doc(context.read<AuthCubit>().appUser!.id)
+                          .doc(context.read<AuthController>().appUser!.id)
                           .collection('pendingOrders')
                           .snapshots(),
                       builder: (context, snapshot) {
