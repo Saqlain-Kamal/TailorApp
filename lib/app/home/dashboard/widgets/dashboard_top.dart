@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tailor_app/app/auth/screens/auth_page.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/model/user_model.dart';
 import 'package:tailor_app/app/utils/colors.dart';
@@ -45,13 +46,16 @@ class DashboardTop extends StatelessWidget {
           trailing: GestureDetector(
             onTap: () async {
               try {
-                await context.read<AuthCubit>().signOut();
-                // Navigator.pushAndRemoveUntil(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => const AuthPage()),
-                //   (Route<dynamic> route) =>
-                //       false, // Removes all previous routes
-                // );
+                await context.read<AuthController>().signOut().then(
+                      (onValue) => Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const AuthPage()),
+                        (Route<dynamic> route) =>
+                            false, // Removes all previous routes
+                      ),
+                    );
+
                 log('I am here');
               } catch (e) {
                 log(e.toString());

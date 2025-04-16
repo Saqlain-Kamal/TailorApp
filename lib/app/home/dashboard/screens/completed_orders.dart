@@ -21,7 +21,7 @@ class CompletedOrders extends StatelessWidget {
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('users')
-              .doc(context.read<AuthCubit>().appUser!.id)
+              .doc(context.read<AuthController>().appUser!.id)
               .collection('completeOrders')
               .snapshots(),
           builder: (context, snapshot) {

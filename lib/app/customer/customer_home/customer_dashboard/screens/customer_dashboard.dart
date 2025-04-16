@@ -34,18 +34,23 @@ class CustomerDashboard extends StatefulWidget {
 class _CustomerDashboardState extends State<CustomerDashboard> {
   @override
   void initState() {
-    getTailors();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        getTailors();
+      },
+    );
+
     super.initState();
   }
 
   void getTailors() async {
-    await context.read<TailorCubit>().getTailors();
+    await context.read<TailorController>().getTailors();
     await context
-        .read<MeasurmentCubit>()
-        .getMeasurments(uid: context.read<AuthCubit>().appUser!.id!);
+        .read<MeasurmentController>()
+        .getMeasurments(uid: context.read<AuthController>().appUser!.id!);
     // context
     //     .read<FavoriteCubit>()
-    //     .fetchFavorites(uid: context.read<AuthCubit>().appUser!.id!);
+    //     .fetchFavorites(uid: context.read<AuthController>().appUser!.id!);
   }
 
   @override
@@ -79,7 +84,7 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                       InkWell(
                         onTap: () async {
                           try {
-                            await context.read<AuthCubit>().signOut();
+                            await context.read<AuthController>().signOut();
                             // Navigator.pushAndRemoveUntil(
                             //   context,
                             //   MaterialPageRoute(builder: (context) => const AuthPage()),
@@ -121,7 +126,7 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                         asset: 'assets/images/listing.jpeg',
                         text: 'Tailor Listing',
                         countText: context
-                            .watch<TailorCubit>()
+                            .watch<TailorController>()
                             .tailorList
                             .length
                             .toString(),
@@ -138,7 +143,7 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                         asset: 'assets/images/measurement.jpeg',
                         text: 'Measurements',
                         countText: context
-                            .watch<MeasurmentCubit>()
+                            .watch<MeasurmentController>()
                             .measurementsList
                             .length
                             .toString(),
@@ -231,8 +236,9 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                 StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection('users')
-                        .doc(context.read<AuthCubit>().appUser!.id)
+                        .doc(context.read<AuthController>().appUser!.id)
                         .collection('sentOrders')
+                        .where('status', isEqualTo: 'Approved')
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -292,7 +298,7 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                                 );
                               },
                               child: RecentOrdersCard(
-                                orderDate: formattedDate,
+                                orderDate: deliveryDate,
                                 user: user,
                                 status: status,
                                 showBtn: false,
@@ -303,7 +309,7 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                 StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection('users')
-                        .doc(context.read<AuthCubit>().appUser!.id)
+                        .doc(context.read<AuthController>().appUser!.id)
                         .collection('historyOrders')
                         .snapshots(),
                     builder: (context, snapshot) {

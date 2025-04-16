@@ -30,25 +30,21 @@ class _DashboardState extends State<Dashboard> {
 
   void getOrdersLength() async {
     await context
-        .read<SendRequestCubit>()
-        .getNewOrdersLength(uid: context.read<AuthCubit>().appUser!.id!);
-    await context
-        .read<SendRequestCubit>()
-        .getPendingOrdersLength(uid: context.read<AuthCubit>().appUser!.id!);
-    await context
-        .read<SendRequestCubit>()
-        .getProgressOrdersLength(uid: context.read<AuthCubit>().appUser!.id!);
-    await context
-        .read<SendRequestCubit>()
-        .getCompletedOrdersLength(uid: context.read<AuthCubit>().appUser!.id!);
-    await context
-        .read<SendRequestCubit>()
-        .getTailorReviewLength(uid: context.read<AuthCubit>().appUser!.id!);
+        .read<SendRequestController>()
+        .getNewOrdersLength(uid: context.read<AuthController>().appUser!.id!);
+    await context.read<SendRequestController>().getPendingOrdersLength(
+        uid: context.read<AuthController>().appUser!.id!);
+    await context.read<SendRequestController>().getProgressOrdersLength(
+        uid: context.read<AuthController>().appUser!.id!);
+    await context.read<SendRequestController>().getCompletedOrdersLength(
+        uid: context.read<AuthController>().appUser!.id!);
+    await context.read<SendRequestController>().getTailorReviewLength(
+        uid: context.read<AuthController>().appUser!.id!);
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthCubit>().appUser;
+    final user = context.read<AuthController>().appUser;
     // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     //   statusBarColor: AppColors.darkBlueColor,
     // ));
@@ -96,7 +92,7 @@ class _DashboardState extends State<Dashboard> {
                           children: [
                             DashboardCard(
                               count: context
-                                  .watch<SendRequestCubit>()
+                                  .watch<SendRequestController>()
                                   .progressOrderLength
                                   .toString(),
                               asset: 'assets/images/sessor.png',
@@ -107,7 +103,7 @@ class _DashboardState extends State<Dashboard> {
                             ),
                             DashboardCard(
                               count: context
-                                  .watch<SendRequestCubit>()
+                                  .watch<SendRequestController>()
                                   .pendingOrderLength
                                   .toString(),
                               text: 'Pending Orders',
@@ -123,7 +119,7 @@ class _DashboardState extends State<Dashboard> {
                           children: [
                             DashboardCard(
                               count: context
-                                  .watch<SendRequestCubit>()
+                                  .watch<SendRequestController>()
                                   .newOrderLength
                                   .toString(),
                               svg: 'assets/images/box.svg',
@@ -134,7 +130,7 @@ class _DashboardState extends State<Dashboard> {
                             ),
                             DashboardCard(
                               count: context
-                                  .watch<SendRequestCubit>()
+                                  .watch<SendRequestController>()
                                   .reviewsLength
                                   .toString(),
                               onTap: () {
@@ -223,7 +219,7 @@ class _DashboardState extends State<Dashboard> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '${context.watch<SendRequestCubit>().completedOrderLength.toString().padLeft(2, '0')} Orders',
+                                '${context.watch<SendRequestController>().completedOrderLength.toString().padLeft(2, '0')} Orders',
                                 style: const TextStyle(
                                     fontSize: 22, fontWeight: FontWeight.w400),
                               ),

@@ -298,156 +298,73 @@ class _NewOrdersState extends State<NewOrders> {
               Row(
                 children: [
                   Expanded(
-                    child: BlocConsumer<SendRequestCubit, SendRequestStates>(
-                      listener: (context, state) {
-                        if (state is RequestAcceptedStates) {
-                          log('ji');
-                          context.mySnackBar(
-                              text: 'Order Accepted',
-                              color: AppColors.darkBlueColor);
+                    child: CustomButton(
+                      onTap: () async {
+                        try {
+                          await context
+                              .read<SendRequestController>()
+                              .sendOrderRequestToAdmin(
+                                  orderId: widget.orderId,
+                                  myUid: context
+                                      .read<AuthController>()
+                                      .appUser!
+                                      .id!,
+                                  otherUid: widget.user.id!);
+                        } catch (e) {
+                          if (context.mounted) {
+                            context.mySnackBar(
+                                text: e.toString(), color: Colors.red);
+                          }
                         }
-                        if (state is OrderNotFoundState) {
-                          log('ji');
-                          context.mySnackBar(
-                              text: 'Order Not Found', color: Colors.red);
-                        }
-                        if (state is ErrorState) {
-                          log('here');
-                          context.mySnackBar(
-                              text: state.message, color: Colors.red);
-                        }
-                        // TODO: implement listener
-                      },
-                      builder: (context, state) {
-                        if (state is LoadingStates) {
-                          return CustomButton(
-                            onTap: () {},
-                            text: 'text',
-                            isloading: true,
-                            firstColor: Colors.green.shade600,
-                            secondColor: Colors.green.shade600,
-                          );
-                        }
-                        // if (state is RequestSendedStates) {
-                        //   WidgetsBinding.instance.addPostFrameCallback((_) {
-                        //     Navigator.popUntil(context, (route) => route.isFirst);
-                        //   });
-                        // }
 
-                        if (state is RequestAcceptedStates) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            Navigator.popUntil(
-                                context, (route) => route.isFirst);
-                          });
-                        }
-                        return CustomButton(
-                          onTap: () async {
-                            try {
-                              await context
-                                  .read<SendRequestCubit>()
-                                  .acceptOrder(
-                                      myUid: context
-                                          .read<AuthCubit>()
-                                          .appUser!
-                                          .id!,
-                                      otherUid: widget.user.id!);
-                            } catch (e) {
-                              if (context.mounted) {
-                                context.mySnackBar(
-                                    text: e.toString(), color: Colors.red);
-                              }
-                            }
-
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => CustomerPayment(
-                            //       user: tailor,
-                            //     ),
-                            //   ),
-                            // );
-                          },
-                          text: 'ACCEPT',
-                          firstColor: Colors.green.shade600,
-                          secondColor: Colors.green.shade600,
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => CustomerPayment(
+                        //       user: tailor,
+                        //     ),
+                        //   ),
+                        // );
                       },
+                      text: 'ACCEPT',
+                      firstColor: Colors.green.shade600,
+                      secondColor: Colors.green.shade600,
                     ),
                   ),
                   const SizedBox(
                     width: 8,
                   ),
                   Expanded(
-                    child: BlocConsumer<SendRequestCubit, SendRequestStates>(
-                      listener: (context, state) {
-                        if (state is OrderNotApprovedState) {
-                          log('ji');
-                          context.mySnackBar(
-                              text: 'Order Rejected ! Hope For The Next Order',
-                              color: AppColors.darkBlueColor);
+                    child: CustomButton(
+                      onTap: () async {
+                        try {
+                          await context
+                              .read<SendRequestController>()
+                              .rejectOrder(
+                                  myUid: context
+                                      .read<AuthController>()
+                                      .appUser!
+                                      .id!,
+                                  otherUid: widget.user.id!);
+                        } catch (e) {
+                          if (context.mounted) {
+                            context.mySnackBar(
+                                text: e.toString(), color: Colors.red);
+                          }
                         }
-                        if (state is OrderNotFoundState) {
-                          log('ji');
-                          context.mySnackBar(
-                              text: 'Order Not Found', color: Colors.red);
-                        }
-                        if (state is ErrorState) {
-                          log('here');
-                          context.mySnackBar(
-                              text: state.message, color: Colors.red);
-                        }
-                        // TODO: implement listener
+
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => CustomerPayment(
+                        //       user: tailor,
+                        //     ),
+                        //   ),
+                        // );
                       },
-                      builder: (context, state) {
-                        if (state is RejectLoadingStates) {
-                          return CustomButton(
-                            onTap: () {},
-                            text: 'text',
-                            isloading: true,
-                            firstColor: Colors.red.shade600,
-                            secondColor: Colors.red.shade600,
-                          );
-                        }
-
-                        if (state is OrderNotApprovedState) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            Navigator.popUntil(
-                                context, (route) => route.isFirst);
-                          });
-                        }
-
-                        return CustomButton(
-                          onTap: () async {
-                            try {
-                              await context
-                                  .read<SendRequestCubit>()
-                                  .rejectOrder(
-                                      myUid: context
-                                          .read<AuthCubit>()
-                                          .appUser!
-                                          .id!,
-                                      otherUid: widget.user.id!);
-                            } catch (e) {
-                              if (context.mounted) {
-                                context.mySnackBar(
-                                    text: e.toString(), color: Colors.red);
-                              }
-                            }
-
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => CustomerPayment(
-                            //       user: tailor,
-                            //     ),
-                            //   ),
-                            // );
-                          },
-                          text: 'REJECT',
-                          firstColor: Colors.red.shade600,
-                          secondColor: Colors.red.shade600,
-                        );
-                      },
+                      text: 'REJECT',
+                      firstColor: Colors.red.shade600,
+                      secondColor: Colors.red.shade600,
                     ),
                   ),
                 ],

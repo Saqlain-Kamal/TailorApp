@@ -21,7 +21,8 @@ class TailorListing extends StatefulWidget {
 class _TailorListingState extends State<TailorListing> {
   @override
   Widget build(BuildContext context) {
-    final tailors = context.read<TailorCubit>().tailorList;
+    final tailors = context.read<TailorController>().tailorList;
+    //  final tailors = context.read<TailorCubit>().tailorList;
     log(
       tailors.map((e) => e.toString()).toString(),
     );
@@ -67,59 +68,43 @@ class _TailorListingState extends State<TailorListing> {
               height: screenHeight(context) * 0.01,
             ),
             Flexible(
-              child: BlocConsumer<TailorCubit, TailorStates>(
-                listener: (context, state) {
-                  // TODO: implement listener
-                },
-                builder: (context, state) {
-                  if (state is TailorLoadingState) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  if (state is TailorLoadedState) {
-                    final tailors = context.read<TailorCubit>().tailorList;
-                    return tailors.isNotEmpty
-                        ? GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 8.0,
-                              crossAxisSpacing: 8.0,
-                              childAspectRatio: 1.2,
-                            ),
-                            itemCount: tailors.length,
-                            itemBuilder: (context, index) {
-                              final tailor = tailors[index];
-                              log(tailor.name.toString());
-                              return InkWell(
-                                onTap: () {
-                                  log('message');
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => TailorDetail(
-                                        tailor: tailor,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: TailorListingCard(
-                                  cityName: tailor.place ?? '',
-                                  name: tailor.name!,
-                                  image: 'assets/images/avatar3.png',
-                                  user: tailor,
+              child: tailors.isNotEmpty
+                  ? GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 8.0,
+                        crossAxisSpacing: 8.0,
+                        childAspectRatio: 1.2,
+                      ),
+                      itemCount: tailors.length,
+                      itemBuilder: (context, index) {
+                        final tailor = tailors[index];
+                        log(tailor.name.toString());
+                        return InkWell(
+                          onTap: () {
+                            log('message');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TailorDetail(
+                                  tailor: tailor,
                                 ),
-                              );
-                            },
-                          )
-                        : const Center(
-                            child: Text('Empty'),
-                          );
-                  }
-                  return const SizedBox();
-                },
-              ),
+                              ),
+                            );
+                          },
+                          child: TailorListingCard(
+                            cityName: tailor.place ?? '',
+                            name: tailor.name!,
+                            image: 'assets/images/avatar3.png',
+                            user: tailor,
+                          ),
+                        );
+                      },
+                    )
+                  : const Center(
+                      child: Text('Empty'),
+                    ),
             ),
             SizedBox(
               height: screenHeight(context) * 0.01,

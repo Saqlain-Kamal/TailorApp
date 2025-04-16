@@ -1,9 +1,15 @@
 // import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tailor_app/app/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:tailor_app/app/auth/widgets/custom_text_field.dart';
+import 'package:tailor_app/app/customer/customer_home/customer_dashboard/screens/customer_dashboard.dart';
+import 'package:tailor_app/app/customer/customer_home/customer_home.dart';
+import 'package:tailor_app/app/extension/snackbar.dart';
+import 'package:tailor_app/app/home/home.dart';
 import 'package:tailor_app/app/utils/colors.dart';
 import 'package:tailor_app/app/utils/constants.dart';
 import 'package:tailor_app/app/utils/custom_button.dart';
@@ -86,21 +92,43 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     CustomButton(
+                        isloading: context.watch<AuthController>().isloading,
                         onTap: () async {
                           try {
                             await context
-                                .read<AuthCubit>()
+                                .read<AuthController>()
                                 .sighInWithEmailAndPassword(
                                     emailController.text.trim(),
                                     passwordController.text.trim());
 
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => const Home(),
-                            //   ),
-                            // );
-                          } on FirebaseAuthException catch (e) {}
+                            if (context.read<AuthController>().appUser!.role ==
+                                'Tailor') {
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => const Home(
+                              //       index: 0,
+                              //     ),
+                              //   ),
+                              // );
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const Home(index: 0)),
+                                  (predicate) => false);
+                            } else {
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CustomerDashboard()),
+                                  (predicate) => false);
+                            }
+                          } catch (e) {
+                            context.mySnackBar(
+                                text: e.toString(), color: Colors.red);
+                          }
                         },
                         text: 'Login'),
                     // InkWell(

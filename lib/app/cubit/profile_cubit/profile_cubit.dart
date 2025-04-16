@@ -8,33 +8,43 @@ import 'package:tailor_app/app/cubit/profile_cubit/profile_states.dart';
 import 'package:tailor_app/app/model/user_model.dart';
 import 'package:tailor_app/app/repo/auth_repo.dart';
 
-class ProfileCubit extends Cubit<ProfileStates> {
-  ProfileCubit() : super(InitialStates());
-
+class ProfileController extends ChangeNotifier {
   final authRepo = AuthRepo();
   UserModel? appUser;
+  bool isloading = false;
 
   Future<void> updateTailorDetails(
       {required UserModel user, required BuildContext context}) async {
     try {
-      emit(LoadingStates());
+      // emit(LoadingStates());
+      isloading = true;
+      notifyListeners();
       await authRepo.updateTailorDetails(user: user);
       appUser = user;
-      context.read<AuthCubit>().updateUser(user);
-      emit(TailorInfoChangedState());
+
+      context.read<AuthController>().updateUser(user);
+      notifyListeners();
+      // emit(TailorInfoChangedState());
+      isloading = false;
+      notifyListeners();
     } catch (e) {
+      isloading = false;
+      notifyListeners();
       log('message');
-      emit(
-        ErrorState(
-          message: e.toString(),
-        ),
-      );
+      rethrow;
+      // emit(
+      //   // ErrorState(
+      //   //   message: e.toString(),
+      //   // ),
+      // );
     }
   }
 
   Future<void> changePassword(
       String currentPassword, String newPassword, BuildContext context) async {
-    emit(LoadingStates());
+    // emit(LoadingStates());
+    isloading = true;
+    notifyListeners();
 
     final currentUser = authRepo.isCurrentUser();
 
@@ -53,10 +63,15 @@ class ProfileCubit extends Cubit<ProfileStates> {
         appUser = await authRepo.getUserById(uid: currentUser.uid);
         // await _auth.signOut(); // Optional: Sign out after password change
         log("Password changed successfully!");
-        emit(PasswordChangedState());
+        // emit(PasswordChangedState());
+        isloading = false;
+        notifyListeners();
       } on FirebaseAuthException catch (e) {
-        emit(ErrorState(message: e.message!));
+        isloading = false;
+        notifyListeners();
+        // emit(ErrorState(message: e.message!));
         print("Error: ${e.message}");
+        rethrow;
       }
     }
   }

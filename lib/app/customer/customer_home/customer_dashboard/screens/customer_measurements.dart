@@ -48,12 +48,12 @@ class _CustomerMeasurementsState extends State<CustomerMeasurements> {
               ),
             )
           ],
-          title: const Text('Address'),
+          title: const Text('Measurments'),
         ),
         body: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('measurments')
-              .doc(context.read<AuthCubit>().appUser!.id)
+              .doc(context.read<AuthController>().appUser!.id)
               .collection('measurement')
               .snapshots(),
           builder: (context, snapshot) {

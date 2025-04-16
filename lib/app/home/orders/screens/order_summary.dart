@@ -48,14 +48,14 @@ class _OrderSummaryState extends State<OrderSummary> {
     super.initState();
     // Show the dialog only when the status is "Delivered"
 
-    log(context.read<AuthCubit>().appUser!.role.toString());
+    log(context.read<AuthController>().appUser!.role.toString());
     if (widget.status == 'Delivered' &&
-        context.read<AuthCubit>().appUser!.role == 'Customer' &&
+        context.read<AuthController>().appUser!.role == 'Customer' &&
         widget.isShowReviewDialogue == true) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         _showDeliveredDialog();
-        await context.read<SendRequestCubit>().updateDialogueBool(
-            myUid: context.read<AuthCubit>().appUser!.id!,
+        await context.read<SendRequestController>().updateDialogueBool(
+            myUid: context.read<AuthController>().appUser!.id!,
             otherUid: widget.user.id!);
       });
     }
@@ -89,7 +89,7 @@ class _OrderSummaryState extends State<OrderSummary> {
   @override
   Widget build(BuildContext context) {
     const LatLng loc = LatLng(37.4223, -10.0848);
-    log(context.read<AuthCubit>().currentPosition.toString());
+    log(context.read<AuthController>().currentPosition.toString());
 
     return Scaffold(
       body: SafeArea(

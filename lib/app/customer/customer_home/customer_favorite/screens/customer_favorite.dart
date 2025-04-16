@@ -22,25 +22,31 @@ class CustomerFavorite extends StatefulWidget {
 class _CustomerFavoriteState extends State<CustomerFavorite> {
   @override
   void initState() {
-    getFavoritesTailors();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        getFavoritesTailors();
+      },
+    );
+
     super.initState();
   }
 
   void getFavoritesTailors() async {
     await context
-        .read<FavoriteCubit>()
-        .fetchFavorites(uid: context.read<AuthCubit>().appUser!.id!);
+        .read<FavoriteController>()
+        .fetchFavorites(uid: context.read<AuthController>().appUser!.id!);
     await context
-        .read<FavoriteCubit>()
-        .fetchFavoritesCount(uid: context.read<AuthCubit>().appUser!.id!);
+        .read<FavoriteController>()
+        .fetchFavoritesCount(uid: context.read<AuthController>().appUser!.id!);
   }
 
   @override
   Widget build(BuildContext context) {
-    final fav = context.read<FavoriteCubit>().favorites;
-    log(
-      fav.map((e) => e..toString()).toString(),
-    );
+    // final fav = context.read<FavoriteController>().favorites;
+    final tailors = context.watch<FavoriteController>().favorites;
+    // log(
+    //   fav.map((e) => e.toString()).toString(),
+    // );
     return Scaffold(
       appBar: AppBar(
         title: const Text('Favorite Tailors'),
@@ -55,61 +61,45 @@ class _CustomerFavoriteState extends State<CustomerFavorite> {
               height: screenHeight(context) * 0.03,
             ),
             Flexible(
-              child: BlocConsumer<FavoriteCubit, FavoriteStates>(
-                listener: (context, state) {
-                  // TODO: implement listener
-                },
-                builder: (context, state) {
-                  if (state is FavoriteLoadingState) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  if (state is FavoriteLoadedState) {
-                    final tailors = context.read<FavoriteCubit>().favorites;
-                    return tailors.isNotEmpty
-                        ? GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 8.0,
-                              crossAxisSpacing: 8.0,
-                              childAspectRatio: 1.2,
-                            ),
-                            itemCount: tailors.length,
-                            itemBuilder: (context, index) {
-                              final tailor = tailors[index];
-                              log(tailor.name.toString());
-                              return InkWell(
-                                onTap: () {
-                                  log('message');
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => TailorDetail(
-                                        tailor: tailor,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: TailorListingCard(
-                                  cityName: tailor.place ?? '',
-                                  name: tailor.name!,
-                                  showFavorite: false,
-                                  image: 'assets/images/avatar3.png',
-                                  user: tailor,
+              child: tailors.isNotEmpty
+                  ? GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 8.0,
+                        crossAxisSpacing: 8.0,
+                        childAspectRatio: 1.2,
+                      ),
+                      itemCount: tailors.length,
+                      itemBuilder: (context, index) {
+                        final tailor = tailors[index];
+                        log(tailor.name.toString());
+                        return InkWell(
+                          onTap: () {
+                            log('message');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TailorDetail(
+                                  tailor: tailor,
                                 ),
-                              );
-                            },
-                          )
-                        : const Center(
-                            child: Text(
-                                'No Tailors Have Been Added in the Favorites !'),
-                          );
-                  }
-                  return const SizedBox();
-                },
-              ),
+                              ),
+                            );
+                          },
+                          child: TailorListingCard(
+                            cityName: tailor.place ?? '',
+                            name: tailor.name!,
+                            showFavorite: false,
+                            image: 'assets/images/avatar3.png',
+                            user: tailor,
+                          ),
+                        );
+                      },
+                    )
+                  : const Center(
+                      child:
+                          Text('No Tailors Have Been Added in the Favorites !'),
+                    ),
             ),
             SizedBox(
               height: screenHeight(context) * 0.01,

@@ -26,7 +26,7 @@ class Reviews extends StatelessWidget {
                 child: StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection('reviews')
-                        .doc(context.read<AuthCubit>().appUser!.id)
+                        .doc(context.read<AuthController>().appUser!.id)
                         .collection('myReviews')
                         .orderBy('rating', descending: true)
                         .snapshots(),

@@ -150,9 +150,9 @@ class _CustomAlertDialogueState extends State<CustomAlertDialogue> {
                       });
                       // try {
                       //   await context
-                      //       .read<SendRequestCubit>()
+                      //       .read<SendRequestController>()
                       //       .moveOrderToPending(
-                      //           myUid: context.read<AuthCubit>().appUser!.id!,
+                      //           myUid: context.read<AuthController>().appUser!.id!,
                       //           otherUid: widget.user.id!);
                       // } catch (e) {
                       //   if (context.mounted) {
@@ -185,9 +185,10 @@ class _CustomAlertDialogueState extends State<CustomAlertDialogue> {
 
                       try {
                         await context
-                            .read<SendRequestCubit>()
+                            .read<SendRequestController>()
                             .moveOrderToInProgress(
-                                myUid: context.read<AuthCubit>().appUser!.id!,
+                                myUid:
+                                    context.read<AuthController>().appUser!.id!,
                                 otherUid: widget.user.id!);
                       } catch (e) {
                         if (context.mounted) {
@@ -208,9 +209,11 @@ class _CustomAlertDialogueState extends State<CustomAlertDialogue> {
                 });
                 log(selectedValue.toString());
                 try {
-                  await context.read<SendRequestCubit>().moveOrderToCompleted(
-                      myUid: context.read<AuthCubit>().appUser!.id!,
-                      otherUid: widget.user.id!);
+                  await context
+                      .read<SendRequestController>()
+                      .moveOrderToCompleted(
+                          myUid: context.read<AuthController>().appUser!.id!,
+                          otherUid: widget.user.id!);
                 } catch (e) {
                   if (context.mounted) {
                     context.mySnackBar(text: e.toString(), color: Colors.red);
@@ -240,9 +243,10 @@ class _CustomAlertDialogueState extends State<CustomAlertDialogue> {
 
                       try {
                         await context
-                            .read<SendRequestCubit>()
+                            .read<SendRequestController>()
                             .moveOrderToDelivered(
-                                myUid: context.read<AuthCubit>().appUser!.id!,
+                                myUid:
+                                    context.read<AuthController>().appUser!.id!,
                                 otherUid: widget.user.id!);
                       } catch (e) {
                         if (context.mounted) {

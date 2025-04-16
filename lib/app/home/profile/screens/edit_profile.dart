@@ -28,8 +28,8 @@ class _EditProfileState extends State<EditProfile> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final user = context.read<AuthCubit>().appUser;
-      context.read<ProfileCubit>().emit(InitialStates());
+      final user = context.read<AuthController>().appUser;
+      // context.read<ProfileCubit>().emit(InitialStates());
       if (user != null) {
         nameController.text = user.name!; // Set name in the controller
         emailController.text = user.email!; // Set email in the controller
@@ -43,7 +43,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.watch<AuthCubit>().appUser;
+    final user = context.watch<AuthController>().appUser;
     log(user!.toJson().toString());
     return Scaffold(
       appBar: AppBar(
@@ -113,7 +113,7 @@ class _EditProfileState extends State<EditProfile> {
                     SizedBox(
                         height: screenHeight(context) *
                             0.3), // Replace Spacer with SizedBox
-                    // BlocConsumer<AuthCubit, AuthStates>(
+                    // BlocConsumer<AuthController, AuthStates>(
                     //   listener: (context, state) {
                     //     // TODO: implement listener
                     //   },
@@ -146,7 +146,7 @@ class _EditProfileState extends State<EditProfile> {
                           name: nameController.text.trim(),
                           email: emailController.text.trim(),
                           phoneNumber: phoneController.text.trim(),
-                          place: context.read<AuthCubit>().appUser!.place,
+                          place: context.read<AuthController>().appUser!.place,
                         );
                         Navigator.push(
                           context,

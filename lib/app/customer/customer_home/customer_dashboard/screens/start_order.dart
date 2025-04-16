@@ -33,20 +33,24 @@ class _StartOrderState extends State<StartOrder> {
 
   @override
   void initState() {
-    checkIsApproved();
-    context.read<SendRequestCubit>().isOrderSend(
-        myUid: context.read<AuthCubit>().appUser!.id!,
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        checkIsApproved();
+      },
+    );
+    context.read<SendRequestController>().isOrderSend(
+        myUid: context.read<AuthController>().appUser!.id!,
         otherUid: widget.tailor.id!);
 
     context
-        .read<MeasurmentCubit>()
-        .getMeasurments(uid: context.read<AuthCubit>().appUser!.id!);
+        .read<MeasurmentController>()
+        .getMeasurments(uid: context.read<AuthController>().appUser!.id!);
     super.initState();
   }
 
   void checkIsApproved() async {
-    await context.read<SendRequestCubit>().isOrderApprove(
-        myUid: context.read<AuthCubit>().appUser!.id!,
+    await context.read<SendRequestController>().isOrderApprove(
+        myUid: context.read<AuthController>().appUser!.id!,
         otherUid: widget.tailor.id!);
   }
 
@@ -64,7 +68,7 @@ class _StartOrderState extends State<StartOrder> {
   final List<String> items = ['Shalwar Kameez', 'Shirt', 'Kurta'];
   @override
   Widget build(BuildContext context) {
-    log(context.read<SendRequestCubit>().isOrderAlreadySend.toString());
+    log(context.read<SendRequestController>().isOrderAlreadySend.toString());
     log(widget.tailor.stichingService.toString());
     return Scaffold(
       // backgroundColor: AppColors.whiteColor,
@@ -186,7 +190,7 @@ class _StartOrderState extends State<StartOrder> {
                       WidgetStatePropertyAll(Colors.grey.shade200)),
               dropdownMenuEntries: <DropdownMenuEntry<MeasurmentModel>>[
                 for (MeasurmentModel measurment
-                    in context.watch<MeasurmentCubit>().measurementsList)
+                    in context.watch<MeasurmentController>().measurementsList)
                   DropdownMenuEntry(
                     value: measurment,
                     label: measurment
@@ -332,115 +336,70 @@ class _StartOrderState extends State<StartOrder> {
               ),
             ),
             const Spacer(),
-            BlocConsumer<SendRequestCubit, SendRequestStates>(
-              listener: (context, state) {
-                if (state is RequestSendedStates) {
-                  log('ji');
-                  context.mySnackBar(
-                      text: 'Request Send Successfully',
-                      color: AppColors.darkBlueColor);
+            CustomButton(
+              onTap: () async {
+                try {
+                  // if (selectedValue == 'Measurements') {
+                  //   if (measurmentModel == null) {
+                  //     return context.mySnackBar(
+                  //         text: 'Select Measurements', color: Colors.red);
+                  //   }
+                  // }
+                  if (selectedDeliveryDate == null) {
+                    return context.mySnackBar(
+                        text: 'Select Delivery Date', color: Colors.red);
+                  }
+                  if (serviceSelectedValue == null) {
+                    return context.mySnackBar(
+                        text: 'Select Service', color: Colors.red);
+                  }
+                  context.read<SendRequestController>().isOrderAlreadySend ||
+                          context.read<SendRequestController>().isApproved
+                      ? null
+                      : serviceSelectedValue != null
+                          ? await context
+                              .read<SendRequestController>()
+                              .sendOrderRequest(
+                                  deliveryDate: formattedDate!,
+                                  measurmentModel: measurmentModel,
+                                  serviceSelectedValue: serviceSelectedValue!,
+                                  senderUser:
+                                      context.read<AuthController>().appUser!,
+                                  recieverUser: widget.tailor,
+                                  senderUid: context
+                                      .read<AuthController>()
+                                      .appUser!
+                                      .id!,
+                                  recieverUid: widget.tailor.id!)
+                          : context.mySnackBar(
+                              text: 'Select Measurements Type',
+                              color: Colors.red);
+                } catch (e) {
+                  if (context.mounted) {
+                    context.mySnackBar(text: e.toString(), color: Colors.red);
+                  }
                 }
-                if (state is ErrorState) {
-                  log('here');
-                  context.mySnackBar(text: state.message, color: Colors.red);
-                }
-                // TODO: implement listener
+
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => CustomerPayment(
+                //       user: tailor,
+                //     ),
+                //   ),
+                // );
               },
-              builder: (context, state) {
-                if (state is RequestSendedStates) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    Navigator.pop(context);
-                  });
-                }
-                if (state is LoadingStates) {
-                  return CustomButton(
-                    onTap: () {},
-                    text: 'text',
-                    isloading: true,
-                  );
-                }
-
-                if (state is CheckingLoadingStates) {
-                  return const Center(
-                      child: SizedBox(
-                          height: 10,
-                          width: 10,
-                          child: CircularProgressIndicator()));
-                }
-                // if (state is RequestSendedStates) {
-                //   WidgetsBinding.instance.addPostFrameCallback((_) {
-                //     Navigator.popUntil(context, (route) => route.isFirst);
-                //   });
-                // }
-
-                return CustomButton(
-                  onTap: () async {
-                    try {
-                      // if (selectedValue == 'Measurements') {
-                      //   if (measurmentModel == null) {
-                      //     return context.mySnackBar(
-                      //         text: 'Select Measurements', color: Colors.red);
-                      //   }
-                      // }
-                      if (selectedDeliveryDate == null) {
-                        return context.mySnackBar(
-                            text: 'Select Delivery Date', color: Colors.red);
-                      }
-                      if (serviceSelectedValue == null) {
-                        return context.mySnackBar(
-                            text: 'Select Service', color: Colors.red);
-                      }
-                      context.read<SendRequestCubit>().isOrderAlreadySend ||
-                              context.read<SendRequestCubit>().isApproved
-                          ? null
-                          : serviceSelectedValue != null
-                              ? await context
-                                  .read<SendRequestCubit>()
-                                  .sendOrderRequest(
-                                      deliveryDate: formattedDate!,
-                                      measurmentModel: measurmentModel,
-                                      serviceSelectedValue:
-                                          serviceSelectedValue!,
-                                      senderUser:
-                                          context.read<AuthCubit>().appUser!,
-                                      recieverUser: widget.tailor,
-                                      senderUid: context
-                                          .read<AuthCubit>()
-                                          .appUser!
-                                          .id!,
-                                      recieverUid: widget.tailor.id!)
-                              : context.mySnackBar(
-                                  text: 'Select Measurements Type',
-                                  color: Colors.red);
-                    } catch (e) {
-                      if (context.mounted) {
-                        context.mySnackBar(
-                            text: e.toString(), color: Colors.red);
-                      }
-                    }
-
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => CustomerPayment(
-                    //       user: tailor,
-                    //     ),
-                    //   ),
-                    // );
-                  },
-                  text: context.watch<SendRequestCubit>().isApproved
-                      ? 'Request Approved'
-                      : context.watch<SendRequestCubit>().isOrderAlreadySend
-                          ? "Request Sended"
-                          : "Place Order",
-                );
-              },
+              text: context.watch<SendRequestController>().isApproved
+                  ? 'Request Approved'
+                  : context.watch<SendRequestController>().isOrderAlreadySend
+                      ? "Request Sended"
+                      : "Place Order",
             ),
             SizedBox(
               height: screenHeight(context) * 0.02,
             ),
             // const SizedBox(),
-            // context.watch<SendRequestCubit>().isApproved
+            // context.watch<SendRequestController>().isApproved
             //     ? CustomButton(
             //         onTap: () {},
             //         text: "Chat",

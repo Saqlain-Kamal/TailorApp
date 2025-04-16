@@ -32,58 +32,35 @@ class CustomAlertDialogue extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      title: Column(
-        children: [
-          Image.asset(
-            image,
-            height: 70,
-          ),
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        title: Column(
+          children: [
+            Image.asset(
+              image,
+              height: 70,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+        content: Text(
+          desc,
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.grey.shade500, fontSize: 13),
+        ),
+        actions: [
+          if (showBtn1) BorderCustomButton(onTap: btnOnTap1, text: btnText1),
           const SizedBox(
-            height: 5,
+            height: 10,
           ),
-          Text(
-            title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-      content: Text(
-        desc,
-        textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.grey.shade500, fontSize: 13),
-      ),
-      actions: [
-        if (showBtn1) BorderCustomButton(onTap: btnOnTap1, text: btnText1),
-        const SizedBox(
-          height: 10,
-        ),
-        BlocConsumer<AuthCubit, AuthStates>(
-          listener: (context, state) {
-            if (state is AccountDeletedState) {
-              Navigator.pop(context);
-              Navigator.pop(context);
-              context.mySnackBar(
-                  text: 'Account Deleted Successfully',
-                  color: AppColors.darkBlueColor);
-            }
-            // TODO: implement listener
-          },
-          builder: (context, state) {
-            if (state is LoadingState) {
-              return CustomButton(
-                onTap: () {},
-                text: '',
-                isloading: true,
-              );
-            }
-
-            return CustomButton(onTap: btnOnTap2, text: btnText2);
-          },
-        ),
-      ],
-    );
+          CustomButton(onTap: btnOnTap2, text: btnText2),
+        ]);
   }
 }

@@ -54,46 +54,30 @@ class _ChangePasswordState extends State<ChangePassword> {
                 prefixIcon: 'assets/images/Lock.png',
               ),
               SizedBox(height: screenHeight(context) * 0.52), // Rep
-              BlocConsumer<ProfileCubit, ProfileStates>(
-                listener: (context, state) {
-                  // TODO: implement listener
 
-                  if (state is PasswordChangedState) {
-                    log('ji');
-                    context.mySnackBar(
-                        text: 'Password Changed Successfully',
-                        color: AppColors.darkBlueColor);
-                  }
-                },
-                builder: (context, state) {
-                  if (state is LoadingStates) {
-                    return CustomButton(
-                      onTap: () {},
-                      text: 'text',
-                      isloading: true,
-                    );
-                  }
-                  if (state is PasswordChangedState) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
+              CustomButton(
+                  isloading: context.watch<ProfileController>().isloading,
+                  onTap: () async {
+                    try {
+                      log('message');
+                      if (newPasswordController.text.trim() ==
+                          confirmPasswordController.text.trim()) {
+                        await context.read<ProfileController>().changePassword(
+                            oldPasswordController.text.trim(),
+                            newPasswordController.text.trim(),
+                            context);
+                      }
+                      context.mySnackBar(
+                          text: 'Password Changed Successfully',
+                          color: AppColors.darkBlueColor);
+
                       Navigator.pop(context);
                       Navigator.pop(context);
-                    });
-                  }
-
-                  return CustomButton(
-                      onTap: () async {
-                        log('message');
-                        if (newPasswordController.text.trim() ==
-                            confirmPasswordController.text.trim()) {
-                          await context.read<ProfileCubit>().changePassword(
-                              oldPasswordController.text.trim(),
-                              newPasswordController.text.trim(),
-                              context);
-                        }
-                      },
-                      text: 'Save Password');
-                },
-              )
+                    } catch (e) {
+                      context.mySnackBar(text: e.toString(), color: Colors.red);
+                    }
+                  },
+                  text: 'Save Password'),
             ],
           ),
         ),
